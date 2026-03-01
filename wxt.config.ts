@@ -1,6 +1,14 @@
+import { resolve } from 'node:path';
 import { defineConfig } from 'wxt';
 
 export default defineConfig({
+  vite: () => ({
+    resolve: {
+      alias: {
+        '@': resolve(__dirname, './src'),
+      },
+    },
+  }),
   browser: 'chrome',
   manifestVersion: 3,
   srcDir: 'src',
