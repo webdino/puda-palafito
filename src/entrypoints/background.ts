@@ -12,7 +12,7 @@ export default defineBackground(() => {
 
   registerBackgroundListener({
     mainContents(payload) {
-      console.info('Received main contents from content script:', payload.text);
+      console.info('Received main contents from content script:', payload.title);
     },
   });
 });
