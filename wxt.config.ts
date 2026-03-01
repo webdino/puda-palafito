@@ -1,4 +1,5 @@
 import { resolve } from 'node:path';
+import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'wxt';
 
 export default defineConfig({
@@ -8,6 +9,7 @@ export default defineConfig({
         '@': resolve(__dirname, './src'),
       },
     },
+    plugins: [tailwindcss()],
   }),
   browser: 'chrome',
   manifestVersion: 3,
