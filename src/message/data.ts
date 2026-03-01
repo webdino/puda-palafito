@@ -11,5 +11,5 @@ export interface ContentToBackgroundProtocolMap {
 type ContentToBackgroundProtocolKeys = keyof ContentToBackgroundProtocolMap;
 
 export const ContentToBackgroundMessageKeys = {
-  mainContents: 'mainContents',
+  mainContents: "mainContents",
 } as const satisfies Record<string, ContentToBackgroundProtocolKeys>;

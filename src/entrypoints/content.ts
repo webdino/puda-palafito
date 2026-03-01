@@ -1,12 +1,12 @@
-import { Readability } from '@mozilla/readability';
-import { defineContentScript } from 'wxt/utils/define-content-script';
-import { registerOnPageVisit } from '@/lib/page-visit-detection';
-import { sendMainContentsToBackground } from '@/message/events';
+import { Readability } from "@mozilla/readability";
+import { defineContentScript } from "wxt/utils/define-content-script";
+import { registerOnPageVisit } from "@/lib/page-visit-detection";
+import { sendMainContentsToBackground } from "@/message/events";
 
 export default defineContentScript({
-  matches: ['<all_urls>'],
+  matches: ["<all_urls>"],
   main() {
-    console.info('Content script loaded:', window.location.href);
+    console.info("Content script loaded:", window.location.href);
 
     registerOnPageVisit(async () => {
       // ReadabilityはDOMを破壊的に変更する可能性があるため、cloneしてからパースする
@@ -16,14 +16,14 @@ export default defineContentScript({
 
       if (article) {
         sendMainContentsToBackground({
-          title: article.title ?? '',
+          title: article.title ?? "",
           url: window.location.href,
-          text: article.textContent ?? '',
+          text: article.textContent ?? "",
         });
-        console.info('Extracted main contents:', article.title);
+        console.info("Extracted main contents:", article.title);
         console.log(article.textContent);
       } else {
-        console.warn('Failed to extract main content from this page.');
+        console.warn("Failed to extract main content from this page.");
       }
     });
   },

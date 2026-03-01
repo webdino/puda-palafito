@@ -1,5 +1,5 @@
-import debounce from 'debounce';
-import { delay } from './delay';
+import debounce from "debounce";
+import { delay } from "./delay";
 
 /**
  * Timeout (ms)
@@ -20,7 +20,7 @@ export async function registerOnPageVisit(callback: () => Promise<void>, timeout
   await Promise.race([
     delay(timeout),
     new Promise<void>((resolve) => {
-      window.addEventListener('load', () => resolve(), { once: true });
+      window.addEventListener("load", () => resolve(), { once: true });
     }),
   ]);
 

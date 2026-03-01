@@ -1,9 +1,9 @@
-import { defineExtensionMessaging } from '@webext-core/messaging';
+import { defineExtensionMessaging } from "@webext-core/messaging";
 import {
   ContentToBackgroundMessageKeys,
   type ContentToBackgroundProtocolMap,
   type SendMainContentsPayload,
-} from './data';
+} from "./data";
 
 const { sendMessage: backgroundSender, onMessage: backgroundListener } =
   defineExtensionMessaging<ContentToBackgroundProtocolMap>();
