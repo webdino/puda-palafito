@@ -1,5 +1,9 @@
 # puda-palafito
 
+<p align="center">
+  <img src="./docs/logo.png" width="256">
+</p>
+
 WXT + React + TypeScript を使った Chrome 優先の拡張機能開発。  
 閲覧ページの本文抽出を行い、Google Driveに保存をする。  
 
