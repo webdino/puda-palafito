@@ -1,0 +1,104 @@
+import { storage } from "@wxt-dev/storage";
+import { useEffect, useState } from "react";
+import { type SavedContentsData, StorageKeys } from "@/storage";
+
+export function App() {
+  const [contentsData, setContentsData] = useState<SavedContentsData>([]);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  function handleCopy(id: string, json: string) {
+    navigator.clipboard.writeText(json).then(() => {
+      setCopiedId(id);
+      setTimeout(() => setCopiedId(null), 2000);
+    });
+  }
+
+  useEffect(() => {
+    storage.getItem<SavedContentsData>(StorageKeys.savedContentsDataKey).then((data) => {
+      setContentsData(data ?? []);
+    });
+
+    const unwatch = storage.watch<SavedContentsData>(
+      StorageKeys.savedContentsDataKey,
+      (newValue, oldValue) => {
+        console.log("newValue", newValue);
+        console.log("oldValue", oldValue);
+        setContentsData(newValue ?? []);
+      },
+    );
+    return () => {
+      unwatch();
+    };
+  }, []);
+
+  return (
+    <div className="flex flex-col min-h-screen bg-gradient-to-b from-slate-50 to-slate-100">
+      <header className="sticky top-0 z-10 px-4 py-3 bg-white/80 backdrop-blur border-b border-slate-200">
+        <div className="flex items-center justify-between">
+          <h1 className="text-base font-semibold tracking-tight text-slate-800">Saved Contents</h1>
+          <span className="text-xs font-semibold px-2.5 py-1 bg-indigo-100 text-indigo-600 rounded-full">
+            {contentsData.length}
+          </span>
+        </div>
+      </header>
+
+      <main className="flex-1 p-3 flex flex-col gap-3">
+        {contentsData.length > 0 ? (
+          contentsData.map((item) => {
+            const date = new Date(item.createdAt);
+            const dateStr = Number.isNaN(item.createdAt) ? "—" : date.toLocaleString();
+            const hostname = (() => {
+              try {
+                return new URL(item.url).hostname;
+              } catch {
+                return item.url;
+              }
+            })();
+            return (
+              <div
+                key={item.id}
+                className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden"
+              >
+                <div className="px-4 pt-4 pb-3 flex flex-col gap-1">
+                  <p className="text-sm font-semibold text-slate-800 leading-snug line-clamp-2">
+                    {item.title}
+                  </p>
+                  <a
+                    href={item.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-[11px] text-indigo-500 hover:text-indigo-700 hover:underline truncate w-full block"
+                  >
+                    {hostname}
+                  </a>
+                </div>
+                {item.text && (
+                  <div className="px-4 py-3 bg-slate-50 border-t border-slate-100">
+                    <p className="text-xs text-slate-600 line-clamp-3 leading-relaxed">
+                      {item.text}
+                    </p>
+                  </div>
+                )}
+                <div className="px-4 py-2 border-t border-slate-100 flex items-center justify-between">
+                  <p className="text-[10px] text-slate-400">{dateStr}</p>
+                  <button
+                    type="button"
+                    onClick={() => handleCopy(item.id, JSON.stringify(item, null, 2))}
+                    className="text-[11px] px-2 py-1 rounded-md text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
+                  >
+                    {copiedId === item.id ? "Copied!" : "Copy JSON"}
+                  </button>
+                </div>
+              </div>
+            );
+          })
+        ) : (
+          <div className="flex flex-col items-center justify-center flex-1 py-20 gap-2">
+            <div className="text-3xl">📭</div>
+            <p className="text-sm text-slate-400">No contents saved yet.</p>
+          </div>
+        )}
+      </main>
+    </div>
+  );
+}
