@@ -38,6 +38,9 @@ importers:
       debounce:
         specifier: ^3.0.0
         version: 3.0.0
+      dotenv:
+        specifier: ^17.3.1
+        version: 17.3.1
       react:
         specifier: ^19.2.4
         version: 19.2.4

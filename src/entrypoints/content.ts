@@ -13,6 +13,13 @@ async function saveContentData(mainContent: SendMainContentsPayload) {
   const item = await storage.getItem<SavedContentsData>(StorageKeys.savedContentsDataKey);
   if (item) {
     item.unshift(saveData);
+
+    // 一定件を超えたら古いものから削除
+    const maxCount = Number(import.meta.env.WXT_SAVED_CONTENTS_MAX_COUNT || 1000);
+    if (item.length > maxCount) {
+      item.splice(maxCount);
+    }
+
     await storage.setItem(StorageKeys.savedContentsDataKey, item);
   } else {
     const newData: SavedContentsData = [];
