@@ -10,6 +10,8 @@ WXT + React + TypeScript を使った Chrome 優先の拡張機能開発。
 ## Requirements
 
 - Node.js 24.x
+  - こちらを参考にインストールしてください
+  - https://learn.microsoft.com/ja-jp/windows/dev-environment/javascript/nodejs-on-windows
 - Corepack
 - pnpm 10.x
 
