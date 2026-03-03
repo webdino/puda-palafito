@@ -44,6 +44,7 @@ export default defineContentScript({
           title: article.title ?? "",
           url: window.location.href,
           text: article.textContent ?? "",
+          createdAt: Date.now(),
         };
 
         sendMainContentsToBackground(mainContent);

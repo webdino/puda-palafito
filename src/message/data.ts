@@ -2,6 +2,7 @@ export type SendMainContentsPayload = {
   title: string;
   url: string;
   text: string;
+  createdAt: number;
 };
 
 // content.tsからbackground.tsへのメッセージの型定義
