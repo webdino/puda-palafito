@@ -19,7 +19,10 @@ WXT + React + TypeScript を使った Chrome 優先の拡張機能開発。
 corepack enable
 corepack prepare pnpm@10 --activate
 pnpm install
+cp .env.sample .env
 ```
+
+`.env` ファイルが作成されたら、必要に応じて設定値を変更してください。
 
 ## Development
 

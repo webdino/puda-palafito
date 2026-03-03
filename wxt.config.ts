@@ -1,6 +1,7 @@
 import { resolve } from "node:path";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "wxt";
+import "dotenv/config";
 
 export default defineConfig({
   vite: () => ({
