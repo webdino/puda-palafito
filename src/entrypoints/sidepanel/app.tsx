@@ -21,8 +21,10 @@ export function App() {
     const a = document.createElement("a");
     a.href = url;
     a.download = import.meta.env.WXT_EXPORT_FILE_NAME || "history.json";
+    document.body.appendChild(a);
     a.click();
-    URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 0);
   }
 
   useEffect(() => {
