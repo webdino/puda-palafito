@@ -13,6 +13,20 @@ export function App() {
     });
   }
 
+  function handleExport() {
+    if (contentsData.length === 0) return;
+    const json = JSON.stringify(contentsData, null, 2);
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = import.meta.env.WXT_EXPORT_FILE_NAME || "history.json";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 0);
+  }
+
   useEffect(() => {
     storage.getItem<SavedContentsData>(StorageKeys.savedContentsDataKey).then((data) => {
       setContentsData(data ?? []);
@@ -35,10 +49,23 @@ export function App() {
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-slate-50 to-slate-100">
       <header className="sticky top-0 z-10 px-4 py-3 bg-white/80 backdrop-blur border-b border-slate-200">
         <div className="flex items-center justify-between">
-          <h1 className="text-base font-semibold tracking-tight text-slate-800">Saved Contents</h1>
-          <span className="text-xs font-semibold px-2.5 py-1 bg-indigo-100 text-indigo-600 rounded-full">
-            {contentsData.length}
-          </span>
+          <div className="flex items-center gap-2">
+            <h1 className="text-base font-semibold tracking-tight text-slate-800">
+              Saved Contents
+            </h1>
+            <span className="text-xs font-semibold px-2.5 py-1 bg-indigo-100 text-indigo-600 rounded-full">
+              {contentsData.length}
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={handleExport}
+            disabled={contentsData.length === 0}
+            className="text-xs font-medium px-3 py-1.5 bg-white border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-50 hover:border-slate-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm flex items-center gap-1.5"
+          >
+            <span>📥</span>
+            Export All
+          </button>
         </div>
       </header>
 
