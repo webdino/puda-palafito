@@ -3,6 +3,7 @@
 
 interface ImportMetaEnv {
   readonly WXT_SAVED_CONTENTS_MAX_COUNT: string;
+  readonly WXT_EXPORT_FILE_NAME: string;
 }
 
 interface ImportMeta {
