@@ -7,7 +7,9 @@
       "!**/.wxt",
       "!**/node_modules",
       "!**/scripts",
-      "!readability"
+      "!readability",
+      "!.chrome-profile",
+      "!.claude"
     ]
   },
   "formatter": {
