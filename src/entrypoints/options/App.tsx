@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { isSummarizerAvailable } from "@/lib/summarizer/validation";
+import { notifyModelReady } from "@/message/events";
 import { ModelDownloadProgress } from "./ModelDownloadProgress";
 import { SetupGuide } from "./SetupGuide";
 import { StatusBanner } from "./StatusBanner";
@@ -20,6 +21,7 @@ export function App() {
       try {
         const available = await isSummarizerAvailable();
         setIsAvailable(available);
+        if (available) notifyModelReady();
       } catch (err: unknown) {
         setIsAvailable(false);
         setErrorDetails(err instanceof Error ? err.message : String(err));
@@ -50,7 +52,10 @@ export function App() {
         <>
           <ModelDownloadProgress
             started={downloadStarted}
-            onDownloadDone={() => setIsAvailable(true)}
+            onDownloadDone={() => {
+              setIsAvailable(true);
+              notifyModelReady();
+            }}
           />
           {!downloadStarted && (
             <button
