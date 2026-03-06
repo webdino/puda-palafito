@@ -10,3 +10,4 @@ node_modules/
 .serena
 readability/
 scripts/sites/
+.chrome-profile/

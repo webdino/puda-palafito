@@ -1,7 +1,7 @@
 # puda-palafito
 
 <p align="center">
-  <img src="./docs/logo.png" width="256">
+  <img src="./docs/logo.png" width="256" alt="puda-palafito logo">
 </p>
 
 WXT + React + TypeScript を使った Chrome 優先の拡張機能開発。  
@@ -28,18 +28,42 @@ cp .env.sample .env
 
 ## Development
 
+### 1. 開発用ブラウザの起動
+
+Chrome の `Window AI (Gemini Nano)` や `Summarizer API` などの試験運用版機能を使用する場合、`pnpm dev` で自動的に立ち上がるブラウザではなく、フラグ設定を永続化できる専用プロファイルでの起動を推奨します。
+
+プロジェクトルートにある `open-chrome-dev.bat` を使用してください。
+
 ```bash
-pnpm dev
+# 通常起動
+./open-chrome-dev.bat
+
+# プロファイルを初期化して起動
+./open-chrome-dev.bat --clear
 ```
 
-開発用 Chrome は `.wxt/chrome-dev` に保存されるプロファイルを使用します。
+**なぜこのバッチを使うのか:**
+
+- **フラグの保持**: `pnpm dev` (WXT) で起動するブラウザは終了時にプロファイルがリセットされる場合があるため、`chrome://flags` で変更した試験的機能の設定を `.chrome-profile` ディレクトリに確実に永続化させる。
+- **設定の隔離**: 常用している Chrome の設定や拡張機能と衝突させない。
+- **絶対パス対応**: Windows 環境でプロファイルパスを正しく認識させるため。
+
+### 2. 拡張機能のロード
+
+1. ターミナルでビルドを実行します（ファイル変更を監視する場合）:
+
+   ```bash
+   pnpm dev
+   ```
+
+2. `open-chrome-dev.bat` を実行します。
+
+3. `chrome://extensions` を開き、**「パッケージ化されていない拡張機能を読み込む」** を選択して `.output/chrome-mv3-dev` を指定してください。
+
+---
+
+開発用 Chrome は `.chrome-profile` に保存されるプロファイルを使用します。
 `chrome://flags` で有効にした設定はこのプロファイルに保持されます。
-
-プロファイルをリセット（クリーン）したい場合は、以下のコマンドを実行してください：
-
-```bash
-Remove-Item -Recurse -Force .wxt/chrome-dev
-```
 
 Firefox で開発実行する場合:
 
