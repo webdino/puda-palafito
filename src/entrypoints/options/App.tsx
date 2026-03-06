@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { isSummarizerAvailable } from "@/lib/summarizer/validation";
+import { ModelDownloadProgress } from "./ModelDownloadProgress";
 import { SetupGuide } from "./SetupGuide";
 import { StatusBanner } from "./StatusBanner";
 
@@ -11,6 +12,7 @@ function getChromeVersion(): number | null {
 export function App() {
   const [isAvailable, setIsAvailable] = useState<boolean | null>(null);
   const [errorDetails, setErrorDetails] = useState<string | null>(null);
+  const [downloadStarted, setDownloadStarted] = useState(false);
   const chromeVersion = getChromeVersion();
 
   useEffect(() => {
@@ -43,6 +45,36 @@ export function App() {
       </div>
 
       <StatusBanner isAvailable={isAvailable} errorDetails={errorDetails} />
+
+      {isAvailable === false && (
+        <>
+          <ModelDownloadProgress
+            started={downloadStarted}
+            onDownloadDone={() => setIsAvailable(true)}
+          />
+          {!downloadStarted && (
+            <button
+              type="button"
+              onClick={() => setDownloadStarted(true)}
+              style={{
+                display: "block",
+                marginBottom: 24,
+                padding: "10px 20px",
+                fontSize: 14,
+                fontWeight: "bold",
+                cursor: "pointer",
+                borderRadius: 6,
+                border: "none",
+                backgroundColor: "#0d6efd",
+                color: "#fff",
+              }}
+            >
+              モデルをダウンロードする
+            </button>
+          )}
+        </>
+      )}
+
       <SetupGuide chromeVersion={chromeVersion} />
     </main>
   );
