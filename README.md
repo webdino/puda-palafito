@@ -11,7 +11,7 @@ WXT + React + TypeScript を使った Chrome 優先の拡張機能開発。
 
 - Node.js 24.x
   - こちらを参考にインストールしてください
-  - https://learn.microsoft.com/ja-jp/windows/dev-environment/javascript/nodejs-on-windows
+  - <https://learn.microsoft.com/ja-jp/windows/dev-environment/javascript/nodejs-on-windows>
 - Corepack
 - pnpm 10.x
 
@@ -30,6 +30,15 @@ cp .env.sample .env
 
 ```bash
 pnpm dev
+```
+
+開発用 Chrome は `.wxt/chrome-dev` に保存されるプロファイルを使用します。
+`chrome://flags` で有効にした設定はこのプロファイルに保持されます。
+
+プロファイルをリセット（クリーン）したい場合は、以下のコマンドを実行してください：
+
+```bash
+Remove-Item -Recurse -Force .wxt/chrome-dev
 ```
 
 Firefox で開発実行する場合:

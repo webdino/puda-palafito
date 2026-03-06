@@ -20,12 +20,16 @@ export default defineConfig({
     name: "Puda Palafito",
     version: "0.1.0",
     description: "Chrome-first browser extension scaffold with WXT + React + TypeScript",
-    permissions: ["storage"],
+    permissions: ["storage", "sidePanel", "tabs"],
     host_permissions: ["<all_urls>"],
     browser_specific_settings: {
       gecko: {
         id: "puda-palafito@example.com",
       },
+    },
+    options_ui: {
+      page: "options.html",
+      open_in_tab: true,
     },
   },
 });
