@@ -1,5 +1,13 @@
-import { createOptions } from "./options";
+import { createDefaultOptions, createMapOptions, createReduceOptions } from "./options";
 
-export function createSummarizer(monitorCallback?: CreateMonitorCallback) {
-  return Summarizer.create(createOptions(monitorCallback));
+export function createDefaultSummarizer(monitorCallback?: CreateMonitorCallback) {
+  return Summarizer.create(createDefaultOptions(monitorCallback));
+}
+
+export function createMapSummarizer(title: string) {
+  return Summarizer.create(createMapOptions(title));
+}
+
+export function createReduceSummarizer(title: string) {
+  return Summarizer.create(createReduceOptions(title));
 }

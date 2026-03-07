@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { createSummarizer } from "@/lib/summarizer/create";
+import { createDefaultSummarizer } from "@/lib/summarizer/create";
 
 type DownloadState =
   | { status: "idle" }
@@ -22,7 +22,7 @@ export function ModelDownloadProgress({ started, onDownloadDone }: Props) {
     if (!started) return;
 
     let cancelled = false;
-    let summarizer: Awaited<ReturnType<typeof createSummarizer>> | null = null;
+    let summarizer: Awaited<ReturnType<typeof createDefaultSummarizer>> | null = null;
     const monitor: CreateMonitorCallback = (m) => {
       m.addEventListener("downloadprogress", (e) => {
         if (cancelled) return;
@@ -38,7 +38,7 @@ export function ModelDownloadProgress({ started, onDownloadDone }: Props) {
 
     setState({ status: "downloading", loaded: 0, total: 0 });
 
-    createSummarizer(monitor)
+    createDefaultSummarizer(monitor)
       .then((s) => {
         summarizer = s;
         if (!cancelled) setState({ status: "done" });

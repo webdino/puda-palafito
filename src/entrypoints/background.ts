@@ -1,8 +1,8 @@
 import { storage } from "@wxt-dev/storage";
 import { browser } from "wxt/browser";
 import { defineBackground } from "wxt/utils/define-background";
-import { createSummarizer } from "@/lib/summarizer/create";
-import { fitsInQuota, isSummarizerAvailable } from "@/lib/summarizer/validation";
+import { summarize } from "@/lib/summarizer/summarize";
+import { isSummarizerAvailable } from "@/lib/summarizer/validation";
 import { createOptionsTab, getOpenedOptionsTab, openTab } from "@/lib/tabs";
 import type { SendMainContentsPayload } from "@/message/data";
 import { registerBackgroundListener, registerModelReadyListener } from "../message/events";
@@ -18,21 +18,8 @@ import {
 // import type { BackgroundToContentMessage, ContentToBackgroundMessage } from '../lib/runtime-bridge';
 
 async function saveContentData(payload: SendMainContentsPayload) {
-  const summarizer = await createSummarizer();
-
   const startTime = Date.now();
-  let summarizedText: string = "";
-
-  // 要約の文字数制限をチェック
-  const fit = await fitsInQuota(summarizer, payload.text);
-  if (fit) {
-    try {
-      summarizedText = await summarizer.summarize(payload.text);
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
+  const summarizedText = await summarize(payload.title, payload.text);
   const summarizeTime = Date.now() - startTime;
   console.log(`text summary time: ${summarizeTime}`);
 
