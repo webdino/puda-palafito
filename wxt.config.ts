@@ -21,6 +21,7 @@ export default defineConfig({
     version: "0.1.0",
     description: "Chrome-first browser extension scaffold with WXT + React + TypeScript",
     permissions: ["storage", "sidePanel", "tabs"],
+    action: {},
     host_permissions: ["<all_urls>"],
     browser_specific_settings: {
       gecko: {

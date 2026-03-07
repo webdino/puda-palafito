@@ -1,5 +1,8 @@
 import { storage } from "@wxt-dev/storage";
+import { browser } from "wxt/browser";
 import { defineBackground } from "wxt/utils/define-background";
+import { isSummarizerAvailable } from "@/lib/summarizer/validation";
+import { createOptionsTab, getOpenedOptionsTab, openTab } from "@/lib/tabs";
 import type { SendMainContentsPayload } from "@/message/data";
 import { registerBackgroundListener, registerModelReadyListener } from "../message/events";
 import { createSavedContentData, type SavedContentsData, StorageKeys } from "../storage";
@@ -25,13 +28,45 @@ async function saveContentData(payload: SendMainContentsPayload) {
 export default defineBackground(() => {
   console.info("Background service worker loaded.");
 
-  // モデルが未ダウンロードであることを示すバッジを表示
-  chrome.action.setBadgeText({ text: "!" });
-  chrome.action.setBadgeBackgroundColor({ color: "#e74c3c" });
+  let modelReady = false;
+
+  // 起動時にモデル準備状態を確認してバッジを初期化
+  if ("Summarizer" in self) {
+    isSummarizerAvailable()
+      .then((available) => {
+        modelReady = available;
+        if (!available) {
+          chrome.action.setBadgeText({ text: "!" });
+          chrome.action.setBadgeBackgroundColor({ color: "#e74c3c" });
+        }
+      })
+      .catch(() => {
+        modelReady = false;
+        chrome.action.setBadgeText({ text: "!" });
+        chrome.action.setBadgeBackgroundColor({ color: "#e74c3c" });
+      });
+  }
 
   // Options画面からモデルDL完了通知を受け取ったらバッジを削除
   registerModelReadyListener(() => {
+    modelReady = true;
     chrome.action.setBadgeText({ text: "" });
+  });
+
+  // アイコンクリック時: モデル準備済みならサイドパネル、未準備ならオプション画面を開く
+  chrome.action.onClicked.addListener(async (tab) => {
+    if (modelReady) {
+      if (tab.windowId) {
+        chrome.sidePanel.open({ windowId: tab.windowId });
+      }
+    } else {
+      const tabs = await getOpenedOptionsTab();
+      if (tabs.length > 0) {
+        openTab(tabs[0]);
+      } else {
+        createOptionsTab();
+      }
+    }
   });
 
   chrome.runtime.onInstalled.addListener((details: chrome.runtime.InstalledDetails) => {
