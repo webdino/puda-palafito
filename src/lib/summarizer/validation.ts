@@ -13,3 +13,8 @@ export async function isSummarizerAvailable(): Promise<boolean> {
   const coreOptions = createCoreOptions();
   return (await Summarizer.availability(coreOptions)) === "available";
 }
+
+export async function fitsInQuota(summarizer: Summarizer, text: string): Promise<boolean> {
+  const inputUsage = await summarizer.measureInputUsage(text);
+  return inputUsage < summarizer.inputQuota;
+}

@@ -2,7 +2,7 @@ import { storage } from "@wxt-dev/storage";
 import { browser } from "wxt/browser";
 import { defineBackground } from "wxt/utils/define-background";
 import { createSummarizer } from "@/lib/summarizer/create";
-import { isSummarizerAvailable } from "@/lib/summarizer/validation";
+import { fitsInQuota, isSummarizerAvailable } from "@/lib/summarizer/validation";
 import { createOptionsTab, getOpenedOptionsTab, openTab } from "@/lib/tabs";
 import type { SendMainContentsPayload } from "@/message/data";
 import { registerBackgroundListener, registerModelReadyListener } from "../message/events";
@@ -22,10 +22,15 @@ async function saveContentData(payload: SendMainContentsPayload) {
 
   const startTime = Date.now();
   let summarizedText: string = "";
-  try {
-    summarizedText = await summarizer.summarize(payload.text);
-  } catch (e) {
-    console.error(e);
+
+  // 要約の文字数制限をチェック
+  const fit = await fitsInQuota(summarizer, payload.text);
+  if (fit) {
+    try {
+      summarizedText = await summarizer.summarize(payload.text);
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   const summarizeTime = Date.now() - startTime;
