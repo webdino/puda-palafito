@@ -1,15 +1,63 @@
 import { storage } from "@wxt-dev/storage";
 import { browser } from "wxt/browser";
 import { defineBackground } from "wxt/utils/define-background";
+import { createSummarizer } from "@/lib/summarizer/create";
 import { isSummarizerAvailable } from "@/lib/summarizer/validation";
 import { createOptionsTab, getOpenedOptionsTab, openTab } from "@/lib/tabs";
 import type { SendMainContentsPayload } from "@/message/data";
 import { registerBackgroundListener, registerModelReadyListener } from "../message/events";
-import { createSavedContentData, type SavedContentsData, StorageKeys } from "../storage";
+import {
+  createSavedContentData,
+  DebugStorageKeys,
+  type SavedContentsData,
+  StorageKeys,
+  type SummarizedPerformance,
+  type SummarizedPerformanceData,
+  type SummarizedPerformance as SummarizePerformance,
+} from "../storage";
 
 // import type { BackgroundToContentMessage, ContentToBackgroundMessage } from '../lib/runtime-bridge';
 
 async function saveContentData(payload: SendMainContentsPayload) {
+  const summarizer = await createSummarizer();
+
+  let startTime = Date.now();
+  let readabilitySummarizedText: string = "";
+  try {
+    readabilitySummarizedText = await summarizer.summarize(payload.text);
+  } catch (e) {
+    console.error(e);
+  }
+  const readabilitySummarizedTime = Date.now() - startTime;
+  console.log(`text summary time: ${Date.now() - startTime}`);
+  // console.log(`text summary: ${readabilitySummarizedText}`);
+  startTime = Date.now();
+  let innerTextSummarizedText: string = "";
+  try {
+    innerTextSummarizedText = await summarizer.summarize(payload.renderedText);
+  } catch (e) {
+    console.error(e);
+  }
+  console.log(`rendered text summary time: ${Date.now() - startTime}`);
+  const innerTextSummarizedTime = Date.now() - startTime;
+
+  const summarizePerformanceData: SummarizePerformance = {
+    url: payload.url,
+    readabilityText: payload.text,
+    readabilitySummarizeText: readabilitySummarizedText,
+    readabilitySummarizeTime: readabilitySummarizedTime,
+    readabilitySummarizeSuccess: Boolean(readabilitySummarizedText),
+    innerText: payload.renderedText,
+    innerTextSummarizeText: innerTextSummarizedText,
+    innerTextSummarizeTime: innerTextSummarizedTime,
+    innerTextSummarizeSuccess: Boolean(innerTextSummarizedText),
+  };
+
+  await saveForLocalStorage(payload);
+  await saveDebugSummarizedData(summarizePerformanceData);
+}
+
+async function saveForLocalStorage(payload: SendMainContentsPayload) {
   const saveData = createSavedContentData(payload);
   const item = await storage.getItem<SavedContentsData>(StorageKeys.savedContentsDataKey);
 
@@ -80,3 +128,20 @@ export default defineBackground(() => {
     },
   });
 });
+
+async function saveDebugSummarizedData(data: SummarizedPerformance) {
+  const item = await storage.getItem<SummarizedPerformanceData>(
+    DebugStorageKeys.summarizedResultKey,
+  );
+
+  const list: SummarizedPerformanceData = item ?? [];
+  list.unshift(data);
+
+  // 一定件を超えたら古いものから削除
+  const maxCount = Number(import.meta.env.WXT_SAVED_CONTENTS_MAX_COUNT || 1000);
+  if (list.length > maxCount) {
+    list.splice(maxCount);
+  }
+
+  await storage.setItem(DebugStorageKeys.summarizedResultKey, list);
+}

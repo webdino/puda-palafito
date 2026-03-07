@@ -32,10 +32,6 @@ export default defineContentScript({
         };
 
         sendMainContentsToBackground(mainContent);
-
-        console.info("Extracted main contents:", article.title);
-        console.log(article.textContent);
-        console.log("Rendered text:", renderedText);
       } else {
         console.warn("Failed to extract main content from this page.");
       }
