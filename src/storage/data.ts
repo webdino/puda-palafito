@@ -21,14 +21,10 @@ export type SavedContentsData = Array<SavedContentData>;
 // 要約のデバッグ用 SummarizeAPIのパフォーマンス計測データ
 export type SummarizedPerformance = {
   url: string;
-  readabilityText: string;
-  readabilitySummarizeText: string;
-  readabilitySummarizeTime: number;
-  readabilitySummarizeSuccess: boolean;
-  innerText: string;
-  innerTextSummarizeText: string;
-  innerTextSummarizeTime: number;
-  innerTextSummarizeSuccess: boolean;
+  text: string;
+  summarizedText: string;
+  summarizeTime: number;
+  summarizeSuccess: boolean;
 };
 
 export type SummarizedPerformanceData = Array<SummarizedPerformance>;

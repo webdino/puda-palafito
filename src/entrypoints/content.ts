@@ -16,25 +16,17 @@ export default defineContentScript({
       if (!summarizerAvailable) {
         return;
       }
-      // ReadabilityはDOMを破壊的に変更する可能性があるため、cloneしてからパースする
-      const documentClone = document.cloneNode(true) as Document;
-      const reader = new Readability(documentClone);
-      const article = reader.parse();
 
-      if (article) {
-        const renderedText = document.body.innerText;
-        const mainContent: SendMainContentsPayload = {
-          title: article.title ?? "",
-          url: window.location.href,
-          text: article.textContent ?? "",
-          renderedText,
-          createdAt: Date.now(),
-        };
+      const title = document.title;
+      const renderedText = document.body.innerText;
+      const mainContent: SendMainContentsPayload = {
+        title: title ?? "",
+        url: window.location.href,
+        text: renderedText,
+        createdAt: Date.now(),
+      };
 
-        sendMainContentsToBackground(mainContent);
-      } else {
-        console.warn("Failed to extract main content from this page.");
-      }
+      sendMainContentsToBackground(mainContent);
     });
   },
 });

@@ -13,7 +13,6 @@ import {
   StorageKeys,
   type SummarizedPerformance,
   type SummarizedPerformanceData,
-  type SummarizedPerformance as SummarizePerformance,
 } from "../storage";
 
 // import type { BackgroundToContentMessage, ContentToBackgroundMessage } from '../lib/runtime-bridge';
@@ -21,36 +20,23 @@ import {
 async function saveContentData(payload: SendMainContentsPayload) {
   const summarizer = await createSummarizer();
 
-  let startTime = Date.now();
-  let readabilitySummarizedText: string = "";
+  const startTime = Date.now();
+  let summarizedText: string = "";
   try {
-    readabilitySummarizedText = await summarizer.summarize(payload.text);
+    summarizedText = await summarizer.summarize(payload.text);
   } catch (e) {
     console.error(e);
   }
-  const readabilitySummarizedTime = Date.now() - startTime;
-  console.log(`text summary time: ${Date.now() - startTime}`);
-  // console.log(`text summary: ${readabilitySummarizedText}`);
-  startTime = Date.now();
-  let innerTextSummarizedText: string = "";
-  try {
-    innerTextSummarizedText = await summarizer.summarize(payload.renderedText);
-  } catch (e) {
-    console.error(e);
-  }
-  console.log(`rendered text summary time: ${Date.now() - startTime}`);
-  const innerTextSummarizedTime = Date.now() - startTime;
 
-  const summarizePerformanceData: SummarizePerformance = {
+  const summarizeTime = Date.now() - startTime;
+  console.log(`text summary time: ${summarizeTime}`);
+
+  const summarizePerformanceData: SummarizedPerformance = {
     url: payload.url,
-    readabilityText: payload.text,
-    readabilitySummarizeText: readabilitySummarizedText,
-    readabilitySummarizeTime: readabilitySummarizedTime,
-    readabilitySummarizeSuccess: Boolean(readabilitySummarizedText),
-    innerText: payload.renderedText,
-    innerTextSummarizeText: innerTextSummarizedText,
-    innerTextSummarizeTime: innerTextSummarizedTime,
-    innerTextSummarizeSuccess: Boolean(innerTextSummarizedText),
+    text: payload.text,
+    summarizedText: summarizedText,
+    summarizeTime: summarizeTime,
+    summarizeSuccess: Boolean(summarizedText),
   };
 
   await saveForLocalStorage(payload);

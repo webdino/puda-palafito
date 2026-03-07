@@ -2,7 +2,6 @@ export type SendMainContentsPayload = {
   title: string;
   url: string;
   text: string;
-  renderedText: string;
   createdAt: number;
 };
 
