@@ -14,59 +14,62 @@ function combineMapSummarizedText(summarizedChunks: string[]) {
     .join("\n");
 }
 
-export async function mapReduceSummarize(title: string, text: string) {
-  console.log(`1回では要約できないのでMap-Reduceで要約する: text length: ${text.length}`);
+export async function mapReduceSummarize(title: string, text: string): Promise<string> {
+  console.log(`Map-Reduceで要約する: text length: ${text.length}`);
   const splitter = new RecursiveCharacterTextSplitter({
     chunkSize: 3000,
     chunkOverlap: 750,
   });
 
-  try {
-    const chunks = splitter.splitText(text);
+  const chunks = splitter.splitText(text);
+  console.log(`Chunk count: ${chunks.length}`);
+  chunks.forEach((chunk, index) => {
+    console.log(`Chunk ${index + 1}: ${chunk.length}`);
+  });
 
-    console.log(`Chunk count: ${chunks.length}`);
-    chunks.forEach((chunk, index) => {
-      console.log(`Chunk ${index + 1}: ${chunk.length}`);
-    });
+  const mapSummarizer = await createMapSummarizer(title);
+  const summarizedChunks = await Promise.all(chunks.map((chunk) => mapSummarizer.summarize(chunk)));
+  mapSummarizer.destroy();
 
-    const mapSummarizer = await createMapSummarizer(title);
-    const summarizedChunks = await Promise.all(chunks.map((data) => mapSummarizer.summarize(data)));
-    mapSummarizer.destroy();
+  summarizedChunks.forEach((chunk, index) => {
+    console.log(`Summarized chunk ${index + 1}: ${chunk.length}`);
+    console.log(chunk);
+  });
 
-    summarizedChunks.forEach((chunk, index) => {
-      console.log(`Chunk ${index + 1}: ${chunk.length}`);
-      console.log(chunk);
-    });
+  const combinedText = combineMapSummarizedText(summarizedChunks);
+  console.log(`combineText: ${combinedText}`);
 
-    const combinedText = combineMapSummarizedText(summarizedChunks);
-    console.log(`combineText: ${combinedText}`);
-    const reduceSummarizer = await createReduceSummarizer(title);
+  const reduceSummarizer = await createReduceSummarizer(title);
+  if (await fitsInQuota(reduceSummarizer, combinedText)) {
     const result = await reduceSummarizer.summarize(combinedText);
-
+    reduceSummarizer.destroy();
     console.log(`Map-Reduce result: ${result}`);
     return result;
-  } catch (e) {
-    console.error(e);
   }
-  return "";
+
+  // 結合後もquotaを超える場合はトーナメント方式で再帰的に要約
+  reduceSummarizer.destroy();
+  console.log(`結合テキストがまだ大きいため再帰: combined length: ${combinedText.length}`);
+  return mapReduceSummarize(title, combinedText);
 }
 
-export async function summarize(title: string, text: string) {
+export async function summarize(title: string, text: string): Promise<string> {
   const summarizer = await createDefaultSummarizer();
-
   const fit = await fitsInQuota(summarizer, text);
-  // 1回で要約できるはずなので通常の要約処理を行う
+  summarizer.destroy();
+
   if (fit) {
-    console.log(`1回で要約できるはずなので通常の要約処理を行う: text length: ${text.length}`);
+    console.log(`通常の要約処理: text length: ${text.length}`);
+    const summarizer = await createDefaultSummarizer();
     try {
-      const summarizedText = await summarizer.summarize(text);
+      const result = await summarizer.summarize(text);
       summarizer.destroy();
-      return summarizedText;
+      return result;
     } catch (e) {
       console.error(`要約失敗: ${e}  text length: ${text.length}`);
+      summarizer.destroy();
     }
   }
 
-  summarizer.destroy();
   return mapReduceSummarize(title, text);
 }
