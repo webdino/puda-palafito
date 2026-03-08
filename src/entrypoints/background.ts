@@ -2,7 +2,7 @@ import { storage } from "@wxt-dev/storage";
 import { browser } from "wxt/browser";
 import { defineBackground } from "wxt/utils/define-background";
 import { summarize } from "@/lib/summarizer/summarize";
-import { isSummarizerAvailable } from "@/lib/summarizer/validation";
+import { isSummarizerAvailable, isSummarizerSupported } from "@/lib/summarizer/validation";
 import { createOptionsTab, getOpenedOptionsTab, openTab } from "@/lib/tabs";
 import type { SendMainContentsPayload } from "@/message/data";
 import { registerBackgroundListener, registerModelReadyListener } from "../message/events";
@@ -54,20 +54,18 @@ async function saveForLocalStorage(payload: SendMainContentsPayload) {
 export default defineBackground(() => {
   console.info("Background service worker loaded.");
 
-  let modelReady = false;
-
   // 起動時にモデル準備状態を確認してバッジを初期化
-  if ("Summarizer" in self) {
+  if (isSummarizerSupported()) {
     isSummarizerAvailable()
       .then((available) => {
-        modelReady = available;
         if (!available) {
           chrome.action.setBadgeText({ text: "!" });
           chrome.action.setBadgeBackgroundColor({ color: "#e74c3c" });
+        } else {
+          chrome.action.setBadgeText({ text: "" });
         }
       })
       .catch(() => {
-        modelReady = false;
         chrome.action.setBadgeText({ text: "!" });
         chrome.action.setBadgeBackgroundColor({ color: "#e74c3c" });
       });
@@ -75,13 +73,13 @@ export default defineBackground(() => {
 
   // Options画面からモデルDL完了通知を受け取ったらバッジを削除
   registerModelReadyListener(() => {
-    modelReady = true;
     chrome.action.setBadgeText({ text: "" });
   });
 
   // アイコンクリック時: モデル準備済みならサイドパネル、未準備ならオプション画面を開く
   chrome.action.onClicked.addListener(async (tab) => {
-    if (modelReady) {
+    const isReady = await isSummarizerAvailable();
+    if (isReady) {
       if (tab.windowId) {
         chrome.sidePanel.open({ windowId: tab.windowId });
       }

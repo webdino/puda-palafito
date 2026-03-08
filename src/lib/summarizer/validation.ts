@@ -1,7 +1,7 @@
 import { createCoreOptions } from "./options";
 
 // ブラウザがサポートしているかチェック
-function isSummarizerSupported(): boolean {
+export function isSummarizerSupported(): boolean {
   return "Summarizer" in self;
 }
 
