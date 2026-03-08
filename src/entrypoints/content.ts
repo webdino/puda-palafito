@@ -1,8 +1,10 @@
+import { storage } from "@wxt-dev/storage";
 import { defineContentScript } from "wxt/utils/define-content-script";
 import { registerOnPageVisit } from "@/lib/page-visit-detection";
 import { isSummarizerAvailable } from "@/lib/summarizer/validation";
 import type { SendMainContentsPayload } from "@/message/data";
 import { sendMainContentsToBackground } from "@/message/events";
+import { StorageKeys } from "@/storage";
 
 export default defineContentScript({
   matches: ["<all_urls>"],
@@ -13,6 +15,12 @@ export default defineContentScript({
       const summarizerAvailable = await isSummarizerAvailable();
       // SummarizerAPIが準備できてなければ記録をスキップ
       if (!summarizerAvailable) {
+        return;
+      }
+
+      const recordingEnabled = await storage.getItem<boolean>(StorageKeys.recordingEnabled);
+      // 記録が無効化されていればスキップ（デフォルトは有効）
+      if (recordingEnabled === false) {
         return;
       }
 
