@@ -71,7 +71,9 @@ export default defineBackground(() => {
       if (tabs.length > 0) {
         openTab(tabs[0]);
       } else {
-        createOptionsTab();
+        createOptionsTab().catch((e) => {
+          console.log(e);
+        });
       }
     }
   });

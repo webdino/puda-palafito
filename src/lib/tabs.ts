@@ -9,7 +9,7 @@ export async function getOpenedOptionsTab() {
 
 export function createOptionsTab() {
   const optionUrl = chrome.runtime.getURL(constants.optionPagePath);
-  browser.tabs.create({ url: optionUrl });
+  return browser.tabs.create({ url: optionUrl });
 }
 
 export function openTab(tab: Browser.tabs.Tab) {
