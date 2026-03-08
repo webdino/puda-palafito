@@ -13,5 +13,6 @@ export function createOptionsTab() {
 }
 
 export function openTab(tab: Browser.tabs.Tab) {
+  if (tab.id === undefined) return;
   browser.tabs.update(tab.id, { active: true });
 }

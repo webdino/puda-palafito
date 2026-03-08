@@ -7,7 +7,6 @@ import type { SendMainContentsPayload } from "@/message/data";
 import { registerBackgroundListener, registerModelReadyListener } from "../message/events";
 import {
   createSavedContentData,
-  DebugStorageKeys,
   type SavedContentsData,
   StorageKeys,
   type SummarizedPerformance,
@@ -31,7 +30,6 @@ async function saveContentData(payload: SendMainContentsPayload) {
   };
 
   await saveForLocalStorage(payload);
-  await saveDebugSummarizedData(summarizePerformanceData);
 }
 
 async function saveForLocalStorage(payload: SendMainContentsPayload) {
@@ -105,20 +103,3 @@ export default defineBackground(() => {
     },
   });
 });
-
-async function saveDebugSummarizedData(data: SummarizedPerformance) {
-  const item = await storage.getItem<SummarizedPerformanceData>(
-    DebugStorageKeys.summarizedResultKey,
-  );
-
-  const list: SummarizedPerformanceData = item ?? [];
-  list.unshift(data);
-
-  // 一定件を超えたら古いものから削除
-  const maxCount = Number(import.meta.env.WXT_SAVED_CONTENTS_MAX_COUNT || 1000);
-  if (list.length > maxCount) {
-    list.splice(maxCount);
-  }
-
-  await storage.setItem(DebugStorageKeys.summarizedResultKey, list);
-}

@@ -1,6 +1,6 @@
 import { storage } from "@wxt-dev/storage";
 import { useEffect, useState } from "react";
-import { DebugStorageKeys, type SavedContentsData, StorageKeys } from "@/storage";
+import { type SavedContentsData, StorageKeys } from "@/storage";
 
 export function App() {
   const [contentsData, setContentsData] = useState<SavedContentsData>([]);
@@ -26,20 +26,6 @@ export function App() {
     document.body.removeChild(a);
     setTimeout(() => URL.revokeObjectURL(url), 0);
   }
-
-  // [DEBUG] >>> Debug Feature
-  const [debugCopied, setDebugCopied] = useState(false);
-  async function handleDebugCopy() {
-    const data = await storage.getItem(DebugStorageKeys.summarizedResultKey);
-    if (!data) {
-      alert("No debug data found");
-      return;
-    }
-    await navigator.clipboard.writeText(JSON.stringify(data, null, 2));
-    setDebugCopied(true);
-    setTimeout(() => setDebugCopied(false), 2000);
-  }
-  // [DEBUG] <<< Debug Feature
 
   useEffect(() => {
     storage.getItem<SavedContentsData>(StorageKeys.savedContentsDataKey).then((data) => {
@@ -72,16 +58,6 @@ export function App() {
             </span>
           </div>
           <div className="flex gap-2">
-            {/* [DEBUG] >>> Debug Feature */}
-            <button
-              type="button"
-              onClick={handleDebugCopy}
-              className="text-[10px] font-medium px-2 py-1.5 bg-yellow-50 border border-yellow-200 text-yellow-700 rounded-lg hover:bg-yellow-100 transition-all shadow-sm flex items-center gap-1"
-            >
-              <span>🐛</span>
-              {debugCopied ? "Copied!" : "Debug JS"}
-            </button>
-            {/* [DEBUG] <<< Debug Feature */}
             <button
               type="button"
               onClick={handleExport}
