@@ -2,6 +2,18 @@ import { RecursiveCharacterTextSplitter } from "../textSplitter";
 import { createDefaultSummarizer, createMapSummarizer, createReduceSummarizer } from "./create";
 import { fitsInQuota } from "./validation";
 
+function combineMapSummarizedText(summarizedChunks: string[]) {
+  return summarizedChunks
+    .map((content, index) => {
+      const sectionNumber = index + 1;
+      const totalSections = summarizedChunks.length;
+
+      // 区切り線とセクション情報を付与（AIの注意をリセットさせる）
+      return `### データセクション [${sectionNumber}/${totalSections}]\n${content.trim()}`;
+    })
+    .join("\n");
+}
+
 export async function mapReduceSummarize(title: string, text: string) {
   console.log(`1回では要約できないのでMap-Reduceで要約する: text length: ${text.length}`);
   const splitter = new RecursiveCharacterTextSplitter({
@@ -21,7 +33,12 @@ export async function mapReduceSummarize(title: string, text: string) {
     const summarizedChunks = await Promise.all(chunks.map((data) => mapSummarizer.summarize(data)));
     mapSummarizer.destroy();
 
-    const combinedText = summarizedChunks.join("\n");
+    summarizedChunks.forEach((chunk, index) => {
+      console.log(`Chunk ${index + 1}: ${chunk.length}`);
+      console.log(chunk);
+    });
+
+    const combinedText = combineMapSummarizedText(summarizedChunks);
     console.log(`combineText: ${combinedText}`);
     const reduceSummarizer = await createReduceSummarizer(title);
     const result = await reduceSummarizer.summarize(combinedText);
