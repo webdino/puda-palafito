@@ -1,5 +1,4 @@
 import { storage } from "@wxt-dev/storage";
-import { browser } from "wxt/browser";
 import { defineBackground } from "wxt/utils/define-background";
 import { summarize } from "@/lib/summarizer/summarize";
 import { isSummarizerAvailable, isSummarizerSupported } from "@/lib/summarizer/validation";

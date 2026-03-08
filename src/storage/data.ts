@@ -1,8 +1,6 @@
 import type { SendMainContentsPayload } from "@/message/data";
 
-export type StorablePayload = Omit<SendMainContentsPayload, "renderedText">;
-
-export type SavedContentData = StorablePayload & {
+export type SavedContentData = SendMainContentsPayload & {
   id: string;
 };
 

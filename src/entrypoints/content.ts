@@ -1,4 +1,3 @@
-import { Readability } from "@mozilla/readability";
 import { defineContentScript } from "wxt/utils/define-content-script";
 import { registerOnPageVisit } from "@/lib/page-visit-detection";
 import { isSummarizerAvailable } from "@/lib/summarizer/validation";
