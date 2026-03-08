@@ -4,12 +4,15 @@ export type SavedContentData = SendMainContentsPayload & {
   id: string;
 };
 
-export function createSavedContentData(payload: SendMainContentsPayload): SavedContentData {
+export function createSavedContentData(
+  payload: SendMainContentsPayload,
+  summarizedText: string,
+): SavedContentData {
   return {
     id: crypto.randomUUID(),
     title: payload.title,
     url: payload.url,
-    text: payload.text,
+    text: summarizedText,
     createdAt: payload.createdAt,
   };
 }

@@ -5,13 +5,7 @@ import { isSummarizerAvailable, isSummarizerSupported } from "@/lib/summarizer/v
 import { createOptionsTab, getOpenedOptionsTab, openTab } from "@/lib/tabs";
 import type { SendMainContentsPayload } from "@/message/data";
 import { registerBackgroundListener, registerModelReadyListener } from "../message/events";
-import {
-  createSavedContentData,
-  type SavedContentsData,
-  StorageKeys,
-  type SummarizedPerformance,
-  type SummarizedPerformanceData,
-} from "../storage";
+import { createSavedContentData, type SavedContentsData, StorageKeys } from "../storage";
 
 // import type { BackgroundToContentMessage, ContentToBackgroundMessage } from '../lib/runtime-bridge';
 
@@ -21,19 +15,11 @@ async function saveContentData(payload: SendMainContentsPayload) {
   const summarizeTime = Date.now() - startTime;
   console.log(`text summary time: ${summarizeTime}`);
 
-  const summarizePerformanceData: SummarizedPerformance = {
-    url: payload.url,
-    text: payload.text,
-    summarizedText: summarizedText,
-    summarizeTime: summarizeTime,
-    summarizeSuccess: Boolean(summarizedText),
-  };
-
-  await saveForLocalStorage(payload);
+  await saveForLocalStorage(payload, summarizedText);
 }
 
-async function saveForLocalStorage(payload: SendMainContentsPayload) {
-  const saveData = createSavedContentData(payload);
+async function saveForLocalStorage(payload: SendMainContentsPayload, summarizedText: string) {
+  const saveData = createSavedContentData(payload, summarizedText);
   const item = await storage.getItem<SavedContentsData>(StorageKeys.savedContentsDataKey);
 
   const list: SavedContentsData = item ?? [];
