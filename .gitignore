@@ -8,3 +8,6 @@ node_modules/
 *.log
 .env
 .serena
+readability/
+scripts/sites/
+.chrome-profile/

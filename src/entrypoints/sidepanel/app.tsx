@@ -57,15 +57,17 @@ export function App() {
               {contentsData.length}
             </span>
           </div>
-          <button
-            type="button"
-            onClick={handleExport}
-            disabled={contentsData.length === 0}
-            className="text-xs font-medium px-3 py-1.5 bg-white border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-50 hover:border-slate-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm flex items-center gap-1.5"
-          >
-            <span>📥</span>
-            Export All
-          </button>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={handleExport}
+              disabled={contentsData.length === 0}
+              className="text-xs font-medium px-3 py-1.5 bg-white border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-50 hover:border-slate-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm flex items-center gap-1.5"
+            >
+              <span>📥</span>
+              Export All
+            </button>
+          </div>
         </div>
       </header>
 
