@@ -27,12 +27,7 @@ export function ModelDownloadProgress({ started, onDownloadDone }: Props) {
       m.addEventListener("downloadprogress", (e) => {
         if (cancelled) return;
         const { loaded, total } = e as Event & { loaded: number; total: number };
-        if (loaded >= total) {
-          setState({ status: "done" });
-          onDownloadDoneRef.current();
-        } else {
-          setState({ status: "downloading", loaded, total });
-        }
+        setState({ status: "downloading", loaded, total });
       });
     };
 
@@ -41,7 +36,10 @@ export function ModelDownloadProgress({ started, onDownloadDone }: Props) {
     createDefaultSummarizer(monitor)
       .then((s) => {
         summarizer = s;
-        if (!cancelled) setState({ status: "done" });
+        if (!cancelled) {
+          setState({ status: "done" });
+          onDownloadDoneRef.current();
+        }
       })
       .catch((err: unknown) => {
         if (!cancelled)
