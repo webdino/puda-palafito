@@ -102,7 +102,9 @@ export default defineBackground(() => {
   registerBackgroundListener({
     mainContents(payload) {
       console.info("Received main contents from content script:", payload.title);
-      saveContentData(payload);
+      saveContentData(payload).catch((e) => {
+        console.log(e);
+      });
     },
   });
 });
