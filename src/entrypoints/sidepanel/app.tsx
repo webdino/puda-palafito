@@ -5,6 +5,7 @@ import { type SavedContentsData, StorageKeys } from "@/storage";
 export function App() {
   const [contentsData, setContentsData] = useState<SavedContentsData>([]);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [recordingEnabled, setRecordingEnabled] = useState(true);
 
   function handleCopy(id: string, json: string) {
     navigator.clipboard.writeText(json).then(() => {
@@ -27,7 +28,17 @@ export function App() {
     setTimeout(() => URL.revokeObjectURL(url), 0);
   }
 
+  function handleRecordingToggle(e: React.ChangeEvent<HTMLInputElement>) {
+    const checked = e.target.checked;
+    setRecordingEnabled(checked);
+    storage.setItem(StorageKeys.recordingEnabled, checked);
+  }
+
   useEffect(() => {
+    storage.getItem<boolean>(StorageKeys.recordingEnabled).then((val) => {
+      setRecordingEnabled(val ?? true);
+    });
+
     storage.getItem<SavedContentsData>(StorageKeys.savedContentsDataKey).then((data) => {
       setContentsData(data ?? []);
     });
@@ -57,7 +68,7 @@ export function App() {
               {contentsData.length}
             </span>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
             <button
               type="button"
               onClick={handleExport}
@@ -128,6 +139,18 @@ export function App() {
           </div>
         )}
       </main>
+
+      <footer className="sticky bottom-0 px-4 py-3 bg-white/80 backdrop-blur border-t border-slate-200">
+        <label className="flex items-center gap-2 text-xs text-slate-600 cursor-pointer select-none">
+          <input
+            type="checkbox"
+            checked={recordingEnabled}
+            onChange={handleRecordingToggle}
+            className="w-3.5 h-3.5 accent-indigo-500"
+          />
+          記録を有効にする
+        </label>
+      </footer>
     </div>
   );
 }
