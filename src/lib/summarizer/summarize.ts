@@ -5,8 +5,8 @@ import { fitsInQuota } from "./validation";
 export async function mapReduceSummarize(title: string, text: string) {
   console.log(`1回では要約できないのでMap-Reduceで要約する: text length: ${text.length}`);
   const splitter = new RecursiveCharacterTextSplitter({
-    chunkSize: 6000,
-    chunkOverlap: 500,
+    chunkSize: 3000,
+    chunkOverlap: 750,
   });
 
   try {
