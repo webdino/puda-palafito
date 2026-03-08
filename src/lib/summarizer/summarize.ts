@@ -31,6 +31,13 @@ export async function mapReduceSummarize(title: string, text: string, depth = 0)
     console.log(`Chunk ${index + 1}: ${chunk.length}`);
   });
 
+  // ひとまずはエラーにするが頻発するならquotaからチャンクサイズを算出するほうが良いかも
+  if (chunks.length === 1) {
+    throw new Error(
+      `テキストをこれ以上分割できませんがクォータを超えています: text length: ${text.length}`,
+    );
+  }
+
   const mapSummarizer = await createMapSummarizer(title);
   let summarizedChunks: string[];
   try {
