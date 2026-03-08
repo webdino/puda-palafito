@@ -2,7 +2,7 @@ import { storage } from "@wxt-dev/storage";
 import { defineBackground } from "wxt/utils/define-background";
 import { summarize } from "@/lib/summarizer/summarize";
 import { isSummarizerAvailable, isSummarizerSupported } from "@/lib/summarizer/validation";
-import { createOptionsTab, getOpenedOptionsTab, openTab } from "@/lib/tabs";
+import { openOptionsTab } from "@/lib/tabs";
 import type { SendMainContentsPayload } from "@/message/data";
 import { registerBackgroundListener, registerModelReadyListener } from "../message/events";
 import { createSavedContentData, type SavedContentsData, StorageKeys } from "../storage";
@@ -37,10 +37,13 @@ async function saveForLocalStorage(payload: SendMainContentsPayload, summarizedT
 export default defineBackground(() => {
   console.info("Background service worker loaded.");
 
-  // 起動時にモデル準備状態を確認してバッジを初期化
+  // 起動時にモデル準備状態を確認してバッジとパネル動作を初期化
+  // openPanelOnActionClick: true  → クリックで直接パネルが開く (onClicked は発火しない)
+  // openPanelOnActionClick: false → onClicked が発火 → オプション画面を開く
   if (isSummarizerSupported()) {
     isSummarizerAvailable()
       .then((available) => {
+        chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: available });
         if (!available) {
           chrome.action.setBadgeText({ text: "!" });
           chrome.action.setBadgeBackgroundColor({ color: "#e74c3c" });
@@ -49,33 +52,21 @@ export default defineBackground(() => {
         }
       })
       .catch(() => {
+        chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: false });
         chrome.action.setBadgeText({ text: "!" });
         chrome.action.setBadgeBackgroundColor({ color: "#e74c3c" });
       });
   }
 
-  // Options画面からモデルDL完了通知を受け取ったらバッジを削除
+  // Options画面からモデルDL完了通知を受け取ったらパネル動作とバッジを更新
   registerModelReadyListener(() => {
+    chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
     chrome.action.setBadgeText({ text: "" });
   });
 
-  // アイコンクリック時: モデル準備済みならサイドパネル、未準備ならオプション画面を開く
-  chrome.action.onClicked.addListener(async (tab) => {
-    const isReady = await isSummarizerAvailable();
-    if (isReady) {
-      if (tab.windowId) {
-        chrome.sidePanel.open({ windowId: tab.windowId });
-      }
-    } else {
-      const tabs = await getOpenedOptionsTab();
-      if (tabs.length > 0) {
-        openTab(tabs[0]);
-      } else {
-        createOptionsTab().catch((e) => {
-          console.log(e);
-        });
-      }
-    }
+  // onClicked はモデル未準備時のみ発火 (openPanelOnActionClick: false の場合)
+  chrome.action.onClicked.addListener(() => {
+    openOptionsTab();
   });
 
   chrome.runtime.onInstalled.addListener((details: chrome.runtime.InstalledDetails) => {
