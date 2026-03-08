@@ -27,10 +27,7 @@ abstract class TextSplitter implements TextSplitterParams {
     let splits: string[];
     if (separator) {
       if (this.keepSeparator) {
-        const regexEscapedSeparator = separator.replace(
-          /[/\-\\^$*+?.()|[\]{}]/g,
-          "\\$&"
-        );
+        const regexEscapedSeparator = separator.replace(/[/\-\\^$*+?.()|[\]{}]/g, "\\$&");
         splits = text.split(new RegExp(`(?=${regexEscapedSeparator})`));
       } else {
         splits = text.split(separator);
@@ -50,7 +47,7 @@ abstract class TextSplitter implements TextSplitterParams {
       if (total + _len + currentDoc.length * separator.length > this.chunkSize) {
         if (total > this.chunkSize) {
           console.warn(
-            `Created a chunk of size ${total}, which is longer than the specified ${this.chunkSize}`
+            `Created a chunk of size ${total}, which is longer than the specified ${this.chunkSize}`,
           );
         }
         if (currentDoc.length > 0) {
@@ -60,8 +57,7 @@ abstract class TextSplitter implements TextSplitterParams {
           }
           while (
             total > this.chunkOverlap ||
-            (total + _len + currentDoc.length * separator.length > this.chunkSize &&
-              total > 0)
+            (total + _len + currentDoc.length * separator.length > this.chunkSize && total > 0)
           ) {
             total -= this.lengthFunction(currentDoc[0]);
             currentDoc.shift();
@@ -107,8 +103,7 @@ export const SupportedTextSplitterLanguages = [
   "sol",
 ] as const;
 
-export type SupportedTextSplitterLanguage =
-  (typeof SupportedTextSplitterLanguages)[number];
+export type SupportedTextSplitterLanguage = (typeof SupportedTextSplitterLanguages)[number];
 
 export class RecursiveCharacterTextSplitter
   extends TextSplitter
@@ -174,7 +169,7 @@ export class RecursiveCharacterTextSplitter
 
   static fromLanguage(
     language: SupportedTextSplitterLanguage,
-    options?: Partial<RecursiveCharacterTextSplitterParams>
+    options?: Partial<RecursiveCharacterTextSplitterParams>,
   ) {
     return new RecursiveCharacterTextSplitter({
       ...options,
@@ -279,26 +274,9 @@ export class RecursiveCharacterTextSplitter
         "",
       ];
     } else if (language === "python") {
-      return [
-        "\nclass ",
-        "\ndef ",
-        "\n\tdef ",
-        "\n\n",
-        "\n",
-        " ",
-        "",
-      ];
+      return ["\nclass ", "\ndef ", "\n\tdef ", "\n\n", "\n", " ", ""];
     } else if (language === "rst") {
-      return [
-        "\n===\n",
-        "\n---\n",
-        "\n***\n",
-        "\n.. ",
-        "\n\n",
-        "\n",
-        " ",
-        "",
-      ];
+      return ["\n===\n", "\n---\n", "\n***\n", "\n.. ", "\n\n", "\n", " ", ""];
     } else if (language === "ruby") {
       return [
         "\ndef ",
