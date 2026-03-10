@@ -20,9 +20,13 @@ export default defineConfig({
     name: "Puda Palafito",
     version: "0.1.0",
     description: "Chrome-first browser extension scaffold with WXT + React + TypeScript",
-    permissions: ["storage", "sidePanel", "tabs"],
+    permissions: ["storage", "sidePanel", "tabs", "identity"],
     action: {},
     host_permissions: ["<all_urls>"],
+    oauth2: {
+      client_id: process.env.WXT_OAUTH_CLIENT_ID || "",
+      scopes: ["https://www.googleapis.com/auth/drive.file"],
+    },
     browser_specific_settings: {
       gecko: {
         id: "puda-palafito@example.com",

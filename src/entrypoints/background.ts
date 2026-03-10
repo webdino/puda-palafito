@@ -9,16 +9,30 @@ import { createSavedContentData, type SavedContentsData, StorageKeys } from "../
 
 // import type { BackgroundToContentMessage, ContentToBackgroundMessage } from '../lib/runtime-bridge';
 
+import { uploadJsonToDrive } from "@/lib/drive/api";
+
 async function saveContentData(payload: SendMainContentsPayload) {
   const startTime = Date.now();
   const summarizedText = await summarize(payload.title, payload.text);
   const summarizeTime = Date.now() - startTime;
   console.log(`text summary time: ${summarizeTime}`);
 
-  await saveForLocalStorage(payload, summarizedText);
+  const updatedList = await saveForLocalStorage(payload, summarizedText);
+  if (updatedList) {
+    const backupFileName = import.meta.env.WXT_EXPORT_FILE_NAME || "history.json";
+    const fileId = await uploadJsonToDrive(backupFileName, updatedList);
+    if (fileId) {
+      console.info("Successfully synced to Google Drive:", fileId);
+    } else {
+      console.warn("Could not sync to Google Drive. Check authentication.");
+    }
+  }
 }
 
-async function saveForLocalStorage(payload: SendMainContentsPayload, summarizedText: string) {
+async function saveForLocalStorage(
+  payload: SendMainContentsPayload,
+  summarizedText: string,
+): Promise<SavedContentsData | null> {
   const saveData = createSavedContentData(payload, summarizedText);
   const item = await storage.getItem<SavedContentsData>(StorageKeys.savedContentsDataKey);
 
@@ -32,6 +46,7 @@ async function saveForLocalStorage(payload: SendMainContentsPayload, summarizedT
   }
 
   await storage.setItem(StorageKeys.savedContentsDataKey, list);
+  return list;
 }
 
 export default defineBackground(() => {
