@@ -10,11 +10,15 @@
  * @returns 取得したアクセストークン。取得失敗時は null
  */
 export async function getGoogleAuthToken(interactive = true): Promise<string | null> {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     chrome.identity.getAuthToken({ interactive }, (tokenInfo: unknown) => {
       if (chrome.runtime.lastError) {
         console.error("Authentication failed:", chrome.runtime.lastError.message);
-        resolve(null);
+        if (interactive) {
+          reject(new Error(chrome.runtime.lastError.message));
+        } else {
+          resolve(null);
+        }
         return;
       }
       // tokenが文字列のケースとオブジェクトのケースを吸収する（型定義の差異用）

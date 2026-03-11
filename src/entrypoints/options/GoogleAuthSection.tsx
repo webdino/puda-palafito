@@ -4,6 +4,7 @@ import { checkLoginStatus, getGoogleAuthToken, revokeGoogleAuthToken } from "@/l
 export function GoogleAuthSection() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [isProcessing, setIsProcessing] = useState<boolean>(true);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   useEffect(() => {
     checkLoginStatus().then((status) => {
@@ -14,9 +15,16 @@ export function GoogleAuthSection() {
 
   const handleLogin = async () => {
     setIsProcessing(true);
-    const token = await getGoogleAuthToken(true);
-    setIsLoggedIn(!!token);
-    setIsProcessing(false);
+    setErrorMsg(null);
+    try {
+      const token = await getGoogleAuthToken(true);
+      setIsLoggedIn(!!token);
+    } catch (e) {
+      console.error(e);
+      setErrorMsg(e instanceof Error ? e.message : "Failed to login");
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const handleLogout = async () => {
@@ -36,8 +44,23 @@ export function GoogleAuthSection() {
         要約した履歴を自分のGoogle Driveに自動バックアップするために連携してください。
       </p>
 
+      {errorMsg && (
+        <div
+          style={{
+            marginBottom: 16,
+            padding: "8px 12px",
+            backgroundColor: "#fde8e8",
+            color: "#c81e1e",
+            borderRadius: 4,
+            fontSize: 13,
+          }}
+        >
+          <strong>認証エラー:</strong> {errorMsg}
+        </div>
+      )}
+
       {isProcessing ? (
-        <button disabled style={{ padding: "8px 16px" }}>
+        <button type="button" disabled style={{ padding: "8px 16px" }}>
           状態を確認中...
         </button>
       ) : isLoggedIn ? (
