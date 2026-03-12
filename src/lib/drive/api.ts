@@ -19,6 +19,7 @@ const DRIVE_UPLOAD_URL = "https://www.googleapis.com/upload/drive/v3/files?uploa
 export async function uploadJsonToDrive(
   fileName: string,
   jsonData: unknown,
+  parentId: string | null = null,
 ): Promise<string | null> {
   // バックグラウンドでトークンを取得（取得できなければ認証されていないためエラー）
   const token = await getGoogleAuthToken(false);
@@ -28,12 +29,15 @@ export async function uploadJsonToDrive(
   }
 
   // 1. 同名のファイルが存在するかどうかを検索（今回アプリで作成したもののみ見つかる）
-  const existingFileId = await findFileByName(fileName, token);
+  const existingFileId = await findFileByName(fileName, token, parentId);
 
-  const fileMetadata = {
+  const fileMetadata: Record<string, unknown> = {
     name: fileName,
     mimeType: "application/json",
   };
+  if (parentId && !existingFileId) {
+    fileMetadata.parents = [parentId];
+  }
 
   const fileContent = JSON.stringify(jsonData, null, 2);
 
@@ -88,10 +92,18 @@ export async function uploadJsonToDrive(
 /**
  * Drive上から指定されたファイル名のファイルIDを検索します。
  */
-async function findFileByName(fileName: string, token: string): Promise<string | null> {
+async function findFileByName(
+  fileName: string,
+  token: string,
+  parentId: string | null = null,
+): Promise<string | null> {
   try {
-    const query = encodeURIComponent(`name='${fileName}' and trashed=false`);
-    const response = await fetch(`${DRIVE_API_URL}?q=${query}&fields=files(id,name)`, {
+    let query = `name='${fileName}' and trashed=false`;
+    if (parentId) {
+      query += ` and '${parentId}' in parents`;
+    }
+    const encodedQuery = encodeURIComponent(query);
+    const response = await fetch(`${DRIVE_API_URL}?q=${encodedQuery}&fields=files(id,name)`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -112,4 +124,85 @@ async function findFileByName(fileName: string, token: string): Promise<string |
     console.error("Exception during Drive API search:", error);
     return null;
   }
+}
+
+/**
+ * フォルダ名からGoogle Driveのフォルダを検索します。
+ */
+export async function findFolderByName(folderName: string, token: string): Promise<string | null> {
+  try {
+    const query = `name='${folderName}' and mimeType='application/vnd.google-apps.folder' and trashed=false`;
+    const encodedQuery = encodeURIComponent(query);
+    const response = await fetch(`${DRIVE_API_URL}?q=${encodedQuery}&fields=files(id,name)`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      console.error("Drive API Folder Search error:", response.status);
+      return null;
+    }
+
+    const data = await response.json();
+    if (data.files && data.files.length > 0) {
+      return data.files[0].id;
+    }
+    return null;
+  } catch (error) {
+    console.error("Exception during Drive API Folder search:", error);
+    return null;
+  }
+}
+
+/**
+ * Google Driveに新しいフォルダを作成します。
+ */
+export async function createDriveFolder(folderName: string, token: string): Promise<string | null> {
+  try {
+    const metadata = {
+      name: folderName,
+      mimeType: "application/vnd.google-apps.folder",
+    };
+
+    const response = await fetch(DRIVE_API_URL, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(metadata),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Drive API Folder Create error:", response.status, errorText);
+      return null;
+    }
+
+    const data = await response.json();
+    return data.id;
+  } catch (error) {
+    console.error("Exception during Drive API Folder create:", error);
+    return null;
+  }
+}
+
+/**
+ * 指定した名前のフォルダを検索し、なければ作成してそのIDを返します。
+ */
+export async function getOrCreateDriveFolder(folderName: string): Promise<string | null> {
+  const token = await getGoogleAuthToken(false);
+  if (!token) {
+    console.error("No valid auth token to access Drive Folder.");
+    return null;
+  }
+
+  const existingId = await findFolderByName(folderName, token);
+  if (existingId) {
+    return existingId;
+  }
+
+  return await createDriveFolder(folderName, token);
 }

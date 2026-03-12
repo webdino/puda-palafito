@@ -20,7 +20,17 @@ async function saveContentData(payload: SendMainContentsPayload) {
   const updatedList = await saveForLocalStorage(payload, summarizedText);
   if (updatedList) {
     const backupFileName = import.meta.env.WXT_EXPORT_FILE_NAME || "history.json";
-    const fileId = await uploadJsonToDrive(backupFileName, updatedList);
+
+    // ユーザーが選択したGoogle DriveのフォルダIDを取得
+    const folderId = await storage.getItem<string>(StorageKeys.googleDriveFolderId);
+
+    // フォルダが未設定の場合はバックアップ処理をスキップ
+    if (!folderId) {
+      console.info("Google Drive backup skipped: Destination folder is not configured.");
+      return;
+    }
+
+    const fileId = await uploadJsonToDrive(backupFileName, updatedList, folderId);
     if (fileId) {
       console.info("Successfully synced to Google Drive:", fileId);
     } else {
