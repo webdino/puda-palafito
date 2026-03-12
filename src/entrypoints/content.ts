@@ -1,5 +1,6 @@
 import { storage } from "@wxt-dev/storage";
 import { defineContentScript } from "wxt/utils/define-content-script";
+import { matchesDomainFilter } from "@/lib/domain-filter";
 import { registerOnPageVisit } from "@/lib/page-visit-detection";
 import { isSummarizerAvailable } from "@/lib/summarizer/validation";
 import type { SendMainContentsPayload } from "@/message/data";
@@ -21,6 +22,12 @@ export default defineContentScript({
       const recordingEnabled = await storage.getItem<boolean>(StorageKeys.recordingEnabled);
       // 記録が無効化されていればスキップ（デフォルトは有効）
       if (recordingEnabled === false) {
+        return;
+      }
+
+      const domainFilter = (await storage.getItem<string[]>(StorageKeys.domainFilter)) ?? [];
+      // ドメインフィルタに一致しなければスキップ
+      if (!matchesDomainFilter(window.location.href, domainFilter)) {
         return;
       }
 

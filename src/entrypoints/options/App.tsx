@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { isSummarizerAvailable } from "@/lib/summarizer/validation";
 import { notifyModelReady } from "@/message/events";
+import { DomainFilter } from "./DomainFilter";
 import { ModelDownloadProgress } from "./ModelDownloadProgress";
 import { SetupGuide } from "./SetupGuide";
 import { StatusBanner } from "./StatusBanner";
@@ -10,53 +11,27 @@ function getChromeVersion(): number | null {
   return match ? parseInt(match[1], 10) : null;
 }
 
-export function App() {
-  const [isAvailable, setIsAvailable] = useState<boolean | null>(null);
-  const [errorDetails, setErrorDetails] = useState<string | null>(null);
-  const [downloadStarted, setDownloadStarted] = useState(false);
-  const chromeVersion = getChromeVersion();
+type SetupPanelProps = {
+  isAvailable: boolean | null;
+  errorDetails: string | null;
+  chromeVersion: number | null;
+  onDownloadDone: () => void;
+};
 
-  useEffect(() => {
-    async function checkStatus() {
-      try {
-        const available = await isSummarizerAvailable();
-        setIsAvailable(available);
-        if (available) notifyModelReady();
-      } catch (err: unknown) {
-        setIsAvailable(false);
-        setErrorDetails(err instanceof Error ? err.message : String(err));
-      }
-    }
-    checkStatus();
-  }, []);
+function SetupPanel({ isAvailable, errorDetails, chromeVersion, onDownloadDone }: SetupPanelProps) {
+  const [downloadStarted, setDownloadStarted] = useState(false);
 
   return (
-    <main style={{ padding: 24, fontFamily: "system-ui, sans-serif", lineHeight: 1.5 }}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "baseline",
-          marginBottom: 16,
-        }}
-      >
-        <h1 style={{ fontSize: 24, margin: 0 }}>Puda Palafito 設定</h1>
-        <div style={{ fontSize: 14, color: "#666" }}>
-          ご利用の Chrome バージョン: <strong>{chromeVersion ?? "不明"}</strong>
-        </div>
+    <>
+      <div style={{ fontSize: 14, color: "#666", marginBottom: 16 }}>
+        ご利用の Chrome バージョン: <strong>{chromeVersion ?? "不明"}</strong>
       </div>
 
       <StatusBanner isAvailable={isAvailable} errorDetails={errorDetails} />
 
       {isAvailable === false && (
         <>
-          <ModelDownloadProgress
-            started={downloadStarted}
-            onDownloadDone={() => {
-              setIsAvailable(true);
-              notifyModelReady();
-            }}
-          />
+          <ModelDownloadProgress started={downloadStarted} onDownloadDone={onDownloadDone} />
           {!downloadStarted && (
             <button
               type="button"
@@ -81,6 +56,46 @@ export function App() {
       )}
 
       <SetupGuide chromeVersion={chromeVersion} />
+    </>
+  );
+}
+
+export function App() {
+  const [isAvailable, setIsAvailable] = useState<boolean | null>(null);
+  const [errorDetails, setErrorDetails] = useState<string | null>(null);
+  const chromeVersion = getChromeVersion();
+
+  useEffect(() => {
+    async function checkStatus() {
+      try {
+        const available = await isSummarizerAvailable();
+        setIsAvailable(available);
+        if (available) notifyModelReady();
+      } catch (err: unknown) {
+        setIsAvailable(false);
+        setErrorDetails(err instanceof Error ? err.message : String(err));
+      }
+    }
+    checkStatus();
+  }, []);
+
+  return (
+    <main style={{ padding: 24, fontFamily: "system-ui, sans-serif", lineHeight: 1.5 }}>
+      <h1 style={{ fontSize: 24, margin: "0 0 16px 0" }}>Puda Palafito 設定</h1>
+
+      {isAvailable === true ? (
+        <DomainFilter />
+      ) : (
+        <SetupPanel
+          isAvailable={isAvailable}
+          errorDetails={errorDetails}
+          chromeVersion={chromeVersion}
+          onDownloadDone={() => {
+            setIsAvailable(true);
+            notifyModelReady();
+          }}
+        />
+      )}
     </main>
   );
 }
