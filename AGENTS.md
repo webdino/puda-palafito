@@ -42,3 +42,11 @@ pnpm install
 - 権限(`permissions`)は最小で追加する
 - 生成物はコミットしない（`.output/`, `.wxt/`）
 - 変更時は `pnpm lint`, `pnpm typecheck`, `pnpm test` を通す
+
+## Shell
+
+- windowsでシェルを利用する場合はpowershellを使うこと
+
+## Npm package
+
+- devDependenciesに追加すること

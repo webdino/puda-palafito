@@ -1,5 +1,7 @@
+import { Settings } from "lucide-react";
 import { storage } from "@wxt-dev/storage";
 import { useEffect, useState } from "react";
+import { openOptionsTab } from "@/lib/tabs";
 import { type SavedContentsData, StorageKeys } from "@/storage";
 
 export function App() {
@@ -140,7 +142,7 @@ export function App() {
         )}
       </main>
 
-      <footer className="sticky bottom-0 px-4 py-3 bg-white/80 backdrop-blur border-t border-slate-200">
+      <footer className="sticky bottom-0 px-4 py-3 bg-white/80 backdrop-blur border-t border-slate-200 flex items-center justify-between">
         <label className="flex items-center gap-2 text-xs text-slate-600 cursor-pointer select-none">
           <input
             type="checkbox"
@@ -150,6 +152,14 @@ export function App() {
           />
           記録を有効にする
         </label>
+        <button
+          type="button"
+          onClick={() => openOptionsTab()}
+          aria-label="設定を開く"
+          className="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
+        >
+          <Settings size={16} />
+        </button>
       </footer>
     </div>
   );
