@@ -22,41 +22,31 @@ function SetupPanel({ isAvailable, errorDetails, chromeVersion, onDownloadDone }
   const [downloadStarted, setDownloadStarted] = useState(false);
 
   return (
-    <>
-      <div style={{ fontSize: 14, color: "#666", marginBottom: 16 }}>
-        ご利用の Chrome バージョン: <strong>{chromeVersion ?? "不明"}</strong>
+    <div className="flex flex-col gap-6">
+      <div className="text-sm text-slate-500">
+        ご利用の Chrome バージョン:{" "}
+        <strong className="text-slate-700">{chromeVersion ?? "不明"}</strong>
       </div>
 
       <StatusBanner isAvailable={isAvailable} errorDetails={errorDetails} />
 
       {isAvailable === false && (
-        <>
+        <div className="flex flex-col gap-4">
           <ModelDownloadProgress started={downloadStarted} onDownloadDone={onDownloadDone} />
           {!downloadStarted && (
             <button
               type="button"
               onClick={() => setDownloadStarted(true)}
-              style={{
-                display: "block",
-                marginBottom: 24,
-                padding: "10px 20px",
-                fontSize: 14,
-                fontWeight: "bold",
-                cursor: "pointer",
-                borderRadius: 6,
-                border: "none",
-                backgroundColor: "#0d6efd",
-                color: "#fff",
-              }}
+              className="self-start flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm"
             >
               モデルをダウンロードする
             </button>
           )}
-        </>
+        </div>
       )}
 
       <SetupGuide chromeVersion={chromeVersion} />
-    </>
+    </div>
   );
 }
 
@@ -80,22 +70,30 @@ export function App() {
   }, []);
 
   return (
-    <main style={{ padding: 24, fontFamily: "system-ui, sans-serif", lineHeight: 1.5 }}>
-      <h1 style={{ fontSize: 24, margin: "0 0 16px 0" }}>Puda Palafito 設定</h1>
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100">
+      <header className="sticky top-0 z-10 bg-white/80 backdrop-blur border-b border-slate-200">
+        <div className="max-w-2xl mx-auto px-6 py-4">
+          <h1 className="text-xl font-semibold tracking-tight text-slate-800">
+            Puda Palafito 設定
+          </h1>
+        </div>
+      </header>
 
-      {isAvailable === true ? (
-        <DomainFilter />
-      ) : (
-        <SetupPanel
-          isAvailable={isAvailable}
-          errorDetails={errorDetails}
-          chromeVersion={chromeVersion}
-          onDownloadDone={() => {
-            setIsAvailable(true);
-            notifyModelReady();
-          }}
-        />
-      )}
-    </main>
+      <main className="max-w-2xl mx-auto px-6 py-8">
+        {isAvailable === true ? (
+          <DomainFilter />
+        ) : (
+          <SetupPanel
+            isAvailable={isAvailable}
+            errorDetails={errorDetails}
+            chromeVersion={chromeVersion}
+            onDownloadDone={() => {
+              setIsAvailable(true);
+              notifyModelReady();
+            }}
+          />
+        )}
+      </main>
+    </div>
   );
 }

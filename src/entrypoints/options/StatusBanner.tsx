@@ -6,43 +6,35 @@ export function StatusBanner({
   errorDetails: string | null;
 }) {
   if (isAvailable === null) {
-    return <p>AI の利用可否を確認中...</p>;
+    return (
+      <div className="flex items-center gap-2 text-sm text-slate-500">
+        <span className="animate-spin">⟳</span>
+        AI の利用可否を確認中...
+      </div>
+    );
   }
 
   if (isAvailable) {
     return (
-      <div
-        style={{
-          padding: 16,
-          backgroundColor: "#d4edda",
-          color: "#155724",
-          borderRadius: 8,
-          marginBottom: 24,
-        }}
-      >
-        <h2 style={{ fontSize: 18, marginTop: 0 }}>✅ Summarizer API は利用可能です</h2>
-        <p style={{ margin: 0 }}>AI 機能は正常に動作しています。</p>
+      <div className="flex items-start gap-3 p-4 bg-emerald-50 border border-emerald-200 rounded-xl">
+        <span className="text-lg leading-none mt-0.5">✅</span>
+        <div>
+          <p className="font-semibold text-emerald-800 text-sm">Summarizer API は利用可能です</p>
+          <p className="text-emerald-700 text-xs mt-0.5">AI 機能は正常に動作しています。</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div
-      style={{
-        padding: 16,
-        border: "1px solid #f5c6cb",
-        backgroundColor: "#f8d7da",
-        color: "#721c24",
-        borderRadius: 8,
-        marginBottom: 24,
-      }}
-    >
-      <h2 style={{ fontSize: 18, marginTop: 0 }}>❌ Summarizer API は利用できません</h2>
-      {errorDetails && (
-        <p style={{ fontSize: 14, fontFamily: "monospace", marginTop: 8, opacity: 0.8 }}>
-          エラー: {errorDetails}
-        </p>
-      )}
+    <div className="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-xl">
+      <span className="text-lg leading-none mt-0.5">❌</span>
+      <div>
+        <p className="font-semibold text-red-800 text-sm">Summarizer API は利用できません</p>
+        {errorDetails && (
+          <p className="text-red-700 text-xs font-mono mt-1 opacity-80">エラー: {errorDetails}</p>
+        )}
+      </div>
     </div>
   );
 }
