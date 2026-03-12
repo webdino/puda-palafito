@@ -1,6 +1,6 @@
+import { storage } from "@wxt-dev/storage";
 import { Plus, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { storage } from "@wxt-dev/storage";
 import { StorageKeys } from "@/storage";
 
 export function DomainFilter() {
@@ -62,7 +62,7 @@ export function DomainFilter() {
       <div className="px-5 py-4 border-b border-slate-100">
         <h2 className="text-base font-semibold text-slate-800">ドメインフィルタ</h2>
         <p className="text-xs text-slate-500 mt-1">
-          記録するサイトのドメインを指定します。サブドメインも含めてマッチします（例:{" "}
+          記録しないサイトのドメインを指定します。サブドメインも含めてマッチします（例:{" "}
           <code className="font-mono bg-slate-100 px-1 rounded">example.com</code> は{" "}
           <code className="font-mono bg-slate-100 px-1 rounded">www.example.com</code> にもマッチ）。
           空の場合はすべてのサイトを記録します。
