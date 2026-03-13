@@ -4,7 +4,7 @@
  * - 非空の場合は domains のいずれかにマッチするURLは記録しない（denylist）
  * - サブドメインも含めてマッチする（例: "example.com" は "www.example.com" にもマッチ）
  */
-export function matchesDomainFilter(url: string, domains: string[]): boolean {
+export function isAllowedByDomainFilter(url: string, domains: string[]): boolean {
   if (domains.length === 0) return true;
   try {
     const hostname = new URL(url).hostname;

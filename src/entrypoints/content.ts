@@ -1,6 +1,6 @@
 import { storage } from "@wxt-dev/storage";
 import { defineContentScript } from "wxt/utils/define-content-script";
-import { matchesDomainFilter } from "@/lib/domain-filter";
+import { isAllowedByDomainFilter } from "@/lib/domain-filter";
 import { registerOnPageVisit } from "@/lib/page-visit-detection";
 import { isSummarizerAvailable } from "@/lib/summarizer/validation";
 import type { SendMainContentsPayload } from "@/message/data";
@@ -27,7 +27,7 @@ export default defineContentScript({
 
       const domainFilter = (await storage.getItem<string[]>(StorageKeys.domainFilter)) ?? [];
       // ドメインフィルタに一致しなければスキップ
-      if (!matchesDomainFilter(window.location.href, domainFilter)) {
+      if (!isAllowedByDomainFilter(window.location.href, domainFilter)) {
         return;
       }
 
