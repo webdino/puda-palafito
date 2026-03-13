@@ -47,7 +47,7 @@ export async function revokeGoogleAuthToken(token: string): Promise<void> {
   return new Promise((resolve) => {
     chrome.identity.removeCachedAuthToken({ token }, () => {
       // サーバー側でもアクセスを破棄する
-      fetch(`https://accounts.google.com/o/oauth2/revoke?token=${token}`)
+      fetch(`https://accounts.google.com/o/oauth2/revoke?token=${encodeURIComponent(token)}`)
         .then(() => {
           console.info("Token revoked successfully.");
           resolve();
