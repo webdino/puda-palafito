@@ -58,9 +58,7 @@ export function ModelDownloadProgress({ started, onDownloadDone }: Props) {
     const percent = state.total > 0 ? Math.round((state.loaded / state.total) * 100) : 0;
     return (
       <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl flex flex-col gap-2">
-        <p className="text-sm font-semibold text-amber-800">
-          モデルをダウンロード中... {percent}%
-        </p>
+        <p className="text-sm font-semibold text-amber-800">モデルをダウンロード中... {percent}%</p>
         <div className="h-2 bg-amber-100 rounded-full overflow-hidden">
           <div
             className="h-full bg-amber-400 rounded-full transition-all duration-300"

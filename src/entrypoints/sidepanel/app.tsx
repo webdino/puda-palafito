@@ -1,5 +1,5 @@
-import { Settings } from "lucide-react";
 import { storage } from "@wxt-dev/storage";
+import { Settings } from "lucide-react";
 import { useEffect, useState } from "react";
 import { openOptionsTab } from "@/lib/tabs";
 import { type SavedContentsData, StorageKeys } from "@/storage";

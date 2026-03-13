@@ -12,7 +12,8 @@ function FlagItem({ label, flag }: { label: string; flag: string }) {
         <CopyButton url={flag} />
       </div>
       <p className="text-xs text-slate-500">
-        このフラグを <strong className="text-slate-600">有効（Enabled）</strong> に設定してください。
+        このフラグを <strong className="text-slate-600">有効（Enabled）</strong>{" "}
+        に設定してください。
       </p>
     </li>
   );
@@ -26,16 +27,19 @@ export function SetupGuide({ chromeVersion }: { chromeVersion: number | null }) 
           Chrome ビルトイン AI を有効にする方法
         </h2>
         <p className="text-xs text-slate-500 mt-1">
-          <strong className="text-slate-600">Summarizer API</strong>{" "}
-          は現在 Google Chrome の試験的機能です。以下の手順で有効にしてください。
+          <strong className="text-slate-600">Summarizer API</strong> は現在 Google Chrome
+          の試験的機能です。以下の手順で有効にしてください。
         </p>
       </div>
 
       <ol className="flex flex-col gap-5 px-5 py-4">
         <li className="flex flex-col gap-1">
-          <strong className="text-sm text-slate-700">対応している Chrome バージョンを使用する</strong>
+          <strong className="text-sm text-slate-700">
+            対応している Chrome バージョンを使用する
+          </strong>
           <p className="text-xs text-slate-500">
-            Chrome Dev または Canary（バージョン 133 以降推奨、一部機能はバージョン 138 以降が必要）。
+            Chrome Dev または Canary（バージョン 133 以降推奨、一部機能はバージョン 138
+            以降が必要）。
           </p>
           <p className="text-xs text-slate-500">
             ご利用の Chrome バージョン:{" "}
@@ -55,7 +59,8 @@ export function SetupGuide({ chromeVersion }: { chromeVersion: number | null }) 
       <div className="px-5 py-4 bg-slate-50 border-t border-slate-100">
         <p className="text-xs text-slate-500 leading-relaxed">
           フラグを有効にした後、Chrome がバックグラウンドで Gemini Nano
-          モデルをダウンロードする場合があります。API が完全に利用可能になるまで数分かかることがあります。{" "}
+          モデルをダウンロードする場合があります。API
+          が完全に利用可能になるまで数分かかることがあります。{" "}
           <code className="font-mono bg-slate-200 px-1 py-0.5 rounded text-slate-600">
             chrome://components
           </code>{" "}
