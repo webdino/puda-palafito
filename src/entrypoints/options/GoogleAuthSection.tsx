@@ -99,7 +99,7 @@ export function GoogleAuthSection() {
             fontSize: 13,
           }}
         >
-          <strong>認証エラー:</strong> {errorMsg}
+          <strong>エラー:</strong> {errorMsg}
         </div>
       )}
 
@@ -138,7 +138,7 @@ export function GoogleAuthSection() {
             <p style={{ fontSize: 13, color: "#666", marginTop: 0, marginBottom: 12 }}>
               指定した名前のフォルダをGoogle Drive直下に作成し、その中に保存します。
               <br />
-              未設定の場合はマイドライブ直下にそのまま保存されます。
+              未設定の場合はアップロードが行われません。
             </p>
 
             {savedFolderName ? (
