@@ -42,7 +42,7 @@ export async function uploadJsonToDrive(
   const fileContent = JSON.stringify(jsonData, null, 2);
 
   // 2. multipart/related リクエストボディの作成
-  const boundary = "-------314159265358979323846";
+  const boundary = `-------${crypto.randomUUID().replace(/-/g, "")}`;
   const delimiter = `\r\n--${boundary}\r\n`;
   const closeDelimiter = `\r\n--${boundary}--`;
 
@@ -90,6 +90,13 @@ export async function uploadJsonToDrive(
 }
 
 /**
+ * Drive APIの検索クエリ用に、文字列内のシングルクォート(')とバックスラッシュ(\)をエスケープします。
+ */
+function escapeDriveQueryString(str: string): string {
+  return str.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+}
+
+/**
  * Drive上から指定されたファイル名のファイルIDを検索します。
  */
 async function findFileByName(
@@ -98,9 +105,11 @@ async function findFileByName(
   parentId: string | null = null,
 ): Promise<string | null> {
   try {
-    let query = `name='${fileName}' and trashed=false`;
+    const escapedFileName = escapeDriveQueryString(fileName);
+    let query = `name='${escapedFileName}' and trashed=false`;
     if (parentId) {
-      query += ` and '${parentId}' in parents`;
+      const escapedParentId = escapeDriveQueryString(parentId);
+      query += ` and '${escapedParentId}' in parents`;
     }
     const encodedQuery = encodeURIComponent(query);
     const response = await fetch(`${DRIVE_API_URL}?q=${encodedQuery}&fields=files(id,name)`, {
@@ -131,7 +140,8 @@ async function findFileByName(
  */
 export async function findFolderByName(folderName: string, token: string): Promise<string | null> {
   try {
-    const query = `name='${folderName}' and mimeType='application/vnd.google-apps.folder' and trashed=false`;
+    const escapedFolderName = escapeDriveQueryString(folderName);
+    const query = `name='${escapedFolderName}' and mimeType='application/vnd.google-apps.folder' and trashed=false`;
     const encodedQuery = encodeURIComponent(query);
     const response = await fetch(`${DRIVE_API_URL}?q=${encodedQuery}&fields=files(id,name)`, {
       method: "GET",
