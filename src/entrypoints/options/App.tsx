@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { isSummarizerAvailable } from "@/lib/summarizer/validation";
 import { notifyModelReady } from "@/message/events";
+import { GoogleAuthSection } from "./GoogleAuthSection";
 import { ModelDownloadProgress } from "./ModelDownloadProgress";
 import { SetupGuide } from "./SetupGuide";
 import { StatusBanner } from "./StatusBanner";
@@ -81,6 +82,8 @@ export function App() {
       )}
 
       <SetupGuide chromeVersion={chromeVersion} />
+
+      <GoogleAuthSection />
     </main>
   );
 }
