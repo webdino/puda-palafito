@@ -7,17 +7,18 @@ export function DomainFilter() {
   const [domains, setDomains] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    storage
-      .getItem<string[]>(StorageKeys.domainFilter)
-      .then((saved) => setDomains(saved ?? []));
+    storage.getItem<string[]>(StorageKeys.domainFilter).then((saved) => setDomains(saved ?? []));
   }, []);
 
   async function saveDomains(updated: string[]) {
+    setSaving(true);
     setDomains(updated);
     await storage.setItem(StorageKeys.domainFilter, updated);
+    setSaving(false);
   }
 
   function handleAdd() {
@@ -64,8 +65,8 @@ export function DomainFilter() {
         <p className="text-xs text-slate-500 mt-1">
           記録しないサイトのドメインを指定します。サブドメインも含めてマッチします（例:{" "}
           <code className="font-mono bg-slate-100 px-1 rounded">example.com</code> は{" "}
-          <code className="font-mono bg-slate-100 px-1 rounded">www.example.com</code> にもマッチ）。
-          空の場合はすべてのサイトを記録します。
+          <code className="font-mono bg-slate-100 px-1 rounded">www.example.com</code>{" "}
+          にもマッチ）。 空の場合はすべてのサイトを記録します。
         </p>
       </div>
 
@@ -99,6 +100,7 @@ export function DomainFilter() {
           <button
             type="button"
             onClick={handleAdd}
+            disabled={saving}
             className="flex items-center gap-1.5 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm shrink-0"
           >
             <Plus size={14} />
@@ -122,6 +124,7 @@ export function DomainFilter() {
                 <button
                   type="button"
                   onClick={() => handleDelete(domain)}
+                  disabled={saving}
                   aria-label={`${domain} を削除`}
                   className="flex items-center p-1 rounded text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors"
                 >
