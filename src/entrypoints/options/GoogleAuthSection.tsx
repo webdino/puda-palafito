@@ -58,7 +58,11 @@ export function GoogleAuthSection() {
     setIsSettingFolder(true);
     setErrorMsg(null);
     try {
-      const folderId = await getOrCreateDriveFolder(trimmed);
+      const token = await getGoogleAuthToken(true);
+      if (!token) {
+        throw new Error("認証トークンが取得できませんでした。");
+      }
+      const folderId = await getOrCreateDriveFolder(trimmed, token);
       if (folderId) {
         await storage.setItem(StorageKeys.googleDriveFolderId, folderId);
         await storage.setItem(StorageKeys.googleDriveFolderName, trimmed);

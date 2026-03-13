@@ -39,7 +39,7 @@ export async function uploadJsonToDrive(
     fileMetadata.parents = [parentId];
   }
 
-  const fileContent = JSON.stringify(jsonData, null, 2);
+  const fileContent = JSON.stringify(jsonData);
 
   // 2. multipart/related リクエストボディの作成
   const boundary = `-------${crypto.randomUUID().replace(/-/g, "")}`;
@@ -202,13 +202,10 @@ export async function createDriveFolder(folderName: string, token: string): Prom
 /**
  * 指定した名前のフォルダを検索し、なければ作成してそのIDを返します。
  */
-export async function getOrCreateDriveFolder(folderName: string): Promise<string | null> {
-  const token = await getGoogleAuthToken(false);
-  if (!token) {
-    console.error("No valid auth token to access Drive Folder.");
-    return null;
-  }
-
+export async function getOrCreateDriveFolder(
+  folderName: string,
+  token: string,
+): Promise<string | null> {
   const existingId = await findFolderByName(folderName, token);
   if (existingId) {
     return existingId;
