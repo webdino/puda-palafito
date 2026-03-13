@@ -21,6 +21,7 @@ export default defineConfig({
     version: "0.1.0",
     description: "Chrome-first browser extension scaffold with WXT + React + TypeScript",
     permissions: ["storage", "sidePanel", "tabs", "identity"],
+    host_permissions: ["<all_urls>"],
     action: {},
     ...(process.env.WXT_OAUTH_CLIENT_ID
       ? {
