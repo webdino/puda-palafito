@@ -30,14 +30,24 @@ export function DomainFilter() {
       return;
     }
 
-    // プロトコルが含まれていたら弾く
-    if (trimmed.includes("://")) {
-      setError('プロトコル（"https://" など）は不要です。ホスト名のみ入力してください');
+    // http:// を補って hostname を抽出（パス・ポート・クエリ等を正規化）
+    let hostname: string;
+    try {
+      const urlStr = trimmed.includes("://") ? trimmed : `http://${trimmed}`;
+      hostname = new URL(urlStr).hostname;
+    } catch {
+      setError("有効なドメインを入力してください");
       inputRef.current?.focus();
       return;
     }
 
-    if (domains.includes(trimmed)) {
+    if (!hostname) {
+      setError("有効なドメインを入力してください");
+      inputRef.current?.focus();
+      return;
+    }
+
+    if (domains.includes(hostname)) {
       setError("そのドメインはすでに追加されています");
       inputRef.current?.focus();
       return;
@@ -45,7 +55,7 @@ export function DomainFilter() {
 
     setError(null);
     setInputValue("");
-    saveDomains([...domains, trimmed]);
+    saveDomains([...domains, hostname]);
   }
 
   function handleDelete(domain: string) {
