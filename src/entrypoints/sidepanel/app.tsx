@@ -63,9 +63,7 @@ export function App() {
       <header className="sticky top-0 z-10 px-4 py-3 bg-white/80 backdrop-blur border-b border-slate-200">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <h1 className="text-base font-semibold tracking-tight text-slate-800">
-              Saved Contents
-            </h1>
+            <h1 className="text-base font-semibold tracking-tight text-slate-800">記録ページ</h1>
             <span className="text-xs font-semibold px-2.5 py-1 bg-indigo-100 text-indigo-600 rounded-full">
               {contentsData.length}
             </span>
@@ -137,7 +135,7 @@ export function App() {
         ) : (
           <div className="flex flex-col items-center justify-center flex-1 py-20 gap-2">
             <div className="text-3xl">📭</div>
-            <p className="text-sm text-slate-400">No contents saved yet.</p>
+            <p className="text-sm text-slate-400">まだ記録された要約はありません。</p>
           </div>
         )}
       </main>
