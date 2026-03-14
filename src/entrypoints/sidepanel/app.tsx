@@ -32,9 +32,11 @@ export function App() {
   }
 
   function handleRecordingToggle() {
-    const nextState = !recordingEnabled;
-    setRecordingEnabled(nextState);
-    storage.setItem(StorageKeys.recordingEnabled, nextState);
+    setRecordingEnabled((prev) => {
+      const next = !prev;
+      storage.setItem(StorageKeys.recordingEnabled, next);
+      return next;
+    });
   }
 
   function toggleExpanded(id: string) {
