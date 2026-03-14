@@ -3,13 +3,7 @@ import { createDefaultSummarizer, createMapSummarizer, createReduceSummarizer } 
 import { fitsInQuota } from "./validation";
 
 function combineMapSummarizedText(summarizedChunks: string[]) {
-  const totalSections = summarizedChunks.length;
-  return summarizedChunks
-    .map((content, index) => {
-      // 区切り線とセクション情報を付与（AIの注意をリセットさせる）
-      return `### データセクション [${index + 1}/${totalSections}]\n${content.trim()}`;
-    })
-    .join("\n");
+  return summarizedChunks.join("\n");
 }
 
 const MAX_RECURSION_DEPTH = 5;
@@ -51,23 +45,7 @@ export async function mapReduceSummarize(title: string, text: string, depth = 0)
     console.log(chunk);
   });
 
-  const combinedText = combineMapSummarizedText(summarizedChunks);
-  console.log(`combineText: ${combinedText}`);
-
-  const reduceSummarizer = await createReduceSummarizer(title);
-  try {
-    if (await fitsInQuota(reduceSummarizer, combinedText)) {
-      const result = await reduceSummarizer.summarize(combinedText);
-      console.log(`Map-Reduce result: ${result}`);
-      return result;
-    }
-  } finally {
-    reduceSummarizer.destroy();
-  }
-
-  // 結合後もquotaを超える場合はトーナメント方式で再帰的に要約
-  console.log(`結合テキストがまだ大きいため再帰: combined length: ${combinedText.length}`);
-  return mapReduceSummarize(title, combinedText, depth + 1);
+  return combineMapSummarizedText(summarizedChunks);
 }
 
 export async function summarize(title: string, text: string): Promise<string> {
