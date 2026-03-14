@@ -1,5 +1,5 @@
-function getIconPath(gray: boolean) {
-  return gray
+function getIconPath(isInactive: boolean) {
+  return isInactive
     ? {
         16: `icon-16-gray.png`,
         24: `icon-24-gray.png`,
