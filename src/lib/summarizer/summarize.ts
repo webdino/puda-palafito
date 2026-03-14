@@ -6,13 +6,8 @@ function combineMapSummarizedText(summarizedChunks: string[]) {
   return summarizedChunks.join("\n");
 }
 
-const MAX_RECURSION_DEPTH = 5;
-
-export async function mapSummarizeAndJoin(title: string, text: string, depth = 0): Promise<string> {
-  if (depth >= MAX_RECURSION_DEPTH) {
-    throw new Error(`mapSummarizeAndJoin: 最大再帰深度 (${MAX_RECURSION_DEPTH}) に達しました`);
-  }
-  console.log(`Mapで要約して結合する: text length: ${text.length}, depth: ${depth}`);
+export async function mapSummarizeAndJoin(title: string, text: string): Promise<string> {
+  console.log(`Mapで要約して結合する: text length: ${text.length}`);
 
   const splitter = new RecursiveCharacterTextSplitter({
     chunkSize: 3000,
@@ -65,7 +60,7 @@ export async function summarize(title: string, text: string): Promise<string> {
   try {
     return await mapSummarizeAndJoin(title, text);
   } catch (e) {
-    console.error(`Map-Reduce要約失敗: ${e}`);
+    console.error(`Map-要約失敗: ${e}`);
     return "";
   }
 }
