@@ -98,7 +98,7 @@ export default defineBackground(() => {
     modelReady() {
       updateIconStatus();
     },
-    updateDriveFolderId() {
+    driveFolderIdUpdated() {
       updateIconStatus();
     },
   });
