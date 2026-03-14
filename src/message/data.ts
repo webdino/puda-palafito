@@ -18,9 +18,11 @@ export const ContentToBackgroundMessageKeys = {
 // options/UIからbackground.tsへのメッセージの型定義
 export interface OptionsToBackgroundProtocolMap {
   modelReady: () => void;
+  updateDriveFolderId: () => void;
 }
 type OptionsToBackgroundProtocolKeys = keyof OptionsToBackgroundProtocolMap;
 
 export const OptionsToBackgroundMessageKeys = {
   modelReady: "modelReady",
+  updateDriveFolderId: "updateDriveFolderId",
 } as const satisfies Record<string, OptionsToBackgroundProtocolKeys>;

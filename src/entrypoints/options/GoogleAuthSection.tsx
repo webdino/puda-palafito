@@ -2,6 +2,7 @@ import { storage } from "@wxt-dev/storage";
 import { useEffect, useState } from "react";
 import { checkLoginStatus, getGoogleAuthToken, revokeGoogleAuthToken } from "@/lib/auth/google";
 import { getOrCreateDriveFolder } from "@/lib/drive/api";
+import { notifyUpdateDriveFolderId } from "@/message/events";
 import { StorageKeys } from "@/storage";
 
 export function GoogleAuthSection() {
@@ -68,6 +69,7 @@ export function GoogleAuthSection() {
         await storage.setItem(StorageKeys.googleDriveFolderName, trimmed);
         setSavedFolderName(trimmed);
         setInputFolderName("");
+        notifyUpdateDriveFolderId();
       } else {
         setErrorMsg("フォルダの設定に失敗しました");
       }
@@ -83,6 +85,7 @@ export function GoogleAuthSection() {
     await storage.removeItem(StorageKeys.googleDriveFolderId);
     await storage.removeItem(StorageKeys.googleDriveFolderName);
     setSavedFolderName(null);
+    notifyUpdateDriveFolderId();
   };
 
   return (

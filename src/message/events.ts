@@ -27,8 +27,15 @@ export function notifyModelReady() {
   optionsToBackgroundSender(OptionsToBackgroundMessageKeys.modelReady, undefined);
 }
 
+export function notifyUpdateDriveFolderId() {
+  optionsToBackgroundSender(OptionsToBackgroundMessageKeys.updateDriveFolderId, undefined);
+}
+
 export function registerOptionsToBackgroundListener(callback: OptionsToBackgroundProtocolMap) {
   optionsToBackgroundListener(OptionsToBackgroundMessageKeys.modelReady, () => {
     callback.modelReady();
+  });
+  optionsToBackgroundListener(OptionsToBackgroundMessageKeys.updateDriveFolderId, () => {
+    callback.updateDriveFolderId();
   });
 }

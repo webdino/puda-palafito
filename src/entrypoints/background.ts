@@ -98,6 +98,9 @@ export default defineBackground(() => {
     modelReady() {
       updateIconStatus();
     },
+    updateDriveFolderId() {
+      updateIconStatus();
+    },
   });
 
   // onClicked はモデル未準備時のみ発火 (openPanelOnActionClick: false の場合)
