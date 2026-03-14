@@ -7,21 +7,22 @@ import type { SendMainContentsPayload } from "@/message/data";
 import { sendMainContentsToBackground } from "@/message/events";
 import { StorageKeys } from "@/storage";
 
+// 拡張機能の設定が記録可能な状態かを返す
+async function isRecordingAvailable() {
+  const summarizerAvailable = await isSummarizerAvailable();
+  const recordingEnabled = await storage.getItem<boolean>(StorageKeys.recordingEnabled);
+  const driveFolderId = await storage.getItem<string>(StorageKeys.googleDriveFolderId);
+
+  return summarizerAvailable && recordingEnabled && driveFolderId;
+}
+
 export default defineContentScript({
   matches: ["<all_urls>"],
   main() {
     console.info("Content script loaded:", window.location.href);
 
     registerOnPageVisit(async () => {
-      const summarizerAvailable = await isSummarizerAvailable();
-      // SummarizerAPIが準備できてなければ記録をスキップ
-      if (!summarizerAvailable) {
-        return;
-      }
-
-      const recordingEnabled = await storage.getItem<boolean>(StorageKeys.recordingEnabled);
-      // 記録が無効化されていればスキップ（デフォルトは有効）
-      if (recordingEnabled === false) {
+      if (!isRecordingAvailable()) {
         return;
       }
 
