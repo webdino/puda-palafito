@@ -11,6 +11,7 @@ import { createSavedContentData, type SavedContentsData, StorageKeys } from "../
 // import type { BackgroundToContentMessage, ContentToBackgroundMessage } from '../lib/runtime-bridge';
 
 import { uploadJsonToDrive } from "@/lib/drive/api";
+import { setActiveIcon, setInactiveIcon } from "@/lib/icon";
 
 async function saveContentData(payload: SendMainContentsPayload) {
   const startTime = Date.now();
@@ -71,23 +72,21 @@ export default defineBackground(() => {
       .then((available) => {
         chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: available });
         if (!available) {
-          chrome.action.setBadgeText({ text: "!" });
-          chrome.action.setBadgeBackgroundColor({ color: "#e74c3c" });
+          setInactiveIcon();
         } else {
-          chrome.action.setBadgeText({ text: "" });
+          setActiveIcon();
         }
       })
-      .catch(() => {
+      .catch((e) => {
         chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: false });
-        chrome.action.setBadgeText({ text: "!" });
-        chrome.action.setBadgeBackgroundColor({ color: "#e74c3c" });
+        setInactiveIcon();
       });
   }
 
   // Options画面からモデルDL完了通知を受け取ったらパネル動作とバッジを更新
   registerModelReadyListener(() => {
     chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
-    chrome.action.setBadgeText({ text: "" });
+    setActiveIcon();
   });
 
   // onClicked はモデル未準備時のみ発火 (openPanelOnActionClick: false の場合)
