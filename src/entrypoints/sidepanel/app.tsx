@@ -8,6 +8,7 @@ export function App() {
   const [contentsData, setContentsData] = useState<SavedContentsData>([]);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [recordingEnabled, setRecordingEnabled] = useState(true);
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
 
   function handleCopy(id: string, json: string) {
     navigator.clipboard.writeText(json).then(() => {
@@ -34,6 +35,18 @@ export function App() {
     const nextState = !recordingEnabled;
     setRecordingEnabled(nextState);
     storage.setItem(StorageKeys.recordingEnabled, nextState);
+  }
+
+  function toggleExpanded(id: string) {
+    setExpandedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
   }
 
   useEffect(() => {
@@ -113,11 +126,19 @@ export function App() {
                   </a>
                 </div>
                 {item.text && (
-                  <div className="px-4 py-3 bg-slate-50 border-t border-slate-100">
-                    <p className="text-xs text-slate-600 line-clamp-3 leading-relaxed">
+                  <button
+                    type="button"
+                    onClick={() => toggleExpanded(item.id)}
+                    className="w-full text-left px-4 py-3 bg-slate-50 border-t border-slate-100 hover:bg-slate-100 transition-colors cursor-pointer"
+                  >
+                    <p
+                      className={`text-xs text-slate-600 leading-relaxed whitespace-pre-wrap ${
+                        expandedIds.has(item.id) ? "" : "line-clamp-3"
+                      }`}
+                    >
                       {item.text}
                     </p>
-                  </div>
+                  </button>
                 )}
                 <div className="px-4 py-2 border-t border-slate-100 flex items-center justify-between">
                   <p className="text-[10px] text-slate-400">{dateStr}</p>
