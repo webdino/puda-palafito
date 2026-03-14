@@ -22,7 +22,7 @@ export default defineContentScript({
     console.info("Content script loaded:", window.location.href);
 
     registerOnPageVisit(async () => {
-      if (!isRecordingAvailable()) {
+      if (!(await isRecordingAvailable())) {
         return;
       }
 
