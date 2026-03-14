@@ -70,9 +70,8 @@ async function updateIconStatus() {
     if (isSummarizerSupported()) {
       available = await isSummarizerAvailable();
     }
-    const driveFolderId = (await storage.getItem<string>(StorageKeys.googleDriveFolderId)) ?? false;
 
-    if (available && driveFolderId) {
+    if (available) {
       chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
       setActiveIcon();
     } else {
