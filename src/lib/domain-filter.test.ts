@@ -36,15 +36,11 @@ describe("isAllowedByDomainFilter", () => {
 
   describe("複数ドメイン", () => {
     it("いずれかのドメインに一致するURLを拒否する", () => {
-      expect(
-        isAllowedByDomainFilter("https://foo.com", ["bar.com", "foo.com"]),
-      ).toBe(false);
+      expect(isAllowedByDomainFilter("https://foo.com", ["bar.com", "foo.com"])).toBe(false);
     });
 
     it("どのドメインにも一致しないURLを許可する", () => {
-      expect(
-        isAllowedByDomainFilter("https://other.com", ["bar.com", "foo.com"]),
-      ).toBe(true);
+      expect(isAllowedByDomainFilter("https://other.com", ["bar.com", "foo.com"])).toBe(true);
     });
   });
 
