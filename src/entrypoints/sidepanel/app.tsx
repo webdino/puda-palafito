@@ -158,7 +158,7 @@ export function App() {
         ) : (
           <div className="flex flex-col items-center justify-center flex-1 py-20 gap-2">
             <div className="text-3xl">📭</div>
-            <p className="text-sm text-slate-400">まだ記録された要約はありません。</p>
+            <p className="text-sm text-slate-400">まだ記録されたページはありません。</p>
           </div>
         )}
       </main>
