@@ -3,16 +3,20 @@ import { defineBackground } from "wxt/utils/define-background";
 import { summarize } from "@/lib/summarizer/summarize";
 import { isSummarizerAvailable, isSummarizerSupported } from "@/lib/summarizer/validation";
 import { openOptionsTab } from "@/lib/tabs";
-import type { SendMainContentsPayload } from "@/message/data";
+import type { PageVisitedPayload } from "@/message/data";
 import { defaultDomainFilter } from "../constants";
-import { registerBackgroundListener, registerModelReadyListener } from "../message/events";
+import {
+  registerContentToBackgroundListener,
+  registerOptionsToBackgroundListener,
+} from "../message/events";
 import { createSavedContentData, type SavedContentsData, StorageKeys } from "../storage";
 
 // import type { BackgroundToContentMessage, ContentToBackgroundMessage } from '../lib/runtime-bridge';
 
 import { uploadJsonToDrive } from "@/lib/drive/api";
+import { setActiveIcon, setInactiveIcon } from "@/lib/icon";
 
-async function saveContentData(payload: SendMainContentsPayload) {
+async function saveContentData(payload: PageVisitedPayload) {
   const startTime = Date.now();
   const summarizedText = await summarize(payload.title, payload.text);
   const summarizeTime = Date.now() - startTime;
@@ -41,7 +45,7 @@ async function saveContentData(payload: SendMainContentsPayload) {
 }
 
 async function saveForLocalStorage(
-  payload: SendMainContentsPayload,
+  payload: PageVisitedPayload,
   summarizedText: string,
 ): Promise<SavedContentsData | null> {
   const saveData = createSavedContentData(payload, summarizedText);
@@ -60,34 +64,43 @@ async function saveForLocalStorage(
   return list;
 }
 
+async function updateIconStatus() {
+  try {
+    let available = false;
+    if (isSummarizerSupported()) {
+      available = await isSummarizerAvailable();
+    }
+    const driveFolderId = await storage.getItem<string>(StorageKeys.googleDriveFolderId);
+
+    if (available && !!driveFolderId) {
+      chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
+      setActiveIcon();
+    } else {
+      chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: false });
+      setInactiveIcon();
+    }
+  } catch (_e) {
+    chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: false });
+    setInactiveIcon();
+  }
+}
+
 export default defineBackground(() => {
   console.info("Background service worker loaded.");
 
   // 起動時にモデル準備状態を確認してバッジとパネル動作を初期化
   // openPanelOnActionClick: true  → クリックで直接パネルが開く (onClicked は発火しない)
   // openPanelOnActionClick: false → onClicked が発火 → オプション画面を開く
-  if (isSummarizerSupported()) {
-    isSummarizerAvailable()
-      .then((available) => {
-        chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: available });
-        if (!available) {
-          chrome.action.setBadgeText({ text: "!" });
-          chrome.action.setBadgeBackgroundColor({ color: "#e74c3c" });
-        } else {
-          chrome.action.setBadgeText({ text: "" });
-        }
-      })
-      .catch(() => {
-        chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: false });
-        chrome.action.setBadgeText({ text: "!" });
-        chrome.action.setBadgeBackgroundColor({ color: "#e74c3c" });
-      });
-  }
+  updateIconStatus();
 
   // Options画面からモデルDL完了通知を受け取ったらパネル動作とバッジを更新
-  registerModelReadyListener(() => {
-    chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
-    chrome.action.setBadgeText({ text: "" });
+  registerOptionsToBackgroundListener({
+    modelReady() {
+      updateIconStatus();
+    },
+    driveFolderIdUpdated() {
+      updateIconStatus();
+    },
   });
 
   // onClicked はモデル未準備時のみ発火 (openPanelOnActionClick: false の場合)
@@ -103,9 +116,9 @@ export default defineBackground(() => {
     }
   });
 
-  registerBackgroundListener({
-    mainContents(payload) {
-      console.info("Received main contents from content script:", payload.title);
+  registerContentToBackgroundListener({
+    pageVisited(payload) {
+      console.info("Received page visit from content script:", payload.title);
       saveContentData(payload).catch((e) => {
         console.log(e);
       });

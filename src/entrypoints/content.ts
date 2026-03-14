@@ -3,9 +3,18 @@ import { defineContentScript } from "wxt/utils/define-content-script";
 import { isAllowedByDomainFilter } from "@/lib/domain-filter";
 import { registerOnPageVisit } from "@/lib/page-visit-detection";
 import { isSummarizerAvailable } from "@/lib/summarizer/validation";
-import type { SendMainContentsPayload } from "@/message/data";
-import { sendMainContentsToBackground } from "@/message/events";
+import type { PageVisitedPayload } from "@/message/data";
+import { sendPageVisited } from "@/message/events";
 import { StorageKeys } from "@/storage";
+
+// 拡張機能の設定が記録可能な状態かを返す
+async function isRecordingAvailable() {
+  const summarizerAvailable = await isSummarizerAvailable();
+  const recordingEnabled = await storage.getItem<boolean>(StorageKeys.recordingEnabled);
+  const driveFolderId = await storage.getItem<string>(StorageKeys.googleDriveFolderId);
+
+  return summarizerAvailable && recordingEnabled && !!driveFolderId;
+}
 
 export default defineContentScript({
   matches: ["<all_urls>"],
@@ -13,15 +22,7 @@ export default defineContentScript({
     console.info("Content script loaded:", window.location.href);
 
     registerOnPageVisit(async () => {
-      const summarizerAvailable = await isSummarizerAvailable();
-      // SummarizerAPIが準備できてなければ記録をスキップ
-      if (!summarizerAvailable) {
-        return;
-      }
-
-      const recordingEnabled = await storage.getItem<boolean>(StorageKeys.recordingEnabled);
-      // 記録が無効化されていればスキップ（デフォルトは有効）
-      if (recordingEnabled === false) {
+      if (!(await isRecordingAvailable())) {
         return;
       }
 
@@ -33,14 +34,14 @@ export default defineContentScript({
 
       const title = document.title;
       const renderedText = document.body.innerText;
-      const mainContent: SendMainContentsPayload = {
+      const mainContent: PageVisitedPayload = {
         title: title ?? "",
         url: window.location.href,
         text: renderedText,
         createdAt: Date.now(),
       };
 
-      sendMainContentsToBackground(mainContent);
+      sendPageVisited(mainContent);
     });
   },
 });

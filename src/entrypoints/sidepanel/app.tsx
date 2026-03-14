@@ -1,5 +1,5 @@
 import { storage } from "@wxt-dev/storage";
-import { Settings } from "lucide-react";
+import { Circle, Pause, Settings } from "lucide-react";
 import { useEffect, useState } from "react";
 import { openOptionsTab } from "@/lib/tabs";
 import { type SavedContentsData, StorageKeys } from "@/storage";
@@ -8,6 +8,7 @@ export function App() {
   const [contentsData, setContentsData] = useState<SavedContentsData>([]);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [recordingEnabled, setRecordingEnabled] = useState(true);
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
 
   function handleCopy(id: string, json: string) {
     navigator.clipboard.writeText(json).then(() => {
@@ -30,10 +31,24 @@ export function App() {
     setTimeout(() => URL.revokeObjectURL(url), 0);
   }
 
-  function handleRecordingToggle(e: React.ChangeEvent<HTMLInputElement>) {
-    const checked = e.target.checked;
-    setRecordingEnabled(checked);
-    storage.setItem(StorageKeys.recordingEnabled, checked);
+  function handleRecordingToggle() {
+    setRecordingEnabled((prev) => {
+      const next = !prev;
+      storage.setItem(StorageKeys.recordingEnabled, next);
+      return next;
+    });
+  }
+
+  function toggleExpanded(id: string) {
+    setExpandedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
   }
 
   useEffect(() => {
@@ -63,9 +78,7 @@ export function App() {
       <header className="sticky top-0 z-10 px-4 py-3 bg-white/80 backdrop-blur border-b border-slate-200">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <h1 className="text-base font-semibold tracking-tight text-slate-800">
-              Saved Contents
-            </h1>
+            <h1 className="text-base font-semibold tracking-tight text-slate-800">記録ページ</h1>
             <span className="text-xs font-semibold px-2.5 py-1 bg-indigo-100 text-indigo-600 rounded-full">
               {contentsData.length}
             </span>
@@ -115,11 +128,19 @@ export function App() {
                   </a>
                 </div>
                 {item.text && (
-                  <div className="px-4 py-3 bg-slate-50 border-t border-slate-100">
-                    <p className="text-xs text-slate-600 line-clamp-3 leading-relaxed">
+                  <button
+                    type="button"
+                    onClick={() => toggleExpanded(item.id)}
+                    className="w-full text-left px-4 py-3 bg-slate-50 border-t border-slate-100 hover:bg-slate-100 transition-colors cursor-pointer"
+                  >
+                    <p
+                      className={`text-xs text-slate-600 leading-relaxed whitespace-pre-wrap ${
+                        expandedIds.has(item.id) ? "" : "line-clamp-3"
+                      }`}
+                    >
                       {item.text}
                     </p>
-                  </div>
+                  </button>
                 )}
                 <div className="px-4 py-2 border-t border-slate-100 flex items-center justify-between">
                   <p className="text-[10px] text-slate-400">{dateStr}</p>
@@ -137,21 +158,32 @@ export function App() {
         ) : (
           <div className="flex flex-col items-center justify-center flex-1 py-20 gap-2">
             <div className="text-3xl">📭</div>
-            <p className="text-sm text-slate-400">No contents saved yet.</p>
+            <p className="text-sm text-slate-400">まだ記録されたページはありません。</p>
           </div>
         )}
       </main>
 
       <footer className="sticky bottom-0 px-4 py-3 bg-white/80 backdrop-blur border-t border-slate-200 flex items-center justify-between">
-        <label className="flex items-center gap-2 text-xs text-slate-600 cursor-pointer select-none">
-          <input
-            type="checkbox"
-            checked={recordingEnabled}
-            onChange={handleRecordingToggle}
-            className="w-3.5 h-3.5 accent-indigo-500"
-          />
-          記録を有効にする
-        </label>
+        <button
+          type="button"
+          onClick={handleRecordingToggle}
+          title={
+            recordingEnabled ? "記録中 (クリックで一時停止)" : "一時停止中 (クリックで記録再開)"
+          }
+          aria-label={
+            recordingEnabled ? "記録中（クリックで一時停止）" : "一時停止中（クリックで記録再開）"
+          }
+          aria-pressed={recordingEnabled}
+          className={`p-1.5 rounded-lg transition-colors ${
+            recordingEnabled ? "text-red-500 hover:bg-red-50" : "text-slate-400 hover:bg-slate-100"
+          }`}
+        >
+          {recordingEnabled ? (
+            <Circle size={16} className="fill-current animate-pulse" />
+          ) : (
+            <Pause size={16} className="fill-current" />
+          )}
+        </button>
         <button
           type="button"
           onClick={() => openOptionsTab()}

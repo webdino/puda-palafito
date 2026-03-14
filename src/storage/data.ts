@@ -1,11 +1,11 @@
-import type { SendMainContentsPayload } from "@/message/data";
+import type { PageVisitedPayload } from "@/message/data";
 
-export type SavedContentData = SendMainContentsPayload & {
+export type SavedContentData = PageVisitedPayload & {
   id: string;
 };
 
 export function createSavedContentData(
-  payload: SendMainContentsPayload,
+  payload: PageVisitedPayload,
   summarizedText: string,
 ): SavedContentData {
   return {
