@@ -13,7 +13,7 @@ async function isRecordingAvailable() {
   const recordingEnabled = await storage.getItem<boolean>(StorageKeys.recordingEnabled);
   const driveFolderId = await storage.getItem<string>(StorageKeys.googleDriveFolderId);
 
-  return summarizerAvailable && recordingEnabled && driveFolderId;
+  return summarizerAvailable && recordingEnabled && !!driveFolderId;
 }
 
 export default defineContentScript({
