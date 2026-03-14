@@ -61,32 +61,38 @@ async function saveForLocalStorage(
   return list;
 }
 
+async function updateIconStatus() {
+  try {
+    let available = false;
+    if (isSummarizerSupported()) {
+      available = await isSummarizerAvailable();
+    }
+    const driveFolderId = (await storage.getItem<string>(StorageKeys.googleDriveFolderId)) ?? false;
+
+    if (available && driveFolderId) {
+      chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
+      setActiveIcon();
+    } else {
+      chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: false });
+      setInactiveIcon();
+    }
+  } catch (_e) {
+    chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: false });
+    setInactiveIcon();
+  }
+}
+
 export default defineBackground(() => {
   console.info("Background service worker loaded.");
 
   // 起動時にモデル準備状態を確認してバッジとパネル動作を初期化
   // openPanelOnActionClick: true  → クリックで直接パネルが開く (onClicked は発火しない)
   // openPanelOnActionClick: false → onClicked が発火 → オプション画面を開く
-  if (isSummarizerSupported()) {
-    isSummarizerAvailable()
-      .then((available) => {
-        chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: available });
-        if (!available) {
-          setInactiveIcon();
-        } else {
-          setActiveIcon();
-        }
-      })
-      .catch((e) => {
-        chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: false });
-        setInactiveIcon();
-      });
-  }
+  updateIconStatus();
 
   // Options画面からモデルDL完了通知を受け取ったらパネル動作とバッジを更新
   registerModelReadyListener(() => {
-    chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
-    setActiveIcon();
+    updateIconStatus();
   });
 
   // onClicked はモデル未準備時のみ発火 (openPanelOnActionClick: false の場合)
