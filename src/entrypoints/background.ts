@@ -4,6 +4,7 @@ import { summarize } from "@/lib/summarizer/summarize";
 import { isSummarizerAvailable, isSummarizerSupported } from "@/lib/summarizer/validation";
 import { openOptionsTab } from "@/lib/tabs";
 import type { SendMainContentsPayload } from "@/message/data";
+import { defaultDomainFilter } from "../constants";
 import { registerBackgroundListener, registerModelReadyListener } from "../message/events";
 import { createSavedContentData, type SavedContentsData, StorageKeys } from "../storage";
 
@@ -94,8 +95,12 @@ export default defineBackground(() => {
     openOptionsTab();
   });
 
-  chrome.runtime.onInstalled.addListener((details: chrome.runtime.InstalledDetails) => {
+  chrome.runtime.onInstalled.addListener(async (details: chrome.runtime.InstalledDetails) => {
     console.info("Extension installed/updated:", details.reason);
+    const existing = await storage.getItem<string[]>(StorageKeys.domainFilter);
+    if (existing === null) {
+      await storage.setItem(StorageKeys.domainFilter, defaultDomainFilter);
+    }
   });
 
   registerBackgroundListener({

@@ -6,3 +6,12 @@ export const constants = {
     `タイトル「${title}」の各セクションから抽出された重要項目のリストです。情報を一切削らず、全ての項目を保持したまま、重複だけを整理して箇条書きで出力してください。要約して短くしてはいけません。`,
   optionPagePath: "options.html",
 } as const;
+
+export const defaultDomainFilter = [
+  "x.com",
+  "youtube.com",
+  "facebook.com",
+  "instagram.com",
+  "linkedin.com",
+  "tiktok.com",
+];

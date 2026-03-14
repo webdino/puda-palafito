@@ -12,17 +12,11 @@ export function CopyButton({ url }: { url: string }) {
     <button
       type="button"
       onClick={handleCopy}
-      style={{
-        marginLeft: 8,
-        padding: "2px 10px",
-        fontSize: 12,
-        cursor: "pointer",
-        borderRadius: 4,
-        border: "1px solid #aaa",
-        backgroundColor: copied ? "#c3e6cb" : "#fff",
-        color: copied ? "#155724" : "#333",
-        transition: "background-color 0.2s",
-      }}
+      className={`shrink-0 px-2 py-0.5 text-xs rounded transition-colors border ${
+        copied
+          ? "bg-emerald-100 border-emerald-300 text-emerald-700"
+          : "bg-white border-slate-300 text-slate-500 hover:bg-slate-50"
+      }`}
     >
       {copied ? "✅ コピー済み" : "コピー"}
     </button>

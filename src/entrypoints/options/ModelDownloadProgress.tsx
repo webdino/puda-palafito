@@ -57,34 +57,12 @@ export function ModelDownloadProgress({ started, onDownloadDone }: Props) {
   if (state.status === "downloading") {
     const percent = state.total > 0 ? Math.round((state.loaded / state.total) * 100) : 0;
     return (
-      <div
-        style={{
-          padding: 16,
-          backgroundColor: "#fff3cd",
-          color: "#856404",
-          borderRadius: 8,
-          marginBottom: 24,
-        }}
-      >
-        <p style={{ margin: "0 0 8px 0", fontWeight: "bold" }}>
-          モデルをダウンロード中... {percent}%
-        </p>
-        <div
-          style={{
-            height: 8,
-            backgroundColor: "#fde8a4",
-            borderRadius: 4,
-            overflow: "hidden",
-          }}
-        >
+      <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl flex flex-col gap-2">
+        <p className="text-sm font-semibold text-amber-800">モデルをダウンロード中... {percent}%</p>
+        <div className="h-2 bg-amber-100 rounded-full overflow-hidden">
           <div
-            style={{
-              height: "100%",
-              width: `${percent}%`,
-              backgroundColor: "#f5a623",
-              borderRadius: 4,
-              transition: "width 0.3s ease",
-            }}
+            className="h-full bg-amber-400 rounded-full transition-all duration-300"
+            style={{ width: `${percent}%` }}
           />
         </div>
       </div>
@@ -93,32 +71,17 @@ export function ModelDownloadProgress({ started, onDownloadDone }: Props) {
 
   if (state.status === "done") {
     return (
-      <div
-        style={{
-          padding: 16,
-          backgroundColor: "#d4edda",
-          color: "#155724",
-          borderRadius: 8,
-          marginBottom: 24,
-        }}
-      >
-        <p style={{ margin: 0, fontWeight: "bold" }}>✅ モデルのダウンロードが完了しました</p>
+      <div className="flex items-center gap-2 p-4 bg-emerald-50 border border-emerald-200 rounded-xl">
+        <span>✅</span>
+        <p className="text-sm font-semibold text-emerald-800">モデルのダウンロードが完了しました</p>
       </div>
     );
   }
 
   return (
-    <div
-      style={{
-        padding: 16,
-        backgroundColor: "#f8d7da",
-        color: "#721c24",
-        borderRadius: 8,
-        marginBottom: 24,
-      }}
-    >
-      <p style={{ margin: 0, fontWeight: "bold" }}>モデルの読み込みに失敗しました</p>
-      <p style={{ margin: "4px 0 0 0", fontSize: 13, fontFamily: "monospace" }}>{state.message}</p>
+    <div className="p-4 bg-red-50 border border-red-200 rounded-xl flex flex-col gap-1">
+      <p className="text-sm font-semibold text-red-800">モデルの読み込みに失敗しました</p>
+      <p className="text-xs font-mono text-red-700">{state.message}</p>
     </div>
   );
 }

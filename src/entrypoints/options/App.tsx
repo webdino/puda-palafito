@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { isSummarizerAvailable } from "@/lib/summarizer/validation";
 import { notifyModelReady } from "@/message/events";
+import { DomainFilter } from "./DomainFilter";
 import { GoogleAuthSection } from "./GoogleAuthSection";
 import { ModelDownloadProgress } from "./ModelDownloadProgress";
 import { SetupGuide } from "./SetupGuide";
@@ -11,10 +12,48 @@ function getChromeVersion(): number | null {
   return match ? parseInt(match[1], 10) : null;
 }
 
+type SetupPanelProps = {
+  isAvailable: boolean | null;
+  errorDetails: string | null;
+  chromeVersion: number | null;
+  onDownloadDone: () => void;
+};
+
+function SetupPanel({ isAvailable, errorDetails, chromeVersion, onDownloadDone }: SetupPanelProps) {
+  const [downloadStarted, setDownloadStarted] = useState(false);
+
+  return (
+    <div className="flex flex-col gap-6">
+      <div className="text-sm text-slate-500">
+        ご利用の Chrome バージョン:{" "}
+        <strong className="text-slate-700">{chromeVersion ?? "不明"}</strong>
+      </div>
+
+      <StatusBanner isAvailable={isAvailable} errorDetails={errorDetails} />
+
+      {isAvailable === false && (
+        <div className="flex flex-col gap-4">
+          <ModelDownloadProgress started={downloadStarted} onDownloadDone={onDownloadDone} />
+          {!downloadStarted && (
+            <button
+              type="button"
+              onClick={() => setDownloadStarted(true)}
+              className="self-start flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm"
+            >
+              モデルをダウンロードする
+            </button>
+          )}
+        </div>
+      )}
+
+      <SetupGuide chromeVersion={chromeVersion} />
+    </div>
+  );
+}
+
 export function App() {
   const [isAvailable, setIsAvailable] = useState<boolean | null>(null);
   const [errorDetails, setErrorDetails] = useState<string | null>(null);
-  const [downloadStarted, setDownloadStarted] = useState(false);
   const chromeVersion = getChromeVersion();
 
   useEffect(() => {
@@ -32,58 +71,33 @@ export function App() {
   }, []);
 
   return (
-    <main style={{ padding: 24, fontFamily: "system-ui, sans-serif", lineHeight: 1.5 }}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "baseline",
-          marginBottom: 16,
-        }}
-      >
-        <h1 style={{ fontSize: 24, margin: 0 }}>Puda Palafito 設定</h1>
-        <div style={{ fontSize: 14, color: "#666" }}>
-          ご利用の Chrome バージョン: <strong>{chromeVersion ?? "不明"}</strong>
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100">
+      <header className="sticky top-0 z-10 bg-white/80 backdrop-blur border-b border-slate-200">
+        <div className="max-w-2xl mx-auto px-6 py-4">
+          <h1 className="text-xl font-semibold tracking-tight text-slate-800">
+            Puda Palafito 設定
+          </h1>
         </div>
-      </div>
+      </header>
 
-      <StatusBanner isAvailable={isAvailable} errorDetails={errorDetails} />
-
-      {isAvailable === false && (
-        <>
-          <ModelDownloadProgress
-            started={downloadStarted}
+      <main className="max-w-2xl mx-auto px-6 py-8">
+        {isAvailable === true ? (
+          <div>
+            <DomainFilter />
+            <GoogleAuthSection />
+          </div>
+        ) : (
+          <SetupPanel
+            isAvailable={isAvailable}
+            errorDetails={errorDetails}
+            chromeVersion={chromeVersion}
             onDownloadDone={() => {
               setIsAvailable(true);
               notifyModelReady();
             }}
           />
-          {!downloadStarted && (
-            <button
-              type="button"
-              onClick={() => setDownloadStarted(true)}
-              style={{
-                display: "block",
-                marginBottom: 24,
-                padding: "10px 20px",
-                fontSize: 14,
-                fontWeight: "bold",
-                cursor: "pointer",
-                borderRadius: 6,
-                border: "none",
-                backgroundColor: "#0d6efd",
-                color: "#fff",
-              }}
-            >
-              モデルをダウンロードする
-            </button>
-          )}
-        </>
-      )}
-
-      <SetupGuide chromeVersion={chromeVersion} />
-
-      <GoogleAuthSection />
-    </main>
+        )}
+      </main>
+    </div>
   );
 }

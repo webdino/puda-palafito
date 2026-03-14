@@ -21,6 +21,7 @@ export async function openOptionsTab() {
   const tabs = await getOpenedOptionsTab();
   if (tabs.length > 0) {
     openTab(tabs[0]);
+    return;
   }
   createOptionsTab().catch((e) => {
     console.log(e);
