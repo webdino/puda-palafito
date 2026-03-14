@@ -1,5 +1,5 @@
 import { storage } from "@wxt-dev/storage";
-import { Settings } from "lucide-react";
+import { Circle, Pause, Settings } from "lucide-react";
 import { useEffect, useState } from "react";
 import { openOptionsTab } from "@/lib/tabs";
 import { type SavedContentsData, StorageKeys } from "@/storage";
@@ -30,10 +30,10 @@ export function App() {
     setTimeout(() => URL.revokeObjectURL(url), 0);
   }
 
-  function handleRecordingToggle(e: React.ChangeEvent<HTMLInputElement>) {
-    const checked = e.target.checked;
-    setRecordingEnabled(checked);
-    storage.setItem(StorageKeys.recordingEnabled, checked);
+  function handleRecordingToggle() {
+    const nextState = !recordingEnabled;
+    setRecordingEnabled(nextState);
+    storage.setItem(StorageKeys.recordingEnabled, nextState);
   }
 
   useEffect(() => {
@@ -143,15 +143,23 @@ export function App() {
       </main>
 
       <footer className="sticky bottom-0 px-4 py-3 bg-white/80 backdrop-blur border-t border-slate-200 flex items-center justify-between">
-        <label className="flex items-center gap-2 text-xs text-slate-600 cursor-pointer select-none">
-          <input
-            type="checkbox"
-            checked={recordingEnabled}
-            onChange={handleRecordingToggle}
-            className="w-3.5 h-3.5 accent-indigo-500"
-          />
-          記録を有効にする
-        </label>
+        <button
+          type="button"
+          onClick={handleRecordingToggle}
+          title={
+            recordingEnabled ? "記録中 (クリックで一時停止)" : "一時停止中 (クリックで記録再開)"
+          }
+          aria-label={"記録を切り替える"}
+          className={`p-1.5 rounded-lg transition-colors ${
+            recordingEnabled ? "text-red-500 hover:bg-red-50" : "text-slate-400 hover:bg-slate-100"
+          }`}
+        >
+          {recordingEnabled ? (
+            <Circle size={16} className="fill-current animate-pulse" />
+          ) : (
+            <Pause size={16} className="fill-current" />
+          )}
+        </button>
         <button
           type="button"
           onClick={() => openOptionsTab()}
