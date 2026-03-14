@@ -168,7 +168,10 @@ export function App() {
           title={
             recordingEnabled ? "記録中 (クリックで一時停止)" : "一時停止中 (クリックで記録再開)"
           }
-          aria-label={"記録を切り替える"}
+          aria-label={
+            recordingEnabled ? "記録中（クリックで一時停止）" : "一時停止中（クリックで記録再開）"
+          }
+          aria-pressed={recordingEnabled}
           className={`p-1.5 rounded-lg transition-colors ${
             recordingEnabled ? "text-red-500 hover:bg-red-50" : "text-slate-400 hover:bg-slate-100"
           }`}
