@@ -10,8 +10,10 @@ import { StorageKeys } from "@/storage";
 // 拡張機能の設定が記録可能な状態かを返す
 async function isRecordingAvailable() {
   const summarizerAvailable = await isSummarizerAvailable();
-  const recordingEnabled = (await storage.getItem<boolean>(StorageKeys.recordingEnabled)) ?? true;
-  return summarizerAvailable && recordingEnabled;
+  const recordingEnabled = await storage.getItem<boolean>(StorageKeys.recordingEnabled);
+  const driveFolderId = await storage.getItem<string>(StorageKeys.googleDriveFolderId);
+
+  return summarizerAvailable && recordingEnabled && driveFolderId;
 }
 
 export default defineContentScript({
@@ -20,7 +22,7 @@ export default defineContentScript({
     console.info("Content script loaded:", window.location.href);
 
     registerOnPageVisit(async () => {
-      if (!(await isRecordingAvailable())) {
+      if (!isRecordingAvailable()) {
         return;
       }
 
