@@ -4,31 +4,31 @@ import {
   type ContentToBackgroundProtocolMap,
   OptionsToBackgroundMessageKeys,
   type OptionsToBackgroundProtocolMap,
-  type SendMainContentsPayload,
+  type PageVisitedPayload,
 } from "./data";
 
-const { sendMessage: backgroundSender, onMessage: backgroundListener } =
+const { sendMessage: contentToBackgroundSender, onMessage: contentToBackgroundListener } =
   defineExtensionMessaging<ContentToBackgroundProtocolMap>();
 
-const { sendMessage: optionsSender, onMessage: optionsListener } =
+const { sendMessage: optionsToBackgroundSender, onMessage: optionsToBackgroundListener } =
   defineExtensionMessaging<OptionsToBackgroundProtocolMap>();
 
-export function sendMainContentsToBackground(payload: SendMainContentsPayload) {
-  backgroundSender(ContentToBackgroundMessageKeys.mainContents, payload);
+export function sendPageVisited(payload: PageVisitedPayload) {
+  contentToBackgroundSender(ContentToBackgroundMessageKeys.pageVisited, payload);
 }
 
-export function registerBackgroundListener(callback: ContentToBackgroundProtocolMap) {
-  backgroundListener(ContentToBackgroundMessageKeys.mainContents, ({ data }) => {
-    callback.mainContents(data);
+export function registerContentToBackgroundListener(callback: ContentToBackgroundProtocolMap) {
+  contentToBackgroundListener(ContentToBackgroundMessageKeys.pageVisited, ({ data }) => {
+    callback.pageVisited(data);
   });
 }
 
 export function notifyModelReady() {
-  optionsSender(OptionsToBackgroundMessageKeys.modelReady, undefined);
+  optionsToBackgroundSender(OptionsToBackgroundMessageKeys.modelReady, undefined);
 }
 
-export function registerModelReadyListener(callback: () => void) {
-  optionsListener(OptionsToBackgroundMessageKeys.modelReady, () => {
-    callback();
+export function registerOptionsToBackgroundListener(callback: OptionsToBackgroundProtocolMap) {
+  optionsToBackgroundListener(OptionsToBackgroundMessageKeys.modelReady, () => {
+    callback.modelReady();
   });
 }

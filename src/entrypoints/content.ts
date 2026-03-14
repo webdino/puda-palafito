@@ -3,8 +3,8 @@ import { defineContentScript } from "wxt/utils/define-content-script";
 import { isAllowedByDomainFilter } from "@/lib/domain-filter";
 import { registerOnPageVisit } from "@/lib/page-visit-detection";
 import { isSummarizerAvailable } from "@/lib/summarizer/validation";
-import type { SendMainContentsPayload } from "@/message/data";
-import { sendMainContentsToBackground } from "@/message/events";
+import type { PageVisitedPayload } from "@/message/data";
+import { sendPageVisited } from "@/message/events";
 import { StorageKeys } from "@/storage";
 
 // 拡張機能の設定が記録可能な状態かを返す
@@ -34,14 +34,14 @@ export default defineContentScript({
 
       const title = document.title;
       const renderedText = document.body.innerText;
-      const mainContent: SendMainContentsPayload = {
+      const mainContent: PageVisitedPayload = {
         title: title ?? "",
         url: window.location.href,
         text: renderedText,
         createdAt: Date.now(),
       };
 
-      sendMainContentsToBackground(mainContent);
+      sendPageVisited(mainContent);
     });
   },
 });
