@@ -20,6 +20,7 @@ export default defineConfig({
     name: "Puda Palafito",
     version: "0.1.0",
     description: "Chrome-first browser extension scaffold with WXT + React + TypeScript",
+    ...(process.env.WXT_EXTENSION_KEY ? { key: process.env.WXT_EXTENSION_KEY } : {}),
     permissions: ["storage", "sidePanel", "tabs", "identity"],
     host_permissions: ["<all_urls>"],
     action: {},
