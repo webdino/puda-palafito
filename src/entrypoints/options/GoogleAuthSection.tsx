@@ -93,7 +93,7 @@ export function GoogleAuthSection() {
       <div className="px-5 py-4 border-b border-slate-100">
         <h2 className="text-base font-semibold text-slate-800">Google Drive 連携</h2>
         <p className="text-xs text-slate-500 mt-1">
-          要約した履歴を自分のGoogle Driveに自動バックアップするために連携してください。
+          要約した履歴を自分のGoogle Driveに自動アップロードするために連携してください。
         </p>
       </div>
 
