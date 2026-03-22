@@ -20,6 +20,7 @@ export interface OptionsToBackgroundProtocolMap {
   modelReady: () => void;
   driveFolderIdUpdated: () => void;
   deleteItem: (id: string) => void;
+  deleteAllItems: () => void;
 }
 type OptionsToBackgroundProtocolKeys = keyof OptionsToBackgroundProtocolMap;
 
@@ -27,4 +28,5 @@ export const OptionsToBackgroundMessageKeys = {
   modelReady: "modelReady",
   driveFolderIdUpdated: "driveFolderIdUpdated",
   deleteItem: "deleteItem",
+  deleteAllItems: "deleteAllItems",
 } as const satisfies Record<string, OptionsToBackgroundProtocolKeys>;

@@ -95,6 +95,11 @@ async function deleteItem(id: string) {
   // TODO: Google Drive上のファイルも削除する
 }
 
+async function deleteAllItems() {
+  await storage.setItem(StorageKeys.savedContentsDataKey, []);
+  // TODO: Google Drive上のファイルも削除する
+}
+
 export default defineBackground(() => {
   console.info("Background service worker loaded.");
 
@@ -113,6 +118,9 @@ export default defineBackground(() => {
     },
     deleteItem(id) {
       deleteItem(id);
+    },
+    deleteAllItems() {
+      deleteAllItems();
     },
   });
 

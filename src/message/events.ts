@@ -35,6 +35,10 @@ export function notifyDeleteItem(id: string) {
   optionsToBackgroundSender(OptionsToBackgroundMessageKeys.deleteItem, id);
 }
 
+export function notifyDeleteAllItems() {
+  optionsToBackgroundSender(OptionsToBackgroundMessageKeys.deleteAllItems, undefined);
+}
+
 export function registerOptionsToBackgroundListener(callback: OptionsToBackgroundProtocolMap) {
   optionsToBackgroundListener(OptionsToBackgroundMessageKeys.modelReady, () => {
     callback?.modelReady();
@@ -44,5 +48,8 @@ export function registerOptionsToBackgroundListener(callback: OptionsToBackgroun
   });
   optionsToBackgroundListener(OptionsToBackgroundMessageKeys.deleteItem, ({ data }) => {
     callback?.deleteItem(data);
+  });
+  optionsToBackgroundListener(OptionsToBackgroundMessageKeys.deleteAllItems, () => {
+    callback?.deleteAllItems();
   });
 }

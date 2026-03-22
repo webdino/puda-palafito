@@ -2,7 +2,7 @@ import { storage } from "@wxt-dev/storage";
 import { Circle, Pause, Settings } from "lucide-react";
 import { useEffect, useState } from "react";
 import { openOptionsTab } from "@/lib/tabs";
-import { notifyDeleteItem } from "@/message/events";
+import { notifyDeleteAllItems, notifyDeleteItem } from "@/message/events";
 import { type SavedContentsData, StorageKeys } from "@/storage";
 import { ContentCard } from "./ContentCard";
 
@@ -35,6 +35,11 @@ export function App() {
 
   function handleDelete(id: string) {
     notifyDeleteItem(id);
+  }
+
+  function handleDeleteAll() {
+    if (!window.confirm("すべての記録を削除しますか？この操作は元に戻せません。")) return;
+    notifyDeleteAllItems();
   }
 
   function handleRecordingToggle() {
@@ -98,6 +103,15 @@ export function App() {
             >
               <span>📥</span>
               Export All
+            </button>
+            <button
+              type="button"
+              onClick={handleDeleteAll}
+              disabled={contentsData.length === 0}
+              className="text-xs font-medium px-3 py-1.5 bg-white border border-red-200 text-red-500 rounded-lg hover:bg-red-50 hover:border-red-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm flex items-center gap-1.5"
+            >
+              <span>🗑️</span>
+              全削除
             </button>
           </div>
         </div>
