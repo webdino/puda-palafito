@@ -86,6 +86,15 @@ async function updateIconStatus() {
   }
 }
 
+async function deleteItem(id: string) {
+  const item = await storage.getItem<SavedContentsData>(StorageKeys.savedContentsDataKey);
+  const list: SavedContentsData = item ?? [];
+  const filteredList = list.filter((item) => item.id !== id);
+  await storage.setItem(StorageKeys.savedContentsDataKey, filteredList);
+
+  // TODO: Google Drive上のファイルも削除する
+}
+
 export default defineBackground(() => {
   console.info("Background service worker loaded.");
 
@@ -101,6 +110,9 @@ export default defineBackground(() => {
     },
     driveFolderIdUpdated() {
       updateIconStatus();
+    },
+    deleteItem(id) {
+      deleteItem(id);
     },
   });
 

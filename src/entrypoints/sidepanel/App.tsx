@@ -2,6 +2,7 @@ import { storage } from "@wxt-dev/storage";
 import { Circle, Pause, Settings } from "lucide-react";
 import { useEffect, useState } from "react";
 import { openOptionsTab } from "@/lib/tabs";
+import { notifyDeleteItem } from "@/message/events";
 import { type SavedContentsData, StorageKeys } from "@/storage";
 import { ContentCard } from "./ContentCard";
 
@@ -30,6 +31,10 @@ export function App() {
     a.click();
     document.body.removeChild(a);
     setTimeout(() => URL.revokeObjectURL(url), 0);
+  }
+
+  function handleDelete(id: string) {
+    notifyDeleteItem(id);
   }
 
   function handleRecordingToggle() {
@@ -108,6 +113,7 @@ export function App() {
               expandedIds={expandedIds}
               onCopy={handleCopy}
               onToggleExpanded={toggleExpanded}
+              onDelete={handleDelete}
             />
           ))
         ) : (

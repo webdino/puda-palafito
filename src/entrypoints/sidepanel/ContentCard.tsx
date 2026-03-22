@@ -6,9 +6,17 @@ type Props = {
   expandedIds: Set<string>;
   onCopy: (id: string, json: string) => void;
   onToggleExpanded: (id: string) => void;
+  onDelete: (id: string) => void;
 };
 
-export function ContentCard({ item, copiedId, expandedIds, onCopy, onToggleExpanded }: Props) {
+export function ContentCard({
+  item,
+  copiedId,
+  expandedIds,
+  onCopy,
+  onToggleExpanded,
+  onDelete,
+}: Props) {
   const date = new Date(item.createdAt);
   const dateStr = Number.isNaN(item.createdAt) ? "—" : date.toLocaleString();
   const hostname = (() => {
@@ -51,13 +59,23 @@ export function ContentCard({ item, copiedId, expandedIds, onCopy, onToggleExpan
       )}
       <div className="px-4 py-2 border-t border-slate-100 flex items-center justify-between">
         <p className="text-[10px] text-slate-400">{dateStr}</p>
-        <button
-          type="button"
-          onClick={() => onCopy(item.id, JSON.stringify(item, null, 2))}
-          className="text-[11px] px-2 py-1 rounded-md text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
-        >
-          {copiedId === item.id ? "Copied!" : "Copy JSON"}
-        </button>
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            onClick={() => onCopy(item.id, JSON.stringify(item, null, 2))}
+            className="text-[11px] px-2 py-1 rounded-md text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
+          >
+            {copiedId === item.id ? "Copied!" : "Copy JSON"}
+          </button>
+          <button
+            type="button"
+            onClick={() => onDelete(item.id)}
+            aria-label="削除"
+            className="text-[11px] px-2 py-1 rounded-md text-slate-400 hover:bg-red-50 hover:text-red-500 transition-colors"
+          >
+            削除
+          </button>
+        </div>
       </div>
     </div>
   );

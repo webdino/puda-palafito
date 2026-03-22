@@ -31,11 +31,18 @@ export function notifyDriveFolderIdUpdated() {
   optionsToBackgroundSender(OptionsToBackgroundMessageKeys.driveFolderIdUpdated, undefined);
 }
 
+export function notifyDeleteItem(id: string) {
+  optionsToBackgroundSender(OptionsToBackgroundMessageKeys.deleteItem, id);
+}
+
 export function registerOptionsToBackgroundListener(callback: OptionsToBackgroundProtocolMap) {
   optionsToBackgroundListener(OptionsToBackgroundMessageKeys.modelReady, () => {
-    callback.modelReady();
+    callback?.modelReady();
   });
   optionsToBackgroundListener(OptionsToBackgroundMessageKeys.driveFolderIdUpdated, () => {
-    callback.driveFolderIdUpdated();
+    callback?.driveFolderIdUpdated();
+  });
+  optionsToBackgroundListener(OptionsToBackgroundMessageKeys.deleteItem, ({ data }) => {
+    callback?.deleteItem(data);
   });
 }
