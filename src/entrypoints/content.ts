@@ -1,6 +1,7 @@
 import { storage } from "@wxt-dev/storage";
 import { defineContentScript } from "wxt/utils/define-content-script";
 import { isAllowedByDomainFilter } from "@/lib/domain-filter";
+import { isSensitivePath } from "@/lib/url";
 import { registerOnPageVisit } from "@/lib/page-visit-detection";
 import { isSummarizerAvailable } from "@/lib/summarizer/validation";
 import type { PageVisitedPayload } from "@/message/data";
@@ -30,6 +31,10 @@ export default defineContentScript({
       const domainFilter = (await storage.getItem<string[]>(StorageKeys.domainFilter)) ?? [];
       // ドメインフィルタに一致しなければスキップ
       if (!isAllowedByDomainFilter(window.location.href, domainFilter)) {
+        return;
+      }
+      // センシティブなURLパスはスキップ
+      if (isSensitivePath(window.location.href)) {
         return;
       }
 
