@@ -10,10 +10,11 @@ import { StorageKeys } from "@/storage";
 // 拡張機能の設定が記録可能な状態かを返す
 async function isRecordingAvailable() {
   const summarizerAvailable = await isSummarizerAvailable();
-  const recordingEnabled = await storage.getItem<boolean>(StorageKeys.recordingEnabled);
-  const driveFolderId = await storage.getItem<string>(StorageKeys.googleDriveFolderId);
+  const recordingEnabled = (await storage.getItem<boolean>(StorageKeys.recordingEnabled)) ?? true;
 
-  return summarizerAvailable && recordingEnabled && !!driveFolderId;
+  console.log("summarizerAvailable", summarizerAvailable);
+  console.log("recordingEnabled", recordingEnabled);
+  return summarizerAvailable && recordingEnabled;
 }
 
 export default defineContentScript({
