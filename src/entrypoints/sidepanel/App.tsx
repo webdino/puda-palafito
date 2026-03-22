@@ -1,7 +1,9 @@
 import { storage } from "@wxt-dev/storage";
 import { Circle, Pause, Settings } from "lucide-react";
 import { useEffect, useState } from "react";
+import { isAllowedByDomainFilter } from "@/lib/domain-filter";
 import { openOptionsTab } from "@/lib/tabs";
+import { isSensitivePath } from "@/lib/url";
 import { notifyDeleteAllItems, notifyDeleteItem } from "@/message/events";
 import { type SavedContentsData, StorageKeys } from "@/storage";
 import { ContentCard } from "./ContentCard";
@@ -11,6 +13,7 @@ export function App() {
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [recordingEnabled, setRecordingEnabled] = useState(true);
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
+  const [isRecordingSkipped, setIsRecordingSkipped] = useState(false);
 
   function handleCopy(id: string, json: string) {
     navigator.clipboard.writeText(json).then(() => {
@@ -84,6 +87,44 @@ export function App() {
     };
   }, []);
 
+  useEffect(() => {
+    async function checkActiveTab() {
+      const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+      const url = tabs[0]?.url ?? "";
+      const domainFilter = (await storage.getItem<string[]>(StorageKeys.domainFilter)) ?? [];
+      setIsRecordingSkipped(isSensitivePath(url) || !isAllowedByDomainFilter(url, domainFilter));
+    }
+
+    checkActiveTab();
+
+    function onActivated() {
+      checkActiveTab();
+    }
+
+    function onUpdated(
+      _tabId: number,
+      changeInfo: chrome.tabs.OnUpdatedInfo,
+      tab: chrome.tabs.Tab,
+    ) {
+      if (changeInfo.status === "complete" && tab.active) {
+        checkActiveTab();
+      }
+    }
+
+    chrome.tabs.onActivated.addListener(onActivated);
+    chrome.tabs.onUpdated.addListener(onUpdated);
+
+    const unwatchDomainFilter = storage.watch<string[]>(StorageKeys.domainFilter, () => {
+      checkActiveTab();
+    });
+
+    return () => {
+      chrome.tabs.onActivated.removeListener(onActivated);
+      chrome.tabs.onUpdated.removeListener(onUpdated);
+      unwatchDomainFilter();
+    };
+  }, []);
+
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-slate-50 to-slate-100">
       <header className="sticky top-0 z-10 px-4 py-3 bg-white/80 backdrop-blur border-b border-slate-200">
@@ -118,6 +159,17 @@ export function App() {
       </header>
 
       <main className="flex-1 p-3 flex flex-col gap-3">
+        {recordingEnabled && isRecordingSkipped && (
+          <output
+            aria-live="polite"
+            className="flex items-start gap-2 px-3 py-2.5 bg-amber-50 border border-amber-200 rounded-lg text-amber-800"
+          >
+            <span aria-hidden="true" className="mt-0.5 shrink-0">
+              ⚠️
+            </span>
+            <p className="text-xs leading-relaxed">このページは記録対象外です。</p>
+          </output>
+        )}
         {contentsData.length > 0 ? (
           contentsData.map((item) => (
             <ContentCard
