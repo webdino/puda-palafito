@@ -22,27 +22,28 @@ async function saveContentData(payload: PageVisitedPayload) {
 
   const updatedList = await saveForLocalStorage(payload, summarizedText);
   if (updatedList) {
-    const backupFileName = import.meta.env.WXT_EXPORT_FILE_NAME || "history.json";
+    await syncListToDrive(updatedList);
+  }
+}
 
-    // ユーザーが選択したGoogle DriveのフォルダIDを取得
-    const folderId = await storage.getItem<string>(StorageKeys.googleDriveFolderId);
+async function syncListToDrive(list: SavedContentsData) {
+  const folderId = await storage.getItem<string>(StorageKeys.googleDriveFolderId);
+  if (!folderId) {
+    console.info("Google Drive backup skipped: Destination folder is not configured.");
+    return;
+  }
 
-    // フォルダが未設定の場合はバックアップ処理をスキップ
-    if (!folderId) {
-      console.info("Google Drive backup skipped: Destination folder is not configured.");
-      return;
-    }
+  const backupFileName = import.meta.env.WXT_EXPORT_FILE_NAME || "history.json";
+  const sanitizedList = list.map((item) => ({
+    ...item,
+    url: stripQueryParams(item.url),
+  }));
 
-    const sanitizedList = updatedList.map((item) => ({
-      ...item,
-      url: stripQueryParams(item.url),
-    }));
-    const fileId = await uploadJsonToDrive(backupFileName, sanitizedList, folderId);
-    if (fileId) {
-      console.info("Successfully synced to Google Drive:", fileId);
-    } else {
-      console.warn("Could not sync to Google Drive. Check authentication.");
-    }
+  const fileId = await uploadJsonToDrive(backupFileName, sanitizedList, folderId);
+  if (fileId) {
+    console.info("Successfully synced to Google Drive:", fileId);
+  } else {
+    console.warn("Could not sync to Google Drive. Check authentication.");
   }
 }
 
@@ -94,12 +95,12 @@ async function deleteSavedItem(id: string) {
   const filteredList = list.filter((entry) => entry.id !== id);
   await storage.setItem(StorageKeys.savedContentsDataKey, filteredList);
 
-  // TODO: Google Drive上のファイルも削除する
+  await syncListToDrive(filteredList);
 }
 
 async function deleteAllSavedItems() {
   await storage.setItem(StorageKeys.savedContentsDataKey, []);
-  // TODO: Google Drive上のファイルも削除する
+  await syncListToDrive([]);
 }
 
 export default defineBackground(() => {
@@ -117,6 +118,9 @@ export default defineBackground(() => {
     },
     driveFolderIdUpdated() {
       updateIconStatus();
+      storage.getItem<SavedContentsData>(StorageKeys.savedContentsDataKey).then((list) => {
+        syncListToDrive(list ?? []).catch((e) => console.error("Failed to sync to Drive:", e));
+      });
     },
     deleteItem(id) {
       deleteSavedItem(id).catch((e) => {
