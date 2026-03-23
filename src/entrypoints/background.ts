@@ -1,8 +1,11 @@
 import { storage } from "@wxt-dev/storage";
 import { defineBackground } from "wxt/utils/define-background";
+import { uploadJsonToDrive } from "@/lib/drive/api";
+import { setActiveIcon, setInactiveIcon } from "@/lib/icon";
 import { summarize } from "@/lib/summarizer/summarize";
 import { isSummarizerAvailable, isSummarizerSupported } from "@/lib/summarizer/validation";
 import { openOptionsTab } from "@/lib/tabs";
+import { stripQueryParams } from "@/lib/url";
 import type { PageVisitedPayload } from "@/message/data";
 import { defaultDomainFilter } from "../constants";
 import {
@@ -10,11 +13,6 @@ import {
   registerOptionsToBackgroundListener,
 } from "../message/events";
 import { createSavedContentData, type SavedContentsData, StorageKeys } from "../storage";
-
-// import type { BackgroundToContentMessage, ContentToBackgroundMessage } from '../lib/runtime-bridge';
-
-import { uploadJsonToDrive } from "@/lib/drive/api";
-import { setActiveIcon, setInactiveIcon } from "@/lib/icon";
 
 async function saveContentData(payload: PageVisitedPayload) {
   const startTime = Date.now();
@@ -35,7 +33,11 @@ async function saveContentData(payload: PageVisitedPayload) {
       return;
     }
 
-    const fileId = await uploadJsonToDrive(backupFileName, updatedList, folderId);
+    const sanitizedList = updatedList.map((item) => ({
+      ...item,
+      url: stripQueryParams(item.url),
+    }));
+    const fileId = await uploadJsonToDrive(backupFileName, sanitizedList, folderId);
     if (fileId) {
       console.info("Successfully synced to Google Drive:", fileId);
     } else {
@@ -70,9 +72,10 @@ async function updateIconStatus() {
     if (isSummarizerSupported()) {
       available = await isSummarizerAvailable();
     }
-    const driveFolderId = await storage.getItem<string>(StorageKeys.googleDriveFolderId);
 
-    if (available && !!driveFolderId) {
+    const recordingEnabled = (await storage.getItem<boolean>(StorageKeys.recordingEnabled)) ?? true;
+
+    if (available && recordingEnabled) {
       chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
       setActiveIcon();
     } else {
@@ -83,6 +86,20 @@ async function updateIconStatus() {
     chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: false });
     setInactiveIcon();
   }
+}
+
+async function deleteSavedItem(id: string) {
+  const item = await storage.getItem<SavedContentsData>(StorageKeys.savedContentsDataKey);
+  const list: SavedContentsData = item ?? [];
+  const filteredList = list.filter((entry) => entry.id !== id);
+  await storage.setItem(StorageKeys.savedContentsDataKey, filteredList);
+
+  // TODO: Google Drive上のファイルも削除する
+}
+
+async function deleteAllSavedItems() {
+  await storage.setItem(StorageKeys.savedContentsDataKey, []);
+  // TODO: Google Drive上のファイルも削除する
 }
 
 export default defineBackground(() => {
@@ -100,6 +117,16 @@ export default defineBackground(() => {
     },
     driveFolderIdUpdated() {
       updateIconStatus();
+    },
+    deleteItem(id) {
+      deleteSavedItem(id).catch((e) => {
+        console.error("Failed to delete item:", e);
+      });
+    },
+    deleteAllItems() {
+      deleteAllSavedItems().catch((e) => {
+        console.error("Failed to delete all items:", e);
+      });
     },
   });
 

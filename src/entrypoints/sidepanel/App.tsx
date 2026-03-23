@@ -2,13 +2,17 @@ import { storage } from "@wxt-dev/storage";
 import { Circle, Pause, Settings } from "lucide-react";
 import { useEffect, useState } from "react";
 import { openOptionsTab } from "@/lib/tabs";
+import { isAvailableUrl } from "@/lib/url";
+import { notifyDeleteAllItems, notifyDeleteItem } from "@/message/events";
 import { type SavedContentsData, StorageKeys } from "@/storage";
+import { ContentCard } from "./ContentCard";
 
 export function App() {
   const [contentsData, setContentsData] = useState<SavedContentsData>([]);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [recordingEnabled, setRecordingEnabled] = useState(true);
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
+  const [isRecordingSkipped, setIsRecordingSkipped] = useState(false);
 
   function handleCopy(id: string, json: string) {
     navigator.clipboard.writeText(json).then(() => {
@@ -29,6 +33,15 @@ export function App() {
     a.click();
     document.body.removeChild(a);
     setTimeout(() => URL.revokeObjectURL(url), 0);
+  }
+
+  function handleDelete(id: string) {
+    notifyDeleteItem(id);
+  }
+
+  function handleDeleteAll() {
+    if (!window.confirm("すべての記録を削除しますか？この操作は元に戻せません。")) return;
+    notifyDeleteAllItems();
   }
 
   function handleRecordingToggle() {
@@ -73,6 +86,44 @@ export function App() {
     };
   }, []);
 
+  useEffect(() => {
+    async function checkActiveTab() {
+      const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+      const url = tabs[0]?.url ?? "";
+      const available = await isAvailableUrl(url);
+      setIsRecordingSkipped(!available);
+    }
+
+    checkActiveTab();
+
+    function onActivated() {
+      checkActiveTab();
+    }
+
+    function onUpdated(
+      _tabId: number,
+      changeInfo: chrome.tabs.OnUpdatedInfo,
+      tab: chrome.tabs.Tab,
+    ) {
+      if (changeInfo.status === "complete" && tab.active) {
+        checkActiveTab();
+      }
+    }
+
+    chrome.tabs.onActivated.addListener(onActivated);
+    chrome.tabs.onUpdated.addListener(onUpdated);
+
+    const unwatchDomainFilter = storage.watch<string[]>(StorageKeys.domainFilter, () => {
+      checkActiveTab();
+    });
+
+    return () => {
+      chrome.tabs.onActivated.removeListener(onActivated);
+      chrome.tabs.onUpdated.removeListener(onUpdated);
+      unwatchDomainFilter();
+    };
+  }, []);
+
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-slate-50 to-slate-100">
       <header className="sticky top-0 z-10 px-4 py-3 bg-white/80 backdrop-blur border-b border-slate-200">
@@ -93,68 +144,43 @@ export function App() {
               <span>📥</span>
               Export All
             </button>
+            <button
+              type="button"
+              onClick={handleDeleteAll}
+              disabled={contentsData.length === 0}
+              className="text-xs font-medium px-3 py-1.5 bg-white border border-red-200 text-red-500 rounded-lg hover:bg-red-50 hover:border-red-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm flex items-center gap-1.5"
+            >
+              <span>🗑️</span>
+              全削除
+            </button>
           </div>
         </div>
       </header>
 
       <main className="flex-1 p-3 flex flex-col gap-3">
+        {recordingEnabled && isRecordingSkipped && (
+          <output
+            aria-live="polite"
+            className="flex items-start gap-2 px-3 py-2.5 bg-amber-50 border border-amber-200 rounded-lg text-amber-800"
+          >
+            <span aria-hidden="true" className="mt-0.5 shrink-0">
+              ⚠️
+            </span>
+            <p className="text-xs leading-relaxed">このページは記録対象外です。</p>
+          </output>
+        )}
         {contentsData.length > 0 ? (
-          contentsData.map((item) => {
-            const date = new Date(item.createdAt);
-            const dateStr = Number.isNaN(item.createdAt) ? "—" : date.toLocaleString();
-            const hostname = (() => {
-              try {
-                return new URL(item.url).hostname;
-              } catch {
-                return item.url;
-              }
-            })();
-            return (
-              <div
-                key={item.id}
-                className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden"
-              >
-                <div className="px-4 pt-4 pb-3 flex flex-col gap-1">
-                  <p className="text-sm font-semibold text-slate-800 leading-snug line-clamp-2">
-                    {item.title}
-                  </p>
-                  <a
-                    href={item.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-[11px] text-indigo-500 hover:text-indigo-700 hover:underline truncate w-full block"
-                  >
-                    {hostname}
-                  </a>
-                </div>
-                {item.text && (
-                  <button
-                    type="button"
-                    onClick={() => toggleExpanded(item.id)}
-                    className="w-full text-left px-4 py-3 bg-slate-50 border-t border-slate-100 hover:bg-slate-100 transition-colors cursor-pointer"
-                  >
-                    <p
-                      className={`text-xs text-slate-600 leading-relaxed whitespace-pre-wrap ${
-                        expandedIds.has(item.id) ? "" : "line-clamp-3"
-                      }`}
-                    >
-                      {item.text}
-                    </p>
-                  </button>
-                )}
-                <div className="px-4 py-2 border-t border-slate-100 flex items-center justify-between">
-                  <p className="text-[10px] text-slate-400">{dateStr}</p>
-                  <button
-                    type="button"
-                    onClick={() => handleCopy(item.id, JSON.stringify(item, null, 2))}
-                    className="text-[11px] px-2 py-1 rounded-md text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
-                  >
-                    {copiedId === item.id ? "Copied!" : "Copy JSON"}
-                  </button>
-                </div>
-              </div>
-            );
-          })
+          contentsData.map((item) => (
+            <ContentCard
+              key={item.id}
+              item={item}
+              copiedId={copiedId}
+              expandedIds={expandedIds}
+              onCopy={handleCopy}
+              onToggleExpanded={toggleExpanded}
+              onDelete={handleDelete}
+            />
+          ))
         ) : (
           <div className="flex flex-col items-center justify-center flex-1 py-20 gap-2">
             <div className="text-3xl">📭</div>

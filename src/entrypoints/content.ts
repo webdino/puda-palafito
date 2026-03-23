@@ -1,8 +1,8 @@
 import { storage } from "@wxt-dev/storage";
 import { defineContentScript } from "wxt/utils/define-content-script";
-import { isAllowedByDomainFilter } from "@/lib/domain-filter";
 import { registerOnPageVisit } from "@/lib/page-visit-detection";
 import { isSummarizerAvailable } from "@/lib/summarizer/validation";
+import { isAvailableUrl } from "@/lib/url";
 import type { PageVisitedPayload } from "@/message/data";
 import { sendPageVisited } from "@/message/events";
 import { StorageKeys } from "@/storage";
@@ -10,10 +10,8 @@ import { StorageKeys } from "@/storage";
 // 拡張機能の設定が記録可能な状態かを返す
 async function isRecordingAvailable() {
   const summarizerAvailable = await isSummarizerAvailable();
-  const recordingEnabled = await storage.getItem<boolean>(StorageKeys.recordingEnabled);
-  const driveFolderId = await storage.getItem<string>(StorageKeys.googleDriveFolderId);
-
-  return summarizerAvailable && recordingEnabled && !!driveFolderId;
+  const recordingEnabled = (await storage.getItem<boolean>(StorageKeys.recordingEnabled)) ?? true;
+  return summarizerAvailable && recordingEnabled;
 }
 
 export default defineContentScript({
@@ -26,9 +24,8 @@ export default defineContentScript({
         return;
       }
 
-      const domainFilter = (await storage.getItem<string[]>(StorageKeys.domainFilter)) ?? [];
-      // ドメインフィルタに一致しなければスキップ
-      if (!isAllowedByDomainFilter(window.location.href, domainFilter)) {
+      // 録画をしてよいURLか判定する
+      if (!(await isAvailableUrl(window.location.href))) {
         return;
       }
 
