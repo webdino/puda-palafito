@@ -119,10 +119,14 @@ export default defineBackground(() => {
       updateIconStatus();
     },
     deleteItem(id) {
-      deleteItem(id);
+      deleteItem(id).catch((e) => {
+        console.error("Failed to delete item:", e);
+      });
     },
     deleteAllItems() {
-      deleteAllItems();
+      deleteAllItems().catch((e) => {
+        console.error("Failed to delete all items:", e);
+      });
     },
   });
 

@@ -1,9 +1,8 @@
 import { storage } from "@wxt-dev/storage";
 import { defineContentScript } from "wxt/utils/define-content-script";
-import { isAllowedByDomainFilter } from "@/lib/domain-filter";
-import { isSensitivePath } from "@/lib/url";
 import { registerOnPageVisit } from "@/lib/page-visit-detection";
 import { isSummarizerAvailable } from "@/lib/summarizer/validation";
+import { isAvailableUrl } from "@/lib/url";
 import type { PageVisitedPayload } from "@/message/data";
 import { sendPageVisited } from "@/message/events";
 import { StorageKeys } from "@/storage";
@@ -12,9 +11,6 @@ import { StorageKeys } from "@/storage";
 async function isRecordingAvailable() {
   const summarizerAvailable = await isSummarizerAvailable();
   const recordingEnabled = (await storage.getItem<boolean>(StorageKeys.recordingEnabled)) ?? true;
-
-  console.log("summarizerAvailable", summarizerAvailable);
-  console.log("recordingEnabled", recordingEnabled);
   return summarizerAvailable && recordingEnabled;
 }
 
@@ -28,13 +24,8 @@ export default defineContentScript({
         return;
       }
 
-      const domainFilter = (await storage.getItem<string[]>(StorageKeys.domainFilter)) ?? [];
-      // ドメインフィルタに一致しなければスキップ
-      if (!isAllowedByDomainFilter(window.location.href, domainFilter)) {
-        return;
-      }
-      // センシティブなURLパスはスキップ
-      if (isSensitivePath(window.location.href)) {
+      // 録画をしてよいURLか判定する
+      if (!isAvailableUrl(window.location.href)) {
         return;
       }
 

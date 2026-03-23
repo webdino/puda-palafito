@@ -1,9 +1,8 @@
 import { storage } from "@wxt-dev/storage";
 import { Circle, Pause, Settings } from "lucide-react";
 import { useEffect, useState } from "react";
-import { isAllowedByDomainFilter } from "@/lib/domain-filter";
 import { openOptionsTab } from "@/lib/tabs";
-import { isSensitivePath } from "@/lib/url";
+import { isAvailableUrl } from "@/lib/url";
 import { notifyDeleteAllItems, notifyDeleteItem } from "@/message/events";
 import { type SavedContentsData, StorageKeys } from "@/storage";
 import { ContentCard } from "./ContentCard";
@@ -91,8 +90,8 @@ export function App() {
     async function checkActiveTab() {
       const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
       const url = tabs[0]?.url ?? "";
-      const domainFilter = (await storage.getItem<string[]>(StorageKeys.domainFilter)) ?? [];
-      setIsRecordingSkipped(isSensitivePath(url) || !isAllowedByDomainFilter(url, domainFilter));
+      const available = await isAvailableUrl(url);
+      setIsRecordingSkipped(!available);
     }
 
     checkActiveTab();
