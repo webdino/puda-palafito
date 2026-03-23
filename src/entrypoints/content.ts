@@ -25,7 +25,7 @@ export default defineContentScript({
       }
 
       // 録画をしてよいURLか判定する
-      if (!isAvailableUrl(window.location.href)) {
+      if (!(await isAvailableUrl(window.location.href))) {
         return;
       }
 
