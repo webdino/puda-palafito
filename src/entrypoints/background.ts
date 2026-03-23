@@ -91,7 +91,7 @@ async function updateIconStatus() {
 async function deleteItem(id: string) {
   const item = await storage.getItem<SavedContentsData>(StorageKeys.savedContentsDataKey);
   const list: SavedContentsData = item ?? [];
-  const filteredList = list.filter((item) => item.id !== id);
+  const filteredList = list.filter((entry) => entry.id !== id);
   await storage.setItem(StorageKeys.savedContentsDataKey, filteredList);
 
   // TODO: Google Drive上のファイルも削除する
