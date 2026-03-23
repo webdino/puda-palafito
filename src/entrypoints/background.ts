@@ -88,7 +88,7 @@ async function updateIconStatus() {
   }
 }
 
-async function deleteItem(id: string) {
+async function deleteSavedItem(id: string) {
   const item = await storage.getItem<SavedContentsData>(StorageKeys.savedContentsDataKey);
   const list: SavedContentsData = item ?? [];
   const filteredList = list.filter((entry) => entry.id !== id);
@@ -97,7 +97,7 @@ async function deleteItem(id: string) {
   // TODO: Google Drive上のファイルも削除する
 }
 
-async function deleteAllItems() {
+async function deleteAllSavedItems() {
   await storage.setItem(StorageKeys.savedContentsDataKey, []);
   // TODO: Google Drive上のファイルも削除する
 }
@@ -119,12 +119,12 @@ export default defineBackground(() => {
       updateIconStatus();
     },
     deleteItem(id) {
-      deleteItem(id).catch((e) => {
+      deleteSavedItem(id).catch((e) => {
         console.error("Failed to delete item:", e);
       });
     },
     deleteAllItems() {
-      deleteAllItems().catch((e) => {
+      deleteAllSavedItems().catch((e) => {
         console.error("Failed to delete all items:", e);
       });
     },
