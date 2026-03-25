@@ -184,9 +184,10 @@ async function deleteAllSavedItems() {
     const { maxFiles } = getRotationConfig();
     const baseName = import.meta.env.WXT_EXPORT_FILE_NAME || "history.json";
     const baseFileName = baseName.replace(/\.json$/i, "");
-    for (let i = 1; i <= maxFiles; i++) {
-       await uploadJsonToDrive(`${baseFileName}_${i}.json`, [], folderId);
-    }
+    const tasks = Array.from({ length: maxFiles }, (_, i) => {
+      return uploadJsonToDrive(`${baseFileName}_${i + 1}.json`, [], folderId);
+    });
+    await Promise.all(tasks);
   }
 }
 
