@@ -53,9 +53,21 @@ async function syncListToDrive(list: SavedContentsData, targetIndices?: number[]
     })
   ));
 
+  // リストを1回走査し、インデックスごとのバケットを作成 (計算量を O(n*m) から O(n+m) に最適化)
+  const bucketMap = new Map<number, SavedContentsData>();
+  for (const item of list) {
+    const idx = item.driveFileIndex || 1;
+    let bucket = bucketMap.get(idx);
+    if (!bucket) {
+      bucket = [];
+      bucketMap.set(idx, bucket);
+    }
+    bucket.push(item);
+  }
+
   for (const index of indicesToSync) {
     const backupFileName = `${baseFileName}_${index}.json`;
-    const bucketItems = list.filter((item) => (item.driveFileIndex || 1) === index);
+    const bucketItems = bucketMap.get(index) || [];
     
     const sanitizedList = bucketItems.map((item) => ({
       ...item,
