@@ -187,18 +187,18 @@ export default defineBackground(() => {
     modelReady() {
       updateIconStatus();
     },
-    driveFolderIdUpdated() {
+    async driveFolderIdUpdated() {
       updateIconStatus();
-      storage.getItem<string>(StorageKeys.googleDriveFolderId).then((folderId) => {
+      try {
+        const folderId = await storage.getItem<string>(StorageKeys.googleDriveFolderId);
         if (!folderId) return;
-        ensureDriveRotationFiles(folderId)
-          .then(() => {
-            storage.getItem<SavedContentsData>(StorageKeys.savedContentsDataKey).then((list) => {
-              syncListToDrive(list ?? []).catch((e) => console.error("Failed to sync to Drive:", e));
-            });
-          })
-          .catch((e) => console.error("Failed to ensure drive rotation files:", e));
-      });
+
+        await ensureDriveRotationFiles(folderId);
+        const list = await storage.getItem<SavedContentsData>(StorageKeys.savedContentsDataKey);
+        await syncListToDrive(list ?? []);
+      } catch (e) {
+        console.error("Exception during driveFolderIdUpdated flow:", e);
+      }
     },
     deleteItem(id) {
       deleteSavedItem(id).catch((e) => {
