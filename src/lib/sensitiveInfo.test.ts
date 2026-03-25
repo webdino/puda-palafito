@@ -71,9 +71,7 @@ describe("maskSensitiveInfo", () => {
 
     it("指定していない種別はマスクしない", () => {
       const text = "メール: user@example.com 電話: 090-1234-5678";
-      expect(maskSensitiveInfo(text, ["email"])).toBe(
-        "メール: *** 電話: 090-1234-5678",
-      );
+      expect(maskSensitiveInfo(text, ["email"])).toBe("メール: *** 電話: 090-1234-5678");
     });
   });
 

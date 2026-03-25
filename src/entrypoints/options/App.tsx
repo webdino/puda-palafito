@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { isSummarizerAvailable } from "@/lib/summarizer/validation";
 import { notifyModelReady } from "@/message/events";
 import { DomainFilter } from "./DomainFilter";
-import { SensitiveInfoFilter } from "./SensitiveInfoFilter";
 import { GoogleAuthSection } from "./GoogleAuthSection";
 import { ModelDownloadProgress } from "./ModelDownloadProgress";
+import { SensitiveInfoFilter } from "./SensitiveInfoFilter";
 import { SetupGuide } from "./SetupGuide";
 import { StatusBanner } from "./StatusBanner";
 

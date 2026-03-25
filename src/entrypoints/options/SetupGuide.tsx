@@ -24,9 +24,7 @@ function SetupGuideContent() {
         <h2 className="text-base font-semibold text-emerald-800">
           Chrome ビルトイン AI のセットアップ
         </h2>
-        <p className="text-xs text-emerald-700 mt-1 font-medium">
-          フラグ設定は不要です
-        </p>
+        <p className="text-xs text-emerald-700 mt-1 font-medium">フラグ設定は不要です</p>
         <p className="text-xs text-emerald-600 mt-0.5">
           バージョン 138 以降では Summarizer API がデフォルトで有効です。
         </p>
@@ -37,7 +35,8 @@ function SetupGuideContent() {
           <li className="flex flex-col gap-1">
             <strong className="text-sm text-slate-700">モデルのダウンロードを待つ</strong>
             <p className="text-xs text-slate-500 ml-4">
-              初回利用時は Gemini Nano モデルが自動でダウンロードされます。数分かかる場合があります。
+              初回利用時は Gemini Nano
+              モデルが自動でダウンロードされます。数分かかる場合があります。
             </p>
           </li>
         </ol>

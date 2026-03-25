@@ -16,9 +16,7 @@ export function SensitiveInfoFilter() {
   }, []);
 
   async function handleToggle(type: SensitiveInfoType, checked: boolean) {
-    const updated = checked
-      ? [...enabledTypes, type]
-      : enabledTypes.filter((t) => t !== type);
+    const updated = checked ? [...enabledTypes, type] : enabledTypes.filter((t) => t !== type);
     setEnabledTypes(updated);
     await storage.setItem(StorageKeys.sensitiveInfoTypes, updated);
   }
