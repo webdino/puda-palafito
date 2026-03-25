@@ -213,3 +213,23 @@ export async function getOrCreateDriveFolder(
 
   return await createDriveFolder(folderName, token);
 }
+
+/**
+ * フォルダ内にローテーション管理用の全ファイルが揃っているか確認し、無ければ空で作成します。
+ */
+export async function ensureDriveRotationFiles(folderId: string): Promise<void> {
+  const token = await getGoogleAuthToken(false);
+  if (!token) return;
+
+  const fileCount = Number(import.meta.env.WXT_ROTATION_FILE_COUNT || 5);
+  const baseName = import.meta.env.WXT_EXPORT_FILE_NAME || "history.json";
+  const baseFileName = baseName.replace(/\.json$/, "");
+
+  for (let i = 1; i <= fileCount; i++) {
+    const fileName = `${baseFileName}_${i}.json`;
+    const existingId = await findFileByName(fileName, token, folderId);
+    if (!existingId) {
+      await uploadJsonToDrive(fileName, [], folderId);
+    }
+  }
+}

@@ -1,6 +1,6 @@
 import { storage } from "@wxt-dev/storage";
 import { defineBackground } from "wxt/utils/define-background";
-import { uploadJsonToDrive } from "@/lib/drive/api";
+import { uploadJsonToDrive, ensureDriveRotationFiles } from "@/lib/drive/api";
 import { setActiveIcon, setInactiveIcon } from "@/lib/icon";
 import { summarize } from "@/lib/summarizer/summarize";
 import { isSummarizerAvailable, isSummarizerSupported } from "@/lib/summarizer/validation";
@@ -21,29 +21,45 @@ async function saveContentData(payload: PageVisitedPayload) {
   console.log(`text summary time: ${summarizeTime}`);
 
   const updatedList = await saveForLocalStorage(payload, summarizedText);
-  if (updatedList) {
-    await syncListToDrive(updatedList);
+  if (updatedList && updatedList.length > 0) {
+    const targetIndex = updatedList[0].driveFileIndex || 1;
+    await syncListToDrive(updatedList, targetIndex);
   }
 }
 
-async function syncListToDrive(list: SavedContentsData) {
+async function syncListToDrive(list: SavedContentsData, targetIndex?: number) {
   const folderId = await storage.getItem<string>(StorageKeys.googleDriveFolderId);
   if (!folderId) {
     console.info("Google Drive backup skipped: Destination folder is not configured.");
     return;
   }
 
-  const backupFileName = import.meta.env.WXT_EXPORT_FILE_NAME || "history.json";
-  const sanitizedList = list.map((item) => ({
-    ...item,
-    url: stripQueryParams(item.url),
-  }));
+  const baseName = import.meta.env.WXT_EXPORT_FILE_NAME || "history.json";
+  const baseFileName = baseName.replace(/\.json$/, "");
+  
+  const indicesToSync = targetIndex
+    ? [targetIndex]
+    : Array.from(new Set(list.map((item) => item.driveFileIndex || 1)));
 
-  const fileId = await uploadJsonToDrive(backupFileName, sanitizedList, folderId);
-  if (fileId) {
-    console.info("Successfully synced to Google Drive:", fileId);
-  } else {
-    console.warn("Could not sync to Google Drive. Check authentication.");
+  if (indicesToSync.length === 0) {
+    indicesToSync.push(1);
+  }
+
+  for (const index of indicesToSync) {
+    const backupFileName = `${baseFileName}_${index}.json`;
+    const bucketItems = list.filter((item) => (item.driveFileIndex || 1) === index);
+    
+    const sanitizedList = bucketItems.map((item) => ({
+      ...item,
+      url: stripQueryParams(item.url),
+    }));
+
+    const fileId = await uploadJsonToDrive(backupFileName, sanitizedList, folderId);
+    if (fileId) {
+      console.info(`Successfully synced to Google Drive [${backupFileName}]:`, fileId);
+    } else {
+      console.warn(`Could not sync to Google Drive [${backupFileName}]. Check authentication.`);
+    }
   }
 }
 
@@ -53,16 +69,33 @@ async function saveForLocalStorage(
 ): Promise<SavedContentsData | null> {
   const saveData = createSavedContentData(payload, summarizedText);
   const item = await storage.getItem<SavedContentsData>(StorageKeys.savedContentsDataKey);
-
   const list: SavedContentsData = item ?? [];
-  list.unshift(saveData);
 
-  // 一定件を超えたら古いものから削除
-  const maxCount = Number(import.meta.env.WXT_SAVED_CONTENTS_MAX_COUNT || 1000);
-  if (list.length > maxCount) {
-    list.splice(maxCount);
+  const maxFiles = Number(import.meta.env.WXT_ROTATION_FILE_COUNT || 5);
+  const recordLimit = Number(import.meta.env.WXT_ROTATION_RECORD_LIMIT || 200);
+
+  let currentFileIndex = await storage.getItem<number>(StorageKeys.driveRotationIndex) ?? 1;
+
+  const currentBucketCount = list.filter((x) => (x.driveFileIndex || 1) === currentFileIndex).length;
+
+  if (currentBucketCount >= recordLimit) {
+    currentFileIndex = (currentFileIndex % maxFiles) + 1;
+    for (let i = list.length - 1; i >= 0; i--) {
+      if ((list[i].driveFileIndex || 1) === currentFileIndex) {
+        list.splice(i, 1);
+      }
+    }
   }
 
+  saveData.driveFileIndex = currentFileIndex;
+  list.unshift(saveData);
+
+  const totalMaxCount = maxFiles * recordLimit;
+  if (list.length > totalMaxCount) {
+    list.splice(totalMaxCount);
+  }
+
+  await storage.setItem(StorageKeys.driveRotationIndex, currentFileIndex);
   await storage.setItem(StorageKeys.savedContentsDataKey, list);
   return list;
 }
@@ -92,15 +125,30 @@ async function updateIconStatus() {
 async function deleteSavedItem(id: string) {
   const item = await storage.getItem<SavedContentsData>(StorageKeys.savedContentsDataKey);
   const list: SavedContentsData = item ?? [];
-  const filteredList = list.filter((entry) => entry.id !== id);
-  await storage.setItem(StorageKeys.savedContentsDataKey, filteredList);
+  
+  const targetEntry = list.find((entry) => entry.id === id);
+  if (!targetEntry) return;
 
-  await syncListToDrive(filteredList);
+  const targetIndex = targetEntry.driveFileIndex || 1;
+  const filteredList = list.filter((entry) => entry.id !== id);
+  
+  await storage.setItem(StorageKeys.savedContentsDataKey, filteredList);
+  await syncListToDrive(filteredList, targetIndex);
 }
 
 async function deleteAllSavedItems() {
   await storage.setItem(StorageKeys.savedContentsDataKey, []);
-  await syncListToDrive([]);
+  await storage.setItem(StorageKeys.driveRotationIndex, 1);
+  
+  const folderId = await storage.getItem<string>(StorageKeys.googleDriveFolderId);
+  if (folderId) {
+    const fileCount = Number(import.meta.env.WXT_ROTATION_FILE_COUNT || 5);
+    const baseName = import.meta.env.WXT_EXPORT_FILE_NAME || "history.json";
+    const baseFileName = baseName.replace(/\.json$/, "");
+    for (let i = 1; i <= fileCount; i++) {
+       await uploadJsonToDrive(`${baseFileName}_${i}.json`, [], folderId);
+    }
+  }
 }
 
 export default defineBackground(() => {
@@ -118,8 +166,13 @@ export default defineBackground(() => {
     },
     driveFolderIdUpdated() {
       updateIconStatus();
-      storage.getItem<SavedContentsData>(StorageKeys.savedContentsDataKey).then((list) => {
-        syncListToDrive(list ?? []).catch((e) => console.error("Failed to sync to Drive:", e));
+      storage.getItem<string>(StorageKeys.googleDriveFolderId).then((folderId) => {
+        if (!folderId) return;
+        ensureDriveRotationFiles(folderId).then(() => {
+          storage.getItem<SavedContentsData>(StorageKeys.savedContentsDataKey).then((list) => {
+            syncListToDrive(list ?? []).catch((e) => console.error("Failed to sync to Drive:", e));
+          });
+        });
       });
     },
     deleteItem(id) {

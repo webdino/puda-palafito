@@ -4,4 +4,5 @@ export const StorageKeys = {
   domainFilter: "local:DomainFilter",
   googleDriveFolderId: "local:GoogleDriveFolderId",
   googleDriveFolderName: "local:GoogleDriveFolderName",
+  driveRotationIndex: "local:DriveRotationIndex",
 } as const;
