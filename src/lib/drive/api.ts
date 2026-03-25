@@ -1,4 +1,5 @@
 import { getGoogleAuthToken } from "../auth/google";
+import { getRotationConfig } from "../config";
 
 /**
  * Google Drive API 連携ユーティリティ
@@ -221,8 +222,7 @@ export async function ensureDriveRotationFiles(folderId: string): Promise<void> 
   const token = await getGoogleAuthToken(false);
   if (!token) return;
 
-  const rawCount = parseInt(import.meta.env.WXT_ROTATION_FILE_COUNT || "5", 10);
-  const fileCount = Number.isFinite(rawCount) && rawCount >= 1 ? rawCount : 5;
+  const fileCount = getRotationConfig().maxFiles;
 
   const baseName = import.meta.env.WXT_EXPORT_FILE_NAME || "history.json";
   const baseFileName = baseName.replace(/\.json$/i, "");
