@@ -7,7 +7,3 @@ export function createDefaultSummarizer(monitorCallback?: CreateMonitorCallback)
 export function createMapSummarizer(title: string) {
   return Summarizer.create(createMapOptions(title));
 }
-
-export function createReduceSummarizer(title: string) {
-  return Summarizer.create(createReduceOptions(title));
-}
