@@ -16,16 +16,10 @@ export function SensitiveInfoFilter() {
   }, []);
 
   async function handleToggle(type: SensitiveInfoType, checked: boolean) {
-    let updated: SensitiveInfoType[] = [];
-    setEnabledTypes((prev) => {
-      if (checked) {
-        // すでに有効な場合は重複追加しない
-        updated = prev.includes(type) ? prev : [...prev, type];
-      } else {
-        updated = prev.filter((t) => t !== type);
-      }
-      return updated;
-    });
+    const updated = checked
+      ? [...new Set([...enabledTypes, type])]
+      : enabledTypes.filter((t) => t !== type);
+    setEnabledTypes(updated);
     await storage.setItem(StorageKeys.sensitiveInfoTypes, updated);
   }
 
