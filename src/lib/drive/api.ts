@@ -227,11 +227,15 @@ export async function ensureDriveRotationFiles(folderId: string): Promise<void> 
   const baseName = import.meta.env.WXT_EXPORT_FILE_NAME || "history.json";
   const baseFileName = baseName.replace(/\.json$/i, "");
 
-  for (let i = 1; i <= fileCount; i++) {
-    const fileName = `${baseFileName}_${i}.json`;
-    const existingId = await findFileByName(fileName, token, folderId);
-    if (!existingId) {
-      await uploadJsonToDrive(fileName, [], folderId, token);
-    }
-  }
+  const tasks = Array.from({ length: fileCount }, (_, i) => {
+    const fileName = `${baseFileName}_${i + 1}.json`;
+    return async () => {
+      const existingId = await findFileByName(fileName, token, folderId);
+      if (!existingId) {
+        await uploadJsonToDrive(fileName, [], folderId, token);
+      }
+    };
+  });
+
+  await Promise.all(tasks.map((task) => task()));
 }
