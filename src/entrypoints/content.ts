@@ -36,7 +36,7 @@ export default defineContentScript({
       const renderedText = document.body.innerText;
       const maskedText = maskSensitiveInfo(renderedText, enabledSensitiveInfoTypes);
       const mainContent: PageVisitedPayload = {
-        title: title ?? "",
+        title: maskSensitiveInfo(title, enabledSensitiveInfoTypes),
         url: window.location.href,
         text: maskedText,
         createdAt: Date.now(),
