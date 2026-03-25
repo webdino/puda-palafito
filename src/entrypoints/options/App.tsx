@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { isSummarizerAvailable } from "@/lib/summarizer/validation";
 import { notifyModelReady } from "@/message/events";
 import { DomainFilter } from "./DomainFilter";
+import { SensitiveInfoFilter } from "./SensitiveInfoFilter";
 import { GoogleAuthSection } from "./GoogleAuthSection";
 import { ModelDownloadProgress } from "./ModelDownloadProgress";
 import { SetupGuide } from "./SetupGuide";
@@ -82,8 +83,9 @@ export function App() {
 
       <main className="max-w-2xl mx-auto px-6 py-8">
         {isAvailable === true ? (
-          <div>
+          <div className="flex flex-col gap-6">
             <DomainFilter />
+            <SensitiveInfoFilter />
             <GoogleAuthSection />
           </div>
         ) : (

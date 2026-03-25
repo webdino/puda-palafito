@@ -26,6 +26,9 @@ const SensitiveInfoPatterns = {
   },
 };
 
+import { storage } from "@wxt-dev/storage";
+import { StorageKeys } from "@/storage";
+
 export const ALL_SENSITIVE_INFO_TYPES = Object.keys(SensitiveInfoPatterns) as SensitiveInfoType[];
 
 export function getSensitiveInfoLabel(type: SensitiveInfoType): string {
@@ -33,6 +36,11 @@ export function getSensitiveInfoLabel(type: SensitiveInfoType): string {
 }
 
 export type SensitiveInfoType = keyof typeof SensitiveInfoPatterns;
+
+export async function getEnabledSensitiveInfoTypes(): Promise<SensitiveInfoType[]> {
+  const saved = await storage.getItem<SensitiveInfoType[]>(StorageKeys.sensitiveInfoTypes);
+  return saved ?? ALL_SENSITIVE_INFO_TYPES;
+}
 
 export function maskSensitiveInfo(text: string, types: SensitiveInfoType[]): string {
   let result = text;
