@@ -14,20 +14,28 @@ import {
 } from "../message/events";
 import { createSavedContentData, type SavedContentsData, StorageKeys } from "../storage";
 
+function getRotationConfig() {
+  const rawFiles = parseInt(import.meta.env.WXT_ROTATION_FILE_COUNT || "5", 10);
+  const rawLimit = parseInt(import.meta.env.WXT_ROTATION_RECORD_LIMIT || "200", 10);
+  return {
+    maxFiles: Number.isFinite(rawFiles) && rawFiles >= 1 ? rawFiles : 5,
+    recordLimit: Number.isFinite(rawLimit) && rawLimit >= 1 ? rawLimit : 200,
+  };
+}
+
 async function saveContentData(payload: PageVisitedPayload) {
   const startTime = Date.now();
   const summarizedText = await summarize(payload.title, payload.text);
   const summarizeTime = Date.now() - startTime;
   console.log(`text summary time: ${summarizeTime}`);
 
-  const updatedList = await saveForLocalStorage(payload, summarizedText);
-  if (updatedList && updatedList.length > 0) {
-    const targetIndex = updatedList[0].driveFileIndex || 1;
-    await syncListToDrive(updatedList, targetIndex);
+  const result = await saveForLocalStorage(payload, summarizedText);
+  if (result && result.updatedList.length > 0) {
+    await syncListToDrive(result.updatedList, result.modifiedIndices);
   }
 }
 
-async function syncListToDrive(list: SavedContentsData, targetIndex?: number) {
+async function syncListToDrive(list: SavedContentsData, targetIndices?: number[]) {
   const folderId = await storage.getItem<string>(StorageKeys.googleDriveFolderId);
   if (!folderId) {
     console.info("Google Drive backup skipped: Destination folder is not configured.");
@@ -35,10 +43,10 @@ async function syncListToDrive(list: SavedContentsData, targetIndex?: number) {
   }
 
   const baseName = import.meta.env.WXT_EXPORT_FILE_NAME || "history.json";
-  const baseFileName = baseName.replace(/\.json$/, "");
+  const baseFileName = baseName.replace(/\.json$/i, "");
   
-  const indicesToSync = targetIndex
-    ? [targetIndex]
+  const indicesToSync = targetIndices && targetIndices.length > 0
+    ? targetIndices
     : Array.from(new Set(list.map((item) => item.driveFileIndex || 1)));
 
   if (indicesToSync.length === 0) {
@@ -66,17 +74,18 @@ async function syncListToDrive(list: SavedContentsData, targetIndex?: number) {
 async function saveForLocalStorage(
   payload: PageVisitedPayload,
   summarizedText: string,
-): Promise<SavedContentsData | null> {
+): Promise<{ updatedList: SavedContentsData; modifiedIndices: number[] } | null> {
   const saveData = createSavedContentData(payload, summarizedText);
   const item = await storage.getItem<SavedContentsData>(StorageKeys.savedContentsDataKey);
   const list: SavedContentsData = item ?? [];
 
-  const maxFiles = Number(import.meta.env.WXT_ROTATION_FILE_COUNT || 5);
-  const recordLimit = Number(import.meta.env.WXT_ROTATION_RECORD_LIMIT || 200);
+  const { maxFiles, recordLimit } = getRotationConfig();
 
   let currentFileIndex = await storage.getItem<number>(StorageKeys.driveRotationIndex) ?? 1;
 
   const currentBucketCount = list.filter((x) => (x.driveFileIndex || 1) === currentFileIndex).length;
+
+  const modifiedIndices = new Set<number>();
 
   if (currentBucketCount >= recordLimit) {
     currentFileIndex = (currentFileIndex % maxFiles) + 1;
@@ -89,15 +98,29 @@ async function saveForLocalStorage(
 
   saveData.driveFileIndex = currentFileIndex;
   list.unshift(saveData);
+  modifiedIndices.add(currentFileIndex);
 
-  const totalMaxCount = maxFiles * recordLimit;
-  if (list.length > totalMaxCount) {
-    list.splice(totalMaxCount);
+  const bucketCounts = new Map<number, number>();
+  for (let i = 0; i < list.length; i++) {
+    const idx = list[i].driveFileIndex || 1;
+    if (idx < 1 || idx > maxFiles) {
+      list.splice(i, 1);
+      i--;
+      continue;
+    }
+    const currentCount = bucketCounts.get(idx) || 0;
+    if (currentCount >= recordLimit) {
+      list.splice(i, 1);
+      i--;
+      modifiedIndices.add(idx);
+    } else {
+      bucketCounts.set(idx, currentCount + 1);
+    }
   }
 
   await storage.setItem(StorageKeys.driveRotationIndex, currentFileIndex);
   await storage.setItem(StorageKeys.savedContentsDataKey, list);
-  return list;
+  return { updatedList: list, modifiedIndices: Array.from(modifiedIndices) };
 }
 
 async function updateIconStatus() {
@@ -133,7 +156,7 @@ async function deleteSavedItem(id: string) {
   const filteredList = list.filter((entry) => entry.id !== id);
   
   await storage.setItem(StorageKeys.savedContentsDataKey, filteredList);
-  await syncListToDrive(filteredList, targetIndex);
+  await syncListToDrive(filteredList, [targetIndex]);
 }
 
 async function deleteAllSavedItems() {
@@ -142,10 +165,10 @@ async function deleteAllSavedItems() {
   
   const folderId = await storage.getItem<string>(StorageKeys.googleDriveFolderId);
   if (folderId) {
-    const fileCount = Number(import.meta.env.WXT_ROTATION_FILE_COUNT || 5);
+    const { maxFiles } = getRotationConfig();
     const baseName = import.meta.env.WXT_EXPORT_FILE_NAME || "history.json";
-    const baseFileName = baseName.replace(/\.json$/, "");
-    for (let i = 1; i <= fileCount; i++) {
+    const baseFileName = baseName.replace(/\.json$/i, "");
+    for (let i = 1; i <= maxFiles; i++) {
        await uploadJsonToDrive(`${baseFileName}_${i}.json`, [], folderId);
     }
   }
@@ -168,11 +191,13 @@ export default defineBackground(() => {
       updateIconStatus();
       storage.getItem<string>(StorageKeys.googleDriveFolderId).then((folderId) => {
         if (!folderId) return;
-        ensureDriveRotationFiles(folderId).then(() => {
-          storage.getItem<SavedContentsData>(StorageKeys.savedContentsDataKey).then((list) => {
-            syncListToDrive(list ?? []).catch((e) => console.error("Failed to sync to Drive:", e));
-          });
-        });
+        ensureDriveRotationFiles(folderId)
+          .then(() => {
+            storage.getItem<SavedContentsData>(StorageKeys.savedContentsDataKey).then((list) => {
+              syncListToDrive(list ?? []).catch((e) => console.error("Failed to sync to Drive:", e));
+            });
+          })
+          .catch((e) => console.error("Failed to ensure drive rotation files:", e));
       });
     },
     deleteItem(id) {

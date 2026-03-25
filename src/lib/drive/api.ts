@@ -20,9 +20,9 @@ export async function uploadJsonToDrive(
   fileName: string,
   jsonData: unknown,
   parentId: string | null = null,
+  providedToken?: string,
 ): Promise<string | null> {
-  // バックグラウンドでトークンを取得（取得できなければ認証されていないためエラー）
-  const token = await getGoogleAuthToken(false);
+  const token = providedToken || await getGoogleAuthToken(false);
   if (!token) {
     console.error("No valid auth token to upload to Drive.");
     return null;
@@ -221,15 +221,17 @@ export async function ensureDriveRotationFiles(folderId: string): Promise<void> 
   const token = await getGoogleAuthToken(false);
   if (!token) return;
 
-  const fileCount = Number(import.meta.env.WXT_ROTATION_FILE_COUNT || 5);
+  const rawCount = parseInt(import.meta.env.WXT_ROTATION_FILE_COUNT || "5", 10);
+  const fileCount = Number.isFinite(rawCount) && rawCount >= 1 ? rawCount : 5;
+
   const baseName = import.meta.env.WXT_EXPORT_FILE_NAME || "history.json";
-  const baseFileName = baseName.replace(/\.json$/, "");
+  const baseFileName = baseName.replace(/\.json$/i, "");
 
   for (let i = 1; i <= fileCount; i++) {
     const fileName = `${baseFileName}_${i}.json`;
     const existingId = await findFileByName(fileName, token, folderId);
     if (!existingId) {
-      await uploadJsonToDrive(fileName, [], folderId);
+      await uploadJsonToDrive(fileName, [], folderId, token);
     }
   }
 }
