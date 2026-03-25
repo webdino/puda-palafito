@@ -1,5 +1,5 @@
 import { Check, ChevronDown, ChevronRight, Clipboard } from "lucide-react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 const CUSTOM_INSTRUCTIONS = `## 役割
 
@@ -69,21 +69,41 @@ const CUSTOM_INSTRUCTIONS = `## 役割
 
 function CopyInstructionsButton() {
   const [copied, setCopied] = useState(false);
-  const handleCopy = useCallback(() => {
-    navigator.clipboard.writeText(CUSTOM_INSTRUCTIONS).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    });
+  const [failed, setFailed] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
   }, []);
+
+  const handleCopy = useCallback(() => {
+    navigator.clipboard.writeText(CUSTOM_INSTRUCTIONS).then(
+      () => {
+        setCopied(true);
+        setFailed(false);
+        timerRef.current = setTimeout(() => setCopied(false), 2000);
+      },
+      () => {
+        setFailed(true);
+        timerRef.current = setTimeout(() => setFailed(false), 2000);
+      },
+    );
+  }, []);
+
   return (
     <button
       type="button"
       onClick={handleCopy}
-      title={copied ? "コピー済み" : "コピー"}
-      className={`shrink-0 p-1.5 rounded transition-colors border ${
+      title={copied ? "コピー済み" : failed ? "コピー失敗" : "コピー"}
+      aria-label={copied ? "コピー済み" : failed ? "コピー失敗" : "指示文をコピー"}
+      className={`shrink-0 p-1.5 rounded transition-colors border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-indigo-500 ${
         copied
           ? "bg-emerald-100 border-emerald-300 text-emerald-600"
-          : "bg-white border-slate-300 text-slate-400 hover:bg-slate-50 hover:text-slate-600"
+          : failed
+            ? "bg-red-100 border-red-300 text-red-600"
+            : "bg-white border-slate-300 text-slate-400 hover:bg-slate-50 hover:text-slate-600"
       }`}
     >
       {copied ? <Check size={13} /> : <Clipboard size={13} />}
