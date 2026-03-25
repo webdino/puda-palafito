@@ -81,7 +81,11 @@ async function saveForLocalStorage(
 
   const { maxFiles, recordLimit } = getRotationConfig();
 
-  let currentFileIndex = await storage.getItem<number>(StorageKeys.driveRotationIndex) ?? 1;
+  const storedIndex = await storage.getItem<number>(StorageKeys.driveRotationIndex);
+  let currentFileIndex = storedIndex ?? 1;
+  if (!Number.isInteger(currentFileIndex) || currentFileIndex < 1 || currentFileIndex > maxFiles) {
+    currentFileIndex = 1;
+  }
 
   const currentBucketCount = list.filter((x) => (x.driveFileIndex || 1) === currentFileIndex).length;
 
