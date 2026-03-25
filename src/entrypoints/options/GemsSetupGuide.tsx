@@ -81,11 +81,14 @@ function CopyInstructionsButton() {
   const handleCopy = useCallback(() => {
     navigator.clipboard.writeText(CUSTOM_INSTRUCTIONS).then(
       () => {
+        if (timerRef.current) clearTimeout(timerRef.current);
         setCopied(true);
         setFailed(false);
         timerRef.current = setTimeout(() => setCopied(false), 2000);
       },
       () => {
+        if (timerRef.current) clearTimeout(timerRef.current);
+        setCopied(false);
         setFailed(true);
         timerRef.current = setTimeout(() => setFailed(false), 2000);
       },
@@ -117,6 +120,7 @@ function InstructionsBlock() {
     <div className="border border-slate-200 rounded overflow-hidden bg-slate-50">
       <div className="flex items-start justify-between gap-2 px-2 pt-1.5">
         <pre
+          id="instructions-text"
           className={`text-xs text-slate-600 leading-relaxed whitespace-pre-wrap break-words flex-1 font-sans transition-all ${
             open ? "" : "line-clamp-3"
           }`}
@@ -128,6 +132,8 @@ function InstructionsBlock() {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        aria-controls="instructions-text"
         className="w-full flex items-center justify-center gap-1 px-2 py-1 text-xs text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
       >
         {open ? <ChevronDown size={11} /> : <ChevronRight size={11} />}
@@ -156,13 +162,16 @@ export function GemsSetupGuide() {
             </span>
             <span className="text-sm font-semibold text-slate-800">Gem管理画面へのアクセス</span>
           </div>
-          <p className="text-xs text-slate-600 pl-7">Geminiの左サイドバーにあるメニューから操作します。</p>
+          <p className="text-xs text-slate-600 pl-7">
+            Geminiの左サイドバーにあるメニューから操作します。
+          </p>
           <ul className="pl-7 flex flex-col gap-1">
             <li className="text-xs text-slate-600">
               画面左上の「作成したもの」セクションを探します。
             </li>
             <li className="text-xs text-slate-600">
-              <strong className="font-semibold">Gem &gt;</strong> と書かれたメニュー項目をクリックしてください。
+              <strong className="font-semibold">Gem &gt;</strong>{" "}
+              と書かれたメニュー項目をクリックしてください。
             </li>
             <li className="text-xs text-slate-600">
               画面中央（または右側）に「Gem」の管理画面が開きます。
@@ -179,8 +188,8 @@ export function GemsSetupGuide() {
             <span className="text-sm font-semibold text-slate-800">新規作成</span>
           </div>
           <p className="text-xs text-slate-600 pl-7">
-            「マイ Gem」セクション右側の{" "}
-            <strong className="font-semibold">＋ Gem を作成</strong> ボタンをクリックします。
+            「マイ Gem」セクション右側の <strong className="font-semibold">＋ Gem を作成</strong>{" "}
+            ボタンをクリックします。
           </p>
         </div>
 
@@ -192,22 +201,28 @@ export function GemsSetupGuide() {
             </span>
             <span className="text-sm font-semibold text-slate-800">指示とナレッジの設定</span>
           </div>
-          <p className="text-xs text-slate-600 pl-7">開いた作成画面で、以下の2点を設定してください。</p>
+          <p className="text-xs text-slate-600 pl-7">
+            開いた作成画面で、以下の2点を設定してください。
+          </p>
           <ul className="pl-7 flex flex-col gap-2">
             <li className="flex flex-col gap-1">
               <span className="text-xs font-semibold text-slate-700">カスタム指示欄：</span>
-              <span className="text-xs text-slate-600">以下のテキストをそのまま貼り付けてください。</span>
+              <span className="text-xs text-slate-600">
+                以下のテキストをそのまま貼り付けてください。
+              </span>
               <InstructionsBlock />
             </li>
             <li className="flex flex-col gap-1">
               <span className="text-xs font-semibold text-slate-700">知識欄：</span>
               <ul className="flex flex-col gap-1">
                 <li className="text-xs text-slate-600">
-                  「Gem が参照するファイルを追加します」横の <strong className="font-semibold">＋</strong> アイコンをクリック。
+                  「Gem が参照するファイルを追加します」横の{" "}
+                  <strong className="font-semibold">＋</strong> アイコンをクリック。
                 </li>
                 <li className="text-xs text-slate-600">「Google ドライブ」を選択。</li>
                 <li className="text-xs text-slate-600">
-                  拡張機能が自動作成したフォルダ（例：Puda Palafito）を開き、中のファイルを選択します。
+                  拡張機能が自動作成したフォルダ（例：Puda
+                  Palafito）を開き、中のファイルを選択します。
                 </li>
               </ul>
             </li>
