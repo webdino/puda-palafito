@@ -37,13 +37,21 @@ async function syncListToDrive(list: SavedContentsData, targetIndices?: number[]
   const baseName = import.meta.env.WXT_EXPORT_FILE_NAME || "history.json";
   const baseFileName = baseName.replace(/\.json$/i, "");
   
-  const indicesToSync = targetIndices && targetIndices.length > 0
+  const { maxFiles } = getRotationConfig();
+  let rawIndices = targetIndices && targetIndices.length > 0
     ? targetIndices
-    : Array.from(new Set(list.map((item) => item.driveFileIndex || 1)));
+    : list.map((item) => item.driveFileIndex || 1);
 
-  if (indicesToSync.length === 0) {
-    indicesToSync.push(1);
+  if (rawIndices.length === 0) {
+    rawIndices = [1];
   }
+
+  const indicesToSync = Array.from(new Set(
+    rawIndices.map((i) => {
+      if (i < 1 || i > maxFiles || !Number.isFinite(i)) return 1;
+      return i;
+    })
+  ));
 
   for (const index of indicesToSync) {
     const backupFileName = `${baseFileName}_${index}.json`;
