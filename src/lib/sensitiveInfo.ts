@@ -15,7 +15,7 @@ const SensitiveInfoPatterns = {
     label: "マイナンバー",
   },
   phoneJp: {
-    regex: /\b0\d{1,4}[-\s]?\d{1,4}[-\s]?\d{4}\b/,
+    regex: /\b(?:(?:0\d{1,4}[-\s]?\d{1,4}[-\s]?\d{4})|(?:0(?:120|800)[-\s]?\d{3}[-\s]?\d{3}))\b/,
     name: "phoneJp",
     label: "電話番号",
   },
