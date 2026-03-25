@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { isSummarizerAvailable } from "@/lib/summarizer/validation";
 import { notifyModelReady } from "@/message/events";
 import { DomainFilter } from "./DomainFilter";
+import { GemsSetupGuide } from "./GemsSetupGuide";
 import { GoogleAuthSection } from "./GoogleAuthSection";
 import { ModelDownloadProgress } from "./ModelDownloadProgress";
 import { SetupGuide } from "./SetupGuide";
@@ -85,6 +86,7 @@ export function App() {
           <div>
             <DomainFilter />
             <GoogleAuthSection />
+            <GemsSetupGuide />
           </div>
         ) : (
           <SetupPanel
