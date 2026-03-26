@@ -2,6 +2,7 @@ import type { PageVisitedPayload } from "@/message/data";
 
 export type SavedContentData = PageVisitedPayload & {
   id: string;
+  driveFileIndex?: number;
 };
 
 export function createSavedContentData(

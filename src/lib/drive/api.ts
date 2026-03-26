@@ -1,4 +1,5 @@
 import { getGoogleAuthToken } from "../auth/google";
+import { getRotationConfig } from "../config";
 
 /**
  * Google Drive API 連携ユーティリティ
@@ -20,9 +21,9 @@ export async function uploadJsonToDrive(
   fileName: string,
   jsonData: unknown,
   parentId: string | null = null,
+  providedToken?: string,
 ): Promise<string | null> {
-  // バックグラウンドでトークンを取得（取得できなければ認証されていないためエラー）
-  const token = await getGoogleAuthToken(false);
+  const token = providedToken || await getGoogleAuthToken(false);
   if (!token) {
     console.error("No valid auth token to upload to Drive.");
     return null;
@@ -212,4 +213,29 @@ export async function getOrCreateDriveFolder(
   }
 
   return await createDriveFolder(folderName, token);
+}
+
+/**
+ * フォルダ内にローテーション管理用の全ファイルが揃っているか確認し、無ければ空で作成します。
+ */
+export async function ensureDriveRotationFiles(folderId: string): Promise<void> {
+  const token = await getGoogleAuthToken(false);
+  if (!token) return;
+
+  const fileCount = getRotationConfig().maxFiles;
+
+  const baseName = import.meta.env.WXT_EXPORT_FILE_NAME || "history.json";
+  const baseFileName = baseName.replace(/\.json$/i, "");
+
+  const tasks = Array.from({ length: fileCount }, (_, i) => {
+    const fileName = `${baseFileName}_${i + 1}.json`;
+    return async () => {
+      const existingId = await findFileByName(fileName, token, folderId);
+      if (!existingId) {
+        await uploadJsonToDrive(fileName, [], folderId, token);
+      }
+    };
+  });
+
+  await Promise.all(tasks.map((task) => task()));
 }

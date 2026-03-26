@@ -1,6 +1,6 @@
 import { storage } from "@wxt-dev/storage";
 import { defineBackground } from "wxt/utils/define-background";
-import { uploadJsonToDrive } from "@/lib/drive/api";
+import { uploadJsonToDrive, ensureDriveRotationFiles } from "@/lib/drive/api";
 import { setActiveIcon, setInactiveIcon } from "@/lib/icon";
 import { summarize } from "@/lib/summarizer/summarize";
 import { isSummarizerAvailable, isSummarizerSupported } from "@/lib/summarizer/validation";
@@ -13,6 +13,7 @@ import {
   registerOptionsToBackgroundListener,
 } from "../message/events";
 import { createSavedContentData, type SavedContentsData, StorageKeys } from "../storage";
+import { getRotationConfig } from "@/lib/config";
 
 async function saveContentData(payload: PageVisitedPayload) {
   const startTime = Date.now();
@@ -20,28 +21,64 @@ async function saveContentData(payload: PageVisitedPayload) {
   const summarizeTime = Date.now() - startTime;
   console.log(`text summary time: ${summarizeTime}`);
 
-  const updatedList = await saveForLocalStorage(payload, summarizedText);
-  if (updatedList) {
-    const backupFileName = import.meta.env.WXT_EXPORT_FILE_NAME || "history.json";
+  const result = await saveForLocalStorage(payload, summarizedText);
+  if (result && result.updatedList.length > 0) {
+    await syncListToDrive(result.updatedList, result.modifiedIndices);
+  }
+}
 
-    // ユーザーが選択したGoogle DriveのフォルダIDを取得
-    const folderId = await storage.getItem<string>(StorageKeys.googleDriveFolderId);
+async function syncListToDrive(list: SavedContentsData, targetIndices?: number[]) {
+  const folderId = await storage.getItem<string>(StorageKeys.googleDriveFolderId);
+  if (!folderId) {
+    console.info("Google Drive backup skipped: Destination folder is not configured.");
+    return;
+  }
 
-    // フォルダが未設定の場合はバックアップ処理をスキップ
-    if (!folderId) {
-      console.info("Google Drive backup skipped: Destination folder is not configured.");
-      return;
+  const baseName = import.meta.env.WXT_EXPORT_FILE_NAME || "history.json";
+  const baseFileName = baseName.replace(/\.json$/i, "");
+  
+  const { maxFiles } = getRotationConfig();
+  let rawIndices = targetIndices && targetIndices.length > 0
+    ? targetIndices
+    : list.map((item) => item.driveFileIndex || 1);
+
+  if (rawIndices.length === 0) {
+    rawIndices = [1];
+  }
+
+  const indicesToSync = Array.from(new Set(
+    rawIndices.map((i) => {
+      if (i < 1 || i > maxFiles || !Number.isFinite(i)) return 1;
+      return i;
+    })
+  ));
+
+  // リストを1回走査し、インデックスごとのバケットを作成 (計算量を O(n*m) から O(n+m) に最適化)
+  const bucketMap = new Map<number, SavedContentsData>();
+  for (const item of list) {
+    const idx = item.driveFileIndex || 1;
+    let bucket = bucketMap.get(idx);
+    if (!bucket) {
+      bucket = [];
+      bucketMap.set(idx, bucket);
     }
+    bucket.push(item);
+  }
 
-    const sanitizedList = updatedList.map((item) => ({
+  for (const index of indicesToSync) {
+    const backupFileName = `${baseFileName}_${index}.json`;
+    const bucketItems = bucketMap.get(index) || [];
+    
+    const sanitizedList = bucketItems.map((item) => ({
       ...item,
       url: stripQueryParams(item.url),
     }));
+
     const fileId = await uploadJsonToDrive(backupFileName, sanitizedList, folderId);
     if (fileId) {
-      console.info("Successfully synced to Google Drive:", fileId);
+      console.info(`Successfully synced to Google Drive [${backupFileName}]:`, fileId);
     } else {
-      console.warn("Could not sync to Google Drive. Check authentication.");
+      console.warn(`Could not sync to Google Drive [${backupFileName}]. Check authentication.`);
     }
   }
 }
@@ -49,21 +86,57 @@ async function saveContentData(payload: PageVisitedPayload) {
 async function saveForLocalStorage(
   payload: PageVisitedPayload,
   summarizedText: string,
-): Promise<SavedContentsData | null> {
+): Promise<{ updatedList: SavedContentsData; modifiedIndices: number[] } | null> {
   const saveData = createSavedContentData(payload, summarizedText);
   const item = await storage.getItem<SavedContentsData>(StorageKeys.savedContentsDataKey);
-
   const list: SavedContentsData = item ?? [];
-  list.unshift(saveData);
 
-  // 一定件を超えたら古いものから削除
-  const maxCount = Number(import.meta.env.WXT_SAVED_CONTENTS_MAX_COUNT || 1000);
-  if (list.length > maxCount) {
-    list.splice(maxCount);
+  const { maxFiles, recordLimit } = getRotationConfig();
+
+  const storedIndex = await storage.getItem<number>(StorageKeys.driveRotationIndex);
+  let currentFileIndex = storedIndex ?? 1;
+  if (!Number.isInteger(currentFileIndex) || currentFileIndex < 1 || currentFileIndex > maxFiles) {
+    currentFileIndex = 1;
   }
 
+  const currentBucketCount = list.filter((x) => (x.driveFileIndex || 1) === currentFileIndex).length;
+
+  const modifiedIndices = new Set<number>();
+
+  if (currentBucketCount >= recordLimit) {
+    currentFileIndex = (currentFileIndex % maxFiles) + 1;
+    for (let i = list.length - 1; i >= 0; i--) {
+      if ((list[i].driveFileIndex || 1) === currentFileIndex) {
+        list.splice(i, 1);
+      }
+    }
+  }
+
+  saveData.driveFileIndex = currentFileIndex;
+  list.unshift(saveData);
+  modifiedIndices.add(currentFileIndex);
+
+  const bucketCounts = new Map<number, number>();
+  for (let i = 0; i < list.length; i++) {
+    const idx = list[i].driveFileIndex || 1;
+    if (idx < 1 || idx > maxFiles) {
+      list.splice(i, 1);
+      i--;
+      continue;
+    }
+    const currentCount = bucketCounts.get(idx) || 0;
+    if (currentCount >= recordLimit) {
+      list.splice(i, 1);
+      i--;
+      modifiedIndices.add(idx);
+    } else {
+      bucketCounts.set(idx, currentCount + 1);
+    }
+  }
+
+  await storage.setItem(StorageKeys.driveRotationIndex, currentFileIndex);
   await storage.setItem(StorageKeys.savedContentsDataKey, list);
-  return list;
+  return { updatedList: list, modifiedIndices: Array.from(modifiedIndices) };
 }
 
 async function updateIconStatus() {
@@ -91,15 +164,31 @@ async function updateIconStatus() {
 async function deleteSavedItem(id: string) {
   const item = await storage.getItem<SavedContentsData>(StorageKeys.savedContentsDataKey);
   const list: SavedContentsData = item ?? [];
-  const filteredList = list.filter((entry) => entry.id !== id);
-  await storage.setItem(StorageKeys.savedContentsDataKey, filteredList);
+  
+  const targetEntry = list.find((entry) => entry.id === id);
+  if (!targetEntry) return;
 
-  // TODO: Google Drive上のファイルも削除する
+  const targetIndex = targetEntry.driveFileIndex || 1;
+  const filteredList = list.filter((entry) => entry.id !== id);
+  
+  await storage.setItem(StorageKeys.savedContentsDataKey, filteredList);
+  await syncListToDrive(filteredList, [targetIndex]);
 }
 
 async function deleteAllSavedItems() {
   await storage.setItem(StorageKeys.savedContentsDataKey, []);
-  // TODO: Google Drive上のファイルも削除する
+  await storage.setItem(StorageKeys.driveRotationIndex, 1);
+  
+  const folderId = await storage.getItem<string>(StorageKeys.googleDriveFolderId);
+  if (folderId) {
+    const { maxFiles } = getRotationConfig();
+    const baseName = import.meta.env.WXT_EXPORT_FILE_NAME || "history.json";
+    const baseFileName = baseName.replace(/\.json$/i, "");
+    const tasks = Array.from({ length: maxFiles }, (_, i) => {
+      return uploadJsonToDrive(`${baseFileName}_${i + 1}.json`, [], folderId);
+    });
+    await Promise.all(tasks);
+  }
 }
 
 export default defineBackground(() => {
@@ -115,8 +204,18 @@ export default defineBackground(() => {
     modelReady() {
       updateIconStatus();
     },
-    driveFolderIdUpdated() {
+    async driveFolderIdUpdated() {
       updateIconStatus();
+      try {
+        const folderId = await storage.getItem<string>(StorageKeys.googleDriveFolderId);
+        if (!folderId) return;
+
+        await ensureDriveRotationFiles(folderId);
+        const list = await storage.getItem<SavedContentsData>(StorageKeys.savedContentsDataKey);
+        await syncListToDrive(list ?? []);
+      } catch (e) {
+        console.error("Exception during driveFolderIdUpdated flow:", e);
+      }
     },
     deleteItem(id) {
       deleteSavedItem(id).catch((e) => {
