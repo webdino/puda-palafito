@@ -31,7 +31,9 @@ export default defineContentScript({
       }
 
       const bodyClone = document.body.cloneNode(true) as HTMLElement;
-      for (const el of Array.from(bodyClone.querySelectorAll("script, style, noscript"))) {
+      for (const el of Array.from(
+        bodyClone.querySelectorAll('script, style, noscript, [hidden], [aria-hidden="true"]'),
+      )) {
         el.remove();
       }
       for (const el of Array.from(bodyClone.querySelectorAll<HTMLInputElement>("input"))) {
