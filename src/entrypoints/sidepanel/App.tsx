@@ -15,6 +15,7 @@ export function App() {
   const [isRecordingSkipped, setIsRecordingSkipped] = useState(false);
   const [expandedDateFolders, setExpandedDateFolders] = useState<Set<string>>(new Set());
   const hasAutoExpanded = useRef(false);
+  const previousSortedDates = useRef<string[]>([]);
 
   const groupedData = useMemo(() => {
     const groups: Record<string, SavedContentData[]> = {};
@@ -37,11 +38,27 @@ export function App() {
   }, [groupedData]);
 
   useEffect(() => {
-    // 最初の読み込み時に最新の日付フォルダを一度だけ開く
-    if (sortedDates.length > 0 && !hasAutoExpanded.current) {
+    if (sortedDates.length === 0) return;
+
+    if (!hasAutoExpanded.current) {
+      // 最初の読み込み時に最新の日付フォルダを一度だけ開く
       setExpandedDateFolders(new Set([sortedDates[0]]));
       hasAutoExpanded.current = true;
+    } else {
+      // 稼働中に新しいデータ（今日初めての記録など）が追加され、手前に新しい日付グループが発生した場合は自動展開する
+      const prev = previousSortedDates.current;
+      const latest = sortedDates[0];
+      if (prev.length > 0 && prev[0] !== latest && !prev.includes(latest)) {
+        setExpandedDateFolders((current) => {
+          const next = new Set(current);
+          next.add(latest);
+          return next;
+        });
+      }
     }
+    
+    // 比較用に状態を保存
+    previousSortedDates.current = sortedDates;
   }, [sortedDates]);
 
   function toggleDateFolder(dateStr: string) {
