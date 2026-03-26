@@ -103,8 +103,7 @@ function CopyInstructionsButton() {
   } else if (failed) {
     stateClass = "bg-red-100 border-red-300 text-red-600";
   } else {
-    stateClass =
-      "bg-white border-slate-300 text-slate-400 hover:bg-slate-50 hover:text-slate-600";
+    stateClass = "bg-white border-slate-300 text-slate-400 hover:bg-slate-50 hover:text-slate-600";
   }
 
   return (

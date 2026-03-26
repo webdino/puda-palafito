@@ -23,7 +23,7 @@ export async function uploadJsonToDrive(
   parentId: string | null = null,
   providedToken?: string,
 ): Promise<string | null> {
-  const token = providedToken || await getGoogleAuthToken(false);
+  const token = providedToken || (await getGoogleAuthToken(false));
   if (!token) {
     console.error("No valid auth token to upload to Drive.");
     return null;
