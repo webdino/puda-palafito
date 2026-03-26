@@ -30,10 +30,23 @@ export default defineContentScript({
         return;
       }
 
+      const clone = document.documentElement.cloneNode(true) as HTMLElement;
+      for (const el of Array.from(clone.querySelectorAll("script, style, noscript"))) {
+        el.remove();
+      }
+      for (const el of Array.from(
+        clone.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("input, textarea"),
+      )) {
+        el.value = "";
+      }
+      for (const el of Array.from(clone.querySelectorAll<HTMLElement>("[contenteditable]"))) {
+        el.textContent = "";
+      }
+
       const enabledSensitiveInfoTypes = await getEnabledSensitiveInfoTypes();
 
       const title = document.title;
-      const renderedText = document.body.innerText;
+      const renderedText = clone.querySelector("body")?.textContent ?? "";
       const maskedText = maskSensitiveInfo(renderedText, enabledSensitiveInfoTypes);
       const mainContent: PageVisitedPayload = {
         title: maskSensitiveInfo(title, enabledSensitiveInfoTypes),
