@@ -218,12 +218,14 @@ export function App() {
                 <button
                   type="button"
                   onClick={() => toggleDateFolder(dateStr)}
+                  aria-expanded={isExpanded}
+                  aria-controls={`folder-${dateStr.replace(/\//g, "-")}`}
                   className="flex items-center gap-2 px-2 py-1.5 text-slate-700 hover:bg-slate-200/50 rounded-md transition-colors font-semibold"
                 >
                   {isExpanded ? (
-                    <ChevronDown size={18} className="text-slate-400 shrink-0" />
+                    <ChevronDown size={18} className="text-slate-400 shrink-0" aria-hidden="true" />
                   ) : (
-                    <ChevronRight size={18} className="text-slate-400 shrink-0" />
+                    <ChevronRight size={18} className="text-slate-400 shrink-0" aria-hidden="true" />
                   )}
                   <span className="text-sm">{dateStr}</span>
                   <span className="text-xs text-slate-500 font-normal ml-auto bg-slate-200/60 px-2.5 py-0.5 rounded-full">
@@ -232,7 +234,12 @@ export function App() {
                 </button>
                 
                 {isExpanded && (
-                  <div className="flex flex-col gap-3 pl-3 ml-2.5 border-l-2 border-slate-200/60">
+                  <div
+                    id={`folder-${dateStr.replace(/\//g, "-")}`}
+                    role="region"
+                    aria-label={`${dateStr}の記録一覧`}
+                    className="flex flex-col gap-3 pl-3 ml-2.5 border-l-2 border-slate-200/60"
+                  >
                     {items.map((item) => (
                       <ContentCard
                         key={item.id}
