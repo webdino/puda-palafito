@@ -215,13 +215,15 @@ export function App() {
           sortedDates.map((dateStr) => {
             const items = groupedData[dateStr];
             const isExpanded = expandedDateFolders.has(dateStr);
+            const regionId = `folder-${dateStr.replace(/\//g, "-")}`;
+            
             return (
               <div key={dateStr} className="flex flex-col gap-2">
                 <button
                   type="button"
                   onClick={() => toggleDateFolder(dateStr)}
                   aria-expanded={isExpanded}
-                  aria-controls={`folder-${dateStr.replace(/\//g, "-")}`}
+                  aria-controls={regionId}
                   className="flex items-center gap-2 px-2 py-1.5 text-slate-700 hover:bg-slate-200/50 rounded-md transition-colors font-semibold"
                 >
                   {isExpanded ? (
@@ -235,26 +237,25 @@ export function App() {
                   </span>
                 </button>
                 
-                {isExpanded && (
-                  <div
-                    id={`folder-${dateStr.replace(/\//g, "-")}`}
-                    role="region"
-                    aria-label={`${dateStr}の記録一覧`}
-                    className="flex flex-col gap-3 pl-3 ml-2.5 border-l-2 border-slate-200/60"
-                  >
-                    {items.map((item) => (
-                      <ContentCard
-                        key={item.id}
-                        item={item}
-                        copiedId={copiedId}
-                        expandedIds={expandedIds}
-                        onCopy={handleCopy}
-                        onToggleExpanded={toggleExpanded}
-                        onDelete={handleDelete}
-                      />
-                    ))}
-                  </div>
-                )}
+                <div
+                  id={regionId}
+                  role="region"
+                  hidden={!isExpanded}
+                  aria-label={`${dateStr}の記録一覧`}
+                  className={`${!isExpanded ? 'hidden ' : ''}flex flex-col gap-3 pl-3 ml-2.5 border-l-2 border-slate-200/60`}
+                >
+                  {items.map((item) => (
+                    <ContentCard
+                      key={item.id}
+                      item={item}
+                      copiedId={copiedId}
+                      expandedIds={expandedIds}
+                      onCopy={handleCopy}
+                      onToggleExpanded={toggleExpanded}
+                      onDelete={handleDelete}
+                    />
+                  ))}
+                </div>
               </div>
             );
           })
