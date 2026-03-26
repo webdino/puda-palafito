@@ -1,6 +1,7 @@
 import { storage } from "@wxt-dev/storage";
 import { defineContentScript } from "wxt/utils/define-content-script";
 import { registerOnPageVisit } from "@/lib/page-visit-detection";
+import { getEnabledSensitiveInfoTypes, maskSensitiveInfo } from "@/lib/sensitiveInfo";
 import { isSummarizerAvailable } from "@/lib/summarizer/validation";
 import { isAvailableUrl } from "@/lib/url";
 import type { PageVisitedPayload } from "@/message/data";
@@ -29,12 +30,15 @@ export default defineContentScript({
         return;
       }
 
+      const enabledSensitiveInfoTypes = await getEnabledSensitiveInfoTypes();
+
       const title = document.title;
       const renderedText = document.body.innerText;
+      const maskedText = maskSensitiveInfo(renderedText, enabledSensitiveInfoTypes);
       const mainContent: PageVisitedPayload = {
-        title: title ?? "",
+        title: maskSensitiveInfo(title, enabledSensitiveInfoTypes),
         url: window.location.href,
-        text: renderedText,
+        text: maskedText,
         createdAt: Date.now(),
       };
 

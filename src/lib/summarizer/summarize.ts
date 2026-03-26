@@ -1,5 +1,5 @@
 import { RecursiveCharacterTextSplitter } from "../textSplitter";
-import { createDefaultSummarizer, createMapSummarizer, createReduceSummarizer } from "./create";
+import { createDefaultSummarizer, createMapSummarizer } from "./create";
 import { fitsInQuota } from "./validation";
 
 function combineMapSummarizedText(summarizedChunks: string[]) {

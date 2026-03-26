@@ -4,6 +4,7 @@ import { notifyModelReady } from "@/message/events";
 import { DomainFilter } from "./DomainFilter";
 import { GoogleAuthSection } from "./GoogleAuthSection";
 import { ModelDownloadProgress } from "./ModelDownloadProgress";
+import { SensitiveInfoFilter } from "./SensitiveInfoFilter";
 import { SetupGuide } from "./SetupGuide";
 import { StatusBanner } from "./StatusBanner";
 
@@ -82,8 +83,9 @@ export function App() {
 
       <main className="max-w-2xl mx-auto px-6 py-8">
         {isAvailable === true ? (
-          <div>
+          <div className="flex flex-col gap-6">
             <DomainFilter />
+            <SensitiveInfoFilter />
             <GoogleAuthSection />
           </div>
         ) : (

@@ -26,12 +26,3 @@ export function createMapOptions(title: string): SummarizerCreateOptions {
     sharedContext: constants.mapContext(title),
   };
 }
-
-export function createReduceOptions(title: string): SummarizerCreateOptions {
-  // 長文の統合の為少し長めの文章を生成する
-  return {
-    ...createCoreOptions(),
-    length: "long",
-    sharedContext: constants.reduceContext(title),
-  };
-}
