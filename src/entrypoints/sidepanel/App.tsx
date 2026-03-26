@@ -4,7 +4,7 @@ import { useEffect, useState, useMemo, useRef } from "react";
 import { openOptionsTab } from "@/lib/tabs";
 import { isAvailableUrl } from "@/lib/url";
 import { notifyDeleteAllItems, notifyDeleteItem } from "@/message/events";
-import { type SavedContentsData, StorageKeys } from "@/storage";
+import { type SavedContentData, type SavedContentsData, StorageKeys } from "@/storage";
 import { ContentCard } from "./ContentCard";
 
 export function App() {
@@ -17,7 +17,7 @@ export function App() {
   const hasAutoExpanded = useRef(false);
 
   const groupedData = useMemo(() => {
-    const groups: Record<string, SavedContentsData> = {};
+    const groups: Record<string, SavedContentData[]> = {};
     for (const item of contentsData) {
       const date = new Date(item.createdAt);
       // NOTE: 意図的にユーザー環境のローカル・タイムゾーン基準で日付をグループ化しています。
@@ -33,7 +33,7 @@ export function App() {
   }, [contentsData]);
 
   const sortedDates = useMemo(() => {
-    return Object.keys(groupedData).sort((a, b) => b.localeCompare(a));
+    return Object.keys(groupedData).sort((a, b) => (a < b ? 1 : a > b ? -1 : 0));
   }, [groupedData]);
 
   useEffect(() => {
