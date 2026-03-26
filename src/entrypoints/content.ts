@@ -30,24 +30,25 @@ export default defineContentScript({
         return;
       }
 
-      const clone = document.documentElement.cloneNode(true) as HTMLElement;
-      for (const el of Array.from(clone.querySelectorAll("script, style, noscript"))) {
+      const bodyClone = document.body.cloneNode(true) as HTMLElement;
+      for (const el of Array.from(bodyClone.querySelectorAll("script, style, noscript"))) {
         el.remove();
       }
-      for (const el of Array.from(
-        clone.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("input, textarea"),
-      )) {
+      for (const el of Array.from(bodyClone.querySelectorAll<HTMLInputElement>("input"))) {
         el.value = "";
       }
-      for (const el of Array.from(clone.querySelectorAll<HTMLElement>("[contenteditable]"))) {
+      for (const el of Array.from(bodyClone.querySelectorAll<HTMLTextAreaElement>("textarea"))) {
+        el.textContent = "";
+      }
+      for (const el of Array.from(bodyClone.querySelectorAll<HTMLElement>("[contenteditable]"))) {
         el.textContent = "";
       }
 
       const enabledSensitiveInfoTypes = await getEnabledSensitiveInfoTypes();
 
       const title = document.title;
-      const renderedText = clone.querySelector("body")?.textContent ?? "";
-      const maskedText = maskSensitiveInfo(renderedText, enabledSensitiveInfoTypes);
+      const pageText = bodyClone.textContent ?? "";
+      const maskedText = maskSensitiveInfo(pageText, enabledSensitiveInfoTypes);
       const mainContent: PageVisitedPayload = {
         title: maskSensitiveInfo(title, enabledSensitiveInfoTypes),
         url: window.location.href,
