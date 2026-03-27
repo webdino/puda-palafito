@@ -1,10 +1,10 @@
 import { storage } from "@wxt-dev/storage";
-import { Circle, Pause, Settings } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Circle, Pause, Settings, ChevronRight, ChevronDown } from "lucide-react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { openOptionsTab } from "@/lib/tabs";
 import { isAvailableUrl } from "@/lib/url";
 import { notifyDeleteAllItems, notifyDeleteItem } from "@/message/events";
-import { type SavedContentsData, StorageKeys } from "@/storage";
+import { type SavedContentData, type SavedContentsData, StorageKeys } from "@/storage";
 import { ContentCard } from "./ContentCard";
 
 export function App() {
@@ -13,6 +13,65 @@ export function App() {
   const [recordingEnabled, setRecordingEnabled] = useState(true);
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
   const [isRecordingSkipped, setIsRecordingSkipped] = useState(false);
+  const [expandedDateFolders, setExpandedDateFolders] = useState<Set<string>>(new Set());
+  const hasAutoExpanded = useRef(false);
+  const previousSortedDates = useRef<string[]>([]);
+
+  const groupedData = useMemo(() => {
+    const groups: Record<string, SavedContentData[]> = {};
+    for (const item of contentsData) {
+      const date = new Date(item.createdAt);
+      // NOTE: 意図的にユーザー環境のローカル・タイムゾーン基準で日付をグループ化しています。
+      // 閲覧履歴として直感的な日付（UTC等で朝のデータが前日扱いになるのを防ぐため）にするための仕様です。
+      const yyyy = date.getFullYear();
+      const MM = String(date.getMonth() + 1).padStart(2, "0");
+      const dd = String(date.getDate()).padStart(2, "0");
+      const dateKey = `${yyyy}/${MM}/${dd}`;
+      if (!groups[dateKey]) groups[dateKey] = [];
+      groups[dateKey].push(item);
+    }
+    return groups;
+  }, [contentsData]);
+
+  const sortedDates = useMemo(() => {
+    return Object.keys(groupedData).sort((a, b) => (a < b ? 1 : a > b ? -1 : 0));
+  }, [groupedData]);
+
+  useEffect(() => {
+    if (sortedDates.length === 0) return;
+
+    if (!hasAutoExpanded.current) {
+      // 最初の読み込み時に最新の日付フォルダを一度だけ開く
+      setExpandedDateFolders(new Set([sortedDates[0]]));
+      hasAutoExpanded.current = true;
+    } else {
+      // 稼働中に新しいデータ（今日初めての記録など）が追加され、手前に新しい日付グループが発生した場合は自動展開する
+      const prev = previousSortedDates.current;
+      const latest = sortedDates[0];
+      if (prev.length > 0 && prev[0] !== latest && !prev.includes(latest)) {
+        setExpandedDateFolders((current) => {
+          const next = new Set(current);
+          next.add(latest);
+          return next;
+        });
+      }
+    }
+    
+    // 比較用に状態を保存
+    previousSortedDates.current = sortedDates;
+  }, [sortedDates]);
+
+  function toggleDateFolder(dateStr: string) {
+    setExpandedDateFolders((prev) => {
+      const next = new Set(prev);
+      if (next.has(dateStr)) {
+        next.delete(dateStr);
+      } else {
+        next.add(dateStr);
+      }
+      return next;
+    });
+  }
 
   function handleCopy(id: string, json: string) {
     navigator.clipboard.writeText(json).then(() => {
@@ -169,18 +228,54 @@ export function App() {
             <p className="text-xs leading-relaxed">このページは記録対象外です。</p>
           </output>
         )}
-        {contentsData.length > 0 ? (
-          contentsData.map((item) => (
-            <ContentCard
-              key={item.id}
-              item={item}
-              copiedId={copiedId}
-              expandedIds={expandedIds}
-              onCopy={handleCopy}
-              onToggleExpanded={toggleExpanded}
-              onDelete={handleDelete}
-            />
-          ))
+        {sortedDates.length > 0 ? (
+          sortedDates.map((dateStr) => {
+            const items = groupedData[dateStr];
+            const isExpanded = expandedDateFolders.has(dateStr);
+            const regionId = `folder-${dateStr.replace(/\//g, "-")}`;
+            
+            return (
+              <div key={dateStr} className="flex flex-col gap-2">
+                <button
+                  type="button"
+                  onClick={() => toggleDateFolder(dateStr)}
+                  aria-expanded={isExpanded}
+                  aria-controls={regionId}
+                  className="flex items-center gap-2 px-2 py-1.5 text-slate-700 hover:bg-slate-200/50 rounded-md transition-colors font-semibold"
+                >
+                  {isExpanded ? (
+                    <ChevronDown size={18} className="text-slate-400 shrink-0" aria-hidden="true" />
+                  ) : (
+                    <ChevronRight size={18} className="text-slate-400 shrink-0" aria-hidden="true" />
+                  )}
+                  <span className="text-sm">{dateStr}</span>
+                  <span className="text-xs text-slate-500 font-normal ml-auto bg-slate-200/60 px-2.5 py-0.5 rounded-full">
+                    {items.length}件
+                  </span>
+                </button>
+                
+                <div
+                  id={regionId}
+                  role="region"
+                  hidden={!isExpanded}
+                  aria-label={`${dateStr}の記録一覧`}
+                  className={`${!isExpanded ? 'hidden ' : ''}flex flex-col gap-3 pl-3 ml-2.5 border-l-2 border-slate-200/60`}
+                >
+                  {items.map((item) => (
+                    <ContentCard
+                      key={item.id}
+                      item={item}
+                      copiedId={copiedId}
+                      expandedIds={expandedIds}
+                      onCopy={handleCopy}
+                      onToggleExpanded={toggleExpanded}
+                      onDelete={handleDelete}
+                    />
+                  ))}
+                </div>
+              </div>
+            );
+          })
         ) : (
           <div className="flex flex-col items-center justify-center flex-1 py-20 gap-2">
             <div className="text-3xl">📭</div>
