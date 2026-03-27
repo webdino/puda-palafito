@@ -1,6 +1,7 @@
 import { storage } from "@wxt-dev/storage";
 import { defineBackground } from "wxt/utils/define-background";
-import { uploadJsonToDrive, ensureDriveRotationFiles } from "@/lib/drive/api";
+import { getRotationConfig } from "@/lib/config";
+import { ensureDriveRotationFiles, uploadJsonToDrive } from "@/lib/drive/api";
 import { setActiveIcon, setInactiveIcon } from "@/lib/icon";
 import { summarize } from "@/lib/summarizer/summarize";
 import { isSummarizerAvailable, isSummarizerSupported } from "@/lib/summarizer/validation";
@@ -13,7 +14,6 @@ import {
   registerOptionsToBackgroundListener,
 } from "../message/events";
 import { createSavedContentData, type SavedContentsData, StorageKeys } from "../storage";
-import { getRotationConfig } from "@/lib/config";
 
 async function saveContentData(payload: PageVisitedPayload) {
   const startTime = Date.now();
@@ -36,22 +36,25 @@ async function syncListToDrive(list: SavedContentsData, targetIndices?: number[]
 
   const baseName = import.meta.env.WXT_EXPORT_FILE_NAME || "history.json";
   const baseFileName = baseName.replace(/\.json$/i, "");
-  
+
   const { maxFiles } = getRotationConfig();
-  let rawIndices = targetIndices && targetIndices.length > 0
-    ? targetIndices
-    : list.map((item) => item.driveFileIndex || 1);
+  let rawIndices =
+    targetIndices && targetIndices.length > 0
+      ? targetIndices
+      : list.map((item) => item.driveFileIndex || 1);
 
   if (rawIndices.length === 0) {
     rawIndices = [1];
   }
 
-  const indicesToSync = Array.from(new Set(
-    rawIndices.map((i) => {
-      if (i < 1 || i > maxFiles || !Number.isFinite(i)) return 1;
-      return i;
-    })
-  ));
+  const indicesToSync = Array.from(
+    new Set(
+      rawIndices.map((i) => {
+        if (i < 1 || i > maxFiles || !Number.isFinite(i)) return 1;
+        return i;
+      }),
+    ),
+  );
 
   // リストを1回走査し、インデックスごとのバケットを作成 (計算量を O(n*m) から O(n+m) に最適化)
   const bucketMap = new Map<number, SavedContentsData>();
@@ -68,7 +71,7 @@ async function syncListToDrive(list: SavedContentsData, targetIndices?: number[]
   for (const index of indicesToSync) {
     const backupFileName = `${baseFileName}_${index}.json`;
     const bucketItems = bucketMap.get(index) || [];
-    
+
     const sanitizedList = bucketItems.map((item) => ({
       ...item,
       url: stripQueryParams(item.url),
@@ -99,7 +102,9 @@ async function saveForLocalStorage(
     currentFileIndex = 1;
   }
 
-  const currentBucketCount = list.filter((x) => (x.driveFileIndex || 1) === currentFileIndex).length;
+  const currentBucketCount = list.filter(
+    (x) => (x.driveFileIndex || 1) === currentFileIndex,
+  ).length;
 
   const modifiedIndices = new Set<number>();
 
@@ -164,13 +169,13 @@ async function updateIconStatus() {
 async function deleteSavedItem(id: string) {
   const item = await storage.getItem<SavedContentsData>(StorageKeys.savedContentsDataKey);
   const list: SavedContentsData = item ?? [];
-  
+
   const targetEntry = list.find((entry) => entry.id === id);
   if (!targetEntry) return;
 
   const targetIndex = targetEntry.driveFileIndex || 1;
   const filteredList = list.filter((entry) => entry.id !== id);
-  
+
   await storage.setItem(StorageKeys.savedContentsDataKey, filteredList);
   await syncListToDrive(filteredList, [targetIndex]);
 }
@@ -178,7 +183,7 @@ async function deleteSavedItem(id: string) {
 async function deleteAllSavedItems() {
   await storage.setItem(StorageKeys.savedContentsDataKey, []);
   await storage.setItem(StorageKeys.driveRotationIndex, 1);
-  
+
   const folderId = await storage.getItem<string>(StorageKeys.googleDriveFolderId);
   if (folderId) {
     const { maxFiles } = getRotationConfig();
