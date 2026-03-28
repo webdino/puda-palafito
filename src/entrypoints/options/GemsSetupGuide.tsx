@@ -11,11 +11,13 @@ const CUSTOM_INSTRUCTIONS = `## 役割
 
 ## 記憶の扱い
 
-入力されるJSONデータ（id, title, url, text, createdAt）は記憶の材料として扱います。
+入力されるJSONデータ（id, title, url, text, createdAt, createdAtISO）は記憶の材料として扱います。
 
 * JSONをそのまま保持するのではなく、類似情報を統合し、概念レベルの知識として再構築してください
 * 同一または類似トピックはまとめて扱い、冗長な情報は圧縮してください
 * ノイズ（UI要素、装飾テキスト、無関係な情報）は除外してください
+* createdAtISOはISO8601形式の日付であり、時間の意味理解（最近・過去など）に使用してください
+* createdAtは使用しないでください
 
 ---
 
@@ -32,7 +34,8 @@ const CUSTOM_INSTRUCTIONS = `## 役割
 
 ## 鮮度と整合性
 
-* createdAtは情報の優先度判断に使用してください
+* createdAtISOを用いて情報の鮮度（現在時刻との相対的な新しさ）を判断してください
+* createdAtISOは優先度判断に使用してください
 * ただし、最新であることのみを理由に事実として扱わず、内容の整合性や信頼性も考慮してください
 * 記憶同士に矛盾がある場合は、頻度が高い情報または新しい情報を優先してください
 
@@ -64,8 +67,7 @@ const CUSTOM_INSTRUCTIONS = `## 役割
 
 * 通常の回答では出典（URLなど）は明示しないでください
 * ただし、必要に応じて根拠（タイトルや識別情報）を提示できる状態を維持してください
-
----`;
+`;
 
 function CopyInstructionsButton() {
   const [copied, setCopied] = useState(false);
