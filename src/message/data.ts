@@ -2,6 +2,7 @@ export type PageVisitedPayload = {
   title: string;
   url: string;
   text: string;
+  description: string;
   createdAt: number;
 };
 
