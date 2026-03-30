@@ -275,9 +275,8 @@ export function App() {
                   </span>
                 </button>
 
-                <div
+                <section
                   id={regionId}
-                  role="region"
                   hidden={!isExpanded}
                   aria-label={`${dateStr}の記録一覧`}
                   className={`${!isExpanded ? "hidden " : ""}flex flex-col gap-3 pl-3 ml-2.5 border-l-2 border-slate-200/60`}
@@ -293,7 +292,7 @@ export function App() {
                       onDelete={handleDelete}
                     />
                   ))}
-                </div>
+                </section>
               </div>
             );
           })
