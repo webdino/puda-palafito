@@ -1,6 +1,6 @@
 import { storage } from "@wxt-dev/storage";
-import { Circle, Pause, Settings, ChevronRight, ChevronDown } from "lucide-react";
-import { useEffect, useState, useMemo, useRef } from "react";
+import { ChevronDown, ChevronRight, Circle, Pause, Settings } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { openOptionsTab } from "@/lib/tabs";
 import { isAvailableUrl } from "@/lib/url";
 import { notifyDeleteAllItems, notifyDeleteItem } from "@/message/events";
@@ -56,7 +56,7 @@ export function App() {
         });
       }
     }
-    
+
     // 比較用に状態を保存
     previousSortedDates.current = sortedDates;
   }, [sortedDates]);
@@ -233,7 +233,7 @@ export function App() {
             const items = groupedData[dateStr];
             const isExpanded = expandedDateFolders.has(dateStr);
             const regionId = `folder-${dateStr.replace(/\//g, "-")}`;
-            
+
             return (
               <div key={dateStr} className="flex flex-col gap-2">
                 <button
@@ -246,20 +246,23 @@ export function App() {
                   {isExpanded ? (
                     <ChevronDown size={18} className="text-slate-400 shrink-0" aria-hidden="true" />
                   ) : (
-                    <ChevronRight size={18} className="text-slate-400 shrink-0" aria-hidden="true" />
+                    <ChevronRight
+                      size={18}
+                      className="text-slate-400 shrink-0"
+                      aria-hidden="true"
+                    />
                   )}
                   <span className="text-sm">{dateStr}</span>
                   <span className="text-xs text-slate-500 font-normal ml-auto bg-slate-200/60 px-2.5 py-0.5 rounded-full">
                     {items.length}件
                   </span>
                 </button>
-                
-                <div
+
+                <section
                   id={regionId}
-                  role="region"
                   hidden={!isExpanded}
                   aria-label={`${dateStr}の記録一覧`}
-                  className={`${!isExpanded ? 'hidden ' : ''}flex flex-col gap-3 pl-3 ml-2.5 border-l-2 border-slate-200/60`}
+                  className={`${!isExpanded ? "hidden " : ""}flex flex-col gap-3 pl-3 ml-2.5 border-l-2 border-slate-200/60`}
                 >
                   {items.map((item) => (
                     <ContentCard
@@ -272,7 +275,7 @@ export function App() {
                       onDelete={handleDelete}
                     />
                   ))}
-                </div>
+                </section>
               </div>
             );
           })
