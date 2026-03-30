@@ -51,10 +51,19 @@ export default defineContentScript({
       const title = document.title;
       const pageText = bodyClone.textContent ?? "";
       const maskedText = maskSensitiveInfo(pageText, enabledSensitiveInfoTypes);
+      // SNSで共有されるdescriptionを取得する
+      const ogDesc = document.querySelector<HTMLMetaElement>(
+        'meta[property="og:description"]',
+      )?.content;
+      // 一般的なdescriptionを取得する
+      const metaDesc = document.querySelector<HTMLMetaElement>('meta[name="description"]')?.content;
+      // SNS向けのdescriptionがあればそれを優先する
+      const description = ogDesc || metaDesc || "";
       const mainContent: PageVisitedPayload = {
         title: maskSensitiveInfo(title, enabledSensitiveInfoTypes),
         url: window.location.href,
         text: maskedText,
+        description,
         createdAt: Date.now(),
       };
 

@@ -1,5 +1,5 @@
 import { storage } from "@wxt-dev/storage";
-import { ChevronDown, ChevronRight, Circle, Pause, Settings } from "lucide-react";
+import { ChevronDown, ChevronRight, Circle, Pause, Search, Settings } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { openOptionsTab } from "@/lib/tabs";
 import { isAvailableUrl } from "@/lib/url";
@@ -9,6 +9,7 @@ import { ContentCard } from "./ContentCard";
 
 export function App() {
   const [contentsData, setContentsData] = useState<SavedContentsData>([]);
+  const [urlFilter, setUrlFilter] = useState("");
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [recordingEnabled, setRecordingEnabled] = useState(true);
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
@@ -17,9 +18,15 @@ export function App() {
   const hasAutoExpanded = useRef(false);
   const previousSortedDates = useRef<string[]>([]);
 
+  const filteredContentsData = useMemo(() => {
+    if (!urlFilter) return contentsData;
+    const search = urlFilter.toLowerCase();
+    return contentsData.filter((item) => item.url.toLowerCase().includes(search));
+  }, [contentsData, urlFilter]);
+
   const groupedData = useMemo(() => {
     const groups: Record<string, SavedContentData[]> = {};
-    for (const item of contentsData) {
+    for (const item of filteredContentsData) {
       const date = new Date(item.createdAt);
       // NOTE: 意図的にユーザー環境のローカル・タイムゾーン基準で日付をグループ化しています。
       // 閲覧履歴として直感的な日付（UTC等で朝のデータが前日扱いになるのを防ぐため）にするための仕様です。
@@ -31,7 +38,7 @@ export function App() {
       groups[dateKey].push(item);
     }
     return groups;
-  }, [contentsData]);
+  }, [filteredContentsData]);
 
   const sortedDates = useMemo(() => {
     return Object.keys(groupedData).sort((a, b) => (a < b ? 1 : a > b ? -1 : 0));
@@ -185,12 +192,12 @@ export function App() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-slate-50 to-slate-100">
-      <header className="sticky top-0 z-10 px-4 py-3 bg-white/80 backdrop-blur border-b border-slate-200">
+      <header className="sticky top-0 z-10 px-4 py-3 bg-white/80 backdrop-blur border-b border-slate-200 flex flex-col gap-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <h1 className="text-base font-semibold tracking-tight text-slate-800">記録ページ</h1>
             <span className="text-xs font-semibold px-2.5 py-1 bg-indigo-100 text-indigo-600 rounded-full">
-              {contentsData.length}
+              {filteredContentsData.length}
             </span>
           </div>
           <div className="flex gap-2 items-center">
@@ -213,6 +220,16 @@ export function App() {
               全削除
             </button>
           </div>
+        </div>
+        <div className="relative">
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+          <input
+            type="text"
+            value={urlFilter}
+            onChange={(e) => setUrlFilter(e.target.value)}
+            placeholder="URLでフィルタ..."
+            className="w-full text-sm pl-9 pr-3 py-1.5 bg-slate-100 border border-transparent rounded-lg focus:bg-white focus:border-indigo-300 focus:ring-2 focus:ring-indigo-100 outline-none transition-all placeholder:text-slate-400"
+          />
         </div>
       </header>
 

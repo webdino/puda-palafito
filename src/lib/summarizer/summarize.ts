@@ -51,7 +51,12 @@ export async function summarize(title: string, text: string): Promise<string> {
       return await summarizer.summarize(text);
     }
   } catch (e) {
-    console.error(`要約失敗: ${e}  text length: ${text.length}`);
+    if (e instanceof Error && e.name === "NotReadableError") {
+      return "";
+    }
+    console.error(
+      `要約失敗: ${e instanceof Error ? `${e.name} ${e.message}` : e}  text length: ${text.length}`,
+    );
     return "";
   } finally {
     summarizer.destroy();
