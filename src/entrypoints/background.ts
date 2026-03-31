@@ -156,6 +156,9 @@ async function updateIconStatus() {
     if (available && recordingEnabled) {
       chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
       setActiveIcon();
+    } else if (available && !recordingEnabled) {
+      chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
+      setInactiveIcon();
     } else {
       chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: false });
       setInactiveIcon();
