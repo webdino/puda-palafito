@@ -16,11 +16,7 @@ import {
 import { createSavedContentData, type SavedContentsData, StorageKeys } from "../storage";
 
 async function saveContentData(payload: PageVisitedPayload) {
-  const startTime = Date.now();
   const summarizedText = await summarize(payload.title, payload.text);
-  const summarizeTime = Date.now() - startTime;
-  console.log(`text summary time: ${summarizeTime}`);
-
   const result = await saveForLocalStorage(payload, summarizedText);
   if (result && result.updatedList.length > 0) {
     await syncListToDrive(result.updatedList, result.modifiedIndices);
@@ -252,9 +248,8 @@ export default defineBackground(() => {
 
   registerContentToBackgroundListener({
     pageVisited(payload) {
-      console.info("Received page visit from content script:", payload.title);
       saveContentData(payload).catch((e) => {
-        console.log(e);
+        console.error(e);
       });
     },
   });

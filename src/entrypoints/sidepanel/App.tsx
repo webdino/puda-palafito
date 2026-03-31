@@ -146,9 +146,7 @@ export function App() {
 
     const unwatch = storage.watch<SavedContentsData>(
       StorageKeys.savedContentsDataKey,
-      (newValue, oldValue) => {
-        console.log("newValue", newValue);
-        console.log("oldValue", oldValue);
+      (newValue, _) => {
         setContentsData(newValue ?? []);
       },
     );

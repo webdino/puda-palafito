@@ -18,15 +18,12 @@ async function runCrawl() {
     process.exit(1);
   }
 
-  console.log(`Reading site list from: ${listPath}`);
   const urlList = JSON.parse(await fs.readFile(listPath, "utf-8"));
 
   const extensionPath = path.resolve(__dirname, "../.output/chrome-mv3");
   const userDataDir = path.join(os.tmpdir(), "playwright-crawl-profile");
   const downloadsPath = path.resolve(process.cwd(), "downloads");
   await fs.mkdir(downloadsPath, { recursive: true });
-
-  console.log("Launching browser with extension...");
 
   const executablePath = process.env.CHROME_PATH || undefined;
 
@@ -48,16 +45,13 @@ async function runCrawl() {
 
   // クロール開始前にストレージをクリア（拡張機能ページ経由）
   const extensionId = background.url().split("/")[2];
-  console.log("Clearing storage...");
   const helperPage = await context.newPage();
   await helperPage.goto(`chrome-extension://${extensionId}/sidepanel.html`, { waitUntil: "load" });
   await helperPage.evaluate(() => chrome.storage.local.clear());
   await helperPage.close();
-  console.log("Storage cleared.");
 
   for (let i = 0; i < urlList.length; i++) {
     const url = urlList[i];
-    console.log(`Visiting (${i + 1}/${urlList.length}): ${url}`);
     try {
       await page.goto(url, { waitUntil: "domcontentloaded", timeout: 60000 });
       await page.waitForTimeout(3000);
@@ -66,7 +60,6 @@ async function runCrawl() {
     }
   }
 
-  console.log("Crawl finished. Browser is open. Press Ctrl+C to exit.");
   await new Promise(() => {}); // プロセスが終了するまで待機
 }
 

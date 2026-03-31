@@ -7,19 +7,12 @@ function combineMapSummarizedText(summarizedChunks: string[]) {
 }
 
 export async function mapSummarizeAndJoin(title: string, text: string): Promise<string> {
-  console.log(`Mapで要約して結合する: text length: ${text.length}`);
-
   const splitter = new RecursiveCharacterTextSplitter({
     chunkSize: 3000,
     chunkOverlap: 750,
   });
 
   const chunks = splitter.splitText(text);
-  console.log(`Chunk count: ${chunks.length}`);
-  chunks.forEach((chunk, index) => {
-    console.log(`Chunk ${index + 1}: ${chunk.length}`);
-  });
-
   // ひとまずはエラーにするが頻発するならquotaからチャンクサイズを算出するほうが良いかも
   if (chunks.length === 1) {
     throw new Error(
@@ -35,11 +28,6 @@ export async function mapSummarizeAndJoin(title: string, text: string): Promise<
     mapSummarizer.destroy();
   }
 
-  summarizedChunks.forEach((chunk, index) => {
-    console.log(`Summarized chunk ${index + 1}: ${chunk.length}`);
-    console.log(chunk);
-  });
-
   return combineMapSummarizedText(summarizedChunks);
 }
 
@@ -47,7 +35,6 @@ export async function summarize(title: string, text: string): Promise<string> {
   const summarizer = await createDefaultSummarizer();
   try {
     if (await fitsInQuota(summarizer, text)) {
-      console.log(`通常の要約処理: text length: ${text.length}`);
       return await summarizer.summarize(text);
     }
   } catch (e) {
