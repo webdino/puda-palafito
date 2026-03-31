@@ -21,7 +21,12 @@ export function App() {
   const filteredContentsData = useMemo(() => {
     if (!urlFilter) return contentsData;
     const search = urlFilter.toLowerCase();
-    return contentsData.filter((item) => item.url.toLowerCase().includes(search));
+    return contentsData.filter(
+      (item) =>
+        item.url.toLowerCase().includes(search) ||
+        item.title.toLowerCase().includes(search) ||
+        item.text.toLowerCase().includes(search),
+    );
   }, [contentsData, urlFilter]);
 
   const groupedData = useMemo(() => {
@@ -227,7 +232,7 @@ export function App() {
             type="text"
             value={urlFilter}
             onChange={(e) => setUrlFilter(e.target.value)}
-            placeholder="URLでフィルタ..."
+            placeholder="URL・タイトル・テキストでフィルタ..."
             className="w-full text-sm pl-9 pr-3 py-1.5 bg-slate-100 border border-transparent rounded-lg focus:bg-white focus:border-indigo-300 focus:ring-2 focus:ring-indigo-100 outline-none transition-all placeholder:text-slate-400"
           />
         </div>
