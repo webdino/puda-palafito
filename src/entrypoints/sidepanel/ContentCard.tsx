@@ -1,18 +1,40 @@
+import type React from "react";
 import type { SavedContentsData } from "@/storage";
 
 type Props = {
   item: SavedContentsData[number];
   copiedId: string | null;
   expandedIds: Set<string>;
+  query: string;
   onCopy: (id: string, json: string) => void;
   onToggleExpanded: (id: string) => void;
   onDelete: (id: string) => void;
 };
 
+function escapeRegExp(s: string) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function highlight(text: string, query: string): React.ReactNode {
+  if (!query) return text;
+  const parts = text.split(new RegExp(`(${escapeRegExp(query)})`, "gi"));
+  return parts.map((part, i) =>
+    part.toLowerCase() === query.toLowerCase() ? (
+      // biome-ignore lint/suspicious/noArrayIndexKey: split parts are positionally stable and never reordered
+      <mark key={i} className="bg-yellow-200 text-inherit rounded-sm not-italic">
+        {part}
+      </mark>
+    ) : (
+      part
+    ),
+  );
+}
+
 export function ContentCard({
   item,
   copiedId,
   expandedIds,
+  query,
   onCopy,
   onToggleExpanded,
   onDelete,
@@ -31,7 +53,7 @@ export function ContentCard({
     <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
       <div className="px-4 pt-4 pb-3 flex flex-col gap-1">
         <p className="text-sm font-semibold text-slate-800 leading-snug line-clamp-2">
-          {item.title}
+          {highlight(item.title, query)}
         </p>
         <a
           href={item.url}
@@ -39,7 +61,7 @@ export function ContentCard({
           rel="noreferrer"
           className="text-[11px] text-indigo-500 hover:text-indigo-700 hover:underline truncate w-full block"
         >
-          {hostname}
+          {highlight(hostname, query)}
         </a>
       </div>
       {item.text && (
@@ -53,7 +75,7 @@ export function ContentCard({
               expandedIds.has(item.id) ? "" : "line-clamp-3"
             }`}
           >
-            {item.text}
+            {highlight(item.text, query)}
           </p>
         </button>
       )}

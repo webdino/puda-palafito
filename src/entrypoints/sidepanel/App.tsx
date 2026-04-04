@@ -33,8 +33,6 @@ export function App() {
     const groups: Record<string, SavedContentData[]> = {};
     for (const item of filteredContentsData) {
       const date = new Date(item.createdAt);
-      // NOTE: 意図的にユーザー環境のローカル・タイムゾーン基準で日付をグループ化しています。
-      // 閲覧履歴として直感的な日付（UTC等で朝のデータが前日扱いになるのを防ぐため）にするための仕様です。
       const yyyy = date.getFullYear();
       const MM = String(date.getMonth() + 1).padStart(2, "0");
       const dd = String(date.getDate()).padStart(2, "0");
@@ -290,6 +288,7 @@ export function App() {
                       item={item}
                       copiedId={copiedId}
                       expandedIds={expandedIds}
+                      query={urlFilter}
                       onCopy={handleCopy}
                       onToggleExpanded={toggleExpanded}
                       onDelete={handleDelete}
