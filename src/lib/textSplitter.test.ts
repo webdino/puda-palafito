@@ -168,7 +168,6 @@ describe("RecursiveCharacterTextSplitter", () => {
         chunkOverlap: 6,
       });
       const output = splitter.splitText(text);
-      console.log(JSON.stringify(output));
       expect(output).toEqual(["一二三。\n\n四五六。", "四五六。\n\n七八九。"]);
     });
   });

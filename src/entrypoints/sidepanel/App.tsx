@@ -21,15 +21,18 @@ export function App() {
   const filteredContentsData = useMemo(() => {
     if (!urlFilter) return contentsData;
     const search = urlFilter.toLowerCase();
-    return contentsData.filter((item) => item.url.toLowerCase().includes(search));
+    return contentsData.filter(
+      (item) =>
+        item.url.toLowerCase().includes(search) ||
+        item.title.toLowerCase().includes(search) ||
+        item.text.toLowerCase().includes(search),
+    );
   }, [contentsData, urlFilter]);
 
   const groupedData = useMemo(() => {
     const groups: Record<string, SavedContentData[]> = {};
     for (const item of filteredContentsData) {
       const date = new Date(item.createdAt);
-      // NOTE: 意図的にユーザー環境のローカル・タイムゾーン基準で日付をグループ化しています。
-      // 閲覧履歴として直感的な日付（UTC等で朝のデータが前日扱いになるのを防ぐため）にするための仕様です。
       const yyyy = date.getFullYear();
       const MM = String(date.getMonth() + 1).padStart(2, "0");
       const dd = String(date.getDate()).padStart(2, "0");
@@ -141,9 +144,7 @@ export function App() {
 
     const unwatch = storage.watch<SavedContentsData>(
       StorageKeys.savedContentsDataKey,
-      (newValue, oldValue) => {
-        console.log("newValue", newValue);
-        console.log("oldValue", oldValue);
+      (newValue, _) => {
         setContentsData(newValue ?? []);
       },
     );
@@ -227,7 +228,7 @@ export function App() {
             type="text"
             value={urlFilter}
             onChange={(e) => setUrlFilter(e.target.value)}
-            placeholder="URLでフィルタ..."
+            placeholder="URL・タイトル・テキストでフィルタ..."
             className="w-full text-sm pl-9 pr-3 py-1.5 bg-slate-100 border border-transparent rounded-lg focus:bg-white focus:border-indigo-300 focus:ring-2 focus:ring-indigo-100 outline-none transition-all placeholder:text-slate-400"
           />
         </div>
@@ -287,6 +288,7 @@ export function App() {
                       item={item}
                       copiedId={copiedId}
                       expandedIds={expandedIds}
+                      query={urlFilter}
                       onCopy={handleCopy}
                       onToggleExpanded={toggleExpanded}
                       onDelete={handleDelete}

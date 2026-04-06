@@ -24,6 +24,6 @@ export async function openOptionsTab() {
     return;
   }
   createOptionsTab().catch((e) => {
-    console.log(e);
+    console.error(e);
   });
 }
