@@ -1,0 +1,13 @@
+node_modules/
+.output/
+.wxt/
+.vite/
+.idea/
+.vscode/
+.DS_Store
+*.log
+.env
+.serena
+readability/
+scripts/sites/
+.chrome-profile/
