@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import asyncio
 import os
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 from typing import Any
 
@@ -102,9 +102,17 @@ def format_file_info(file_path: Path, frontmatter: dict[str, Any]) -> str:
 
 
 def parse_date(date_str: str) -> date | None:
-    """Parse a date string in YYYY-MM-DD format."""
+    """Parse a date string in YYYY-MM-DD or YYYY-MM-DD HH:mm:ss format."""
     try:
+        # Try YYYY-MM-DD format first
         return date.fromisoformat(date_str)
+    except (ValueError, TypeError):
+        pass
+    
+    try:
+        # Try YYYY-MM-DD HH:mm:ss format
+        dt = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
+        return dt.date()
     except (ValueError, TypeError):
         return None
 
