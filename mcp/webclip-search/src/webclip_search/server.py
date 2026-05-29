@@ -98,7 +98,16 @@ def format_file_info(file_path: Path, frontmatter: dict[str, Any]) -> str:
     title = frontmatter.get("title", "No title")
     source = frontmatter.get("source", "No source")
     created = frontmatter.get("created", "Unknown")
-    return f"- {file_path.name}\n  Title: {title}\n  Source: {source}\n  Created: {created}"
+    lines = [
+        f"- {file_path.name}",
+        f"  Title: {title}",
+        f"  Source: {source}",
+        f"  Created: {created}",
+    ]
+    summary = frontmatter.get("summary")
+    if summary:
+        lines.append(f"  Summary: {summary}")
+    return "\n".join(lines)
 
 
 def parse_date(date_str: str) -> date | None:
