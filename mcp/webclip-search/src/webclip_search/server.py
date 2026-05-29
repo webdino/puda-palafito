@@ -179,6 +179,20 @@ async def list_tools() -> list[Tool]:
                 "required": ["filename"],
             },
         ),
+        Tool(
+            name="search_fulltext",
+            description="Search WebClip files by text in the body content (partial match, case-insensitive)",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "query": {
+                        "type": "string",
+                        "description": "Text to search for in the body content",
+                    },
+                },
+                "required": ["query"],
+            },
+        ),
     ]
 
 
@@ -206,6 +220,8 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
             arguments.get("filename", ""),
             arguments.get("max_chars", 2000),
         )
+    elif name == "search_fulltext":
+        return await handle_search_fulltext(webclip_dir, arguments.get("query", ""))
     else:
         return [TextContent(type="text", text=f"Unknown tool: {name}")]
 
@@ -304,6 +320,35 @@ async def handle_search_by_source(
 
     results = [format_file_info(fp, fm) for fp, fm in sorted(matches)]
     output = f"Found {len(matches)} file(s) matching '{url_pattern}':\n\n"
+    output += "\n\n".join(results)
+    return [TextContent(type="text", text=output)]
+
+
+async def handle_search_fulltext(
+    webclip_dir: Path, query: str
+) -> list[TextContent]:
+    """Handle search_fulltext tool call."""
+    if not query:
+        return [TextContent(type="text", text="Query cannot be empty.")]
+
+    files = get_all_markdown_files(webclip_dir)
+    matches = []
+    query_lower = query.lower()
+
+    for file_path in files:
+        frontmatter, body = parse_file_content(file_path)
+        if body and query_lower in body.lower():
+            matches.append((file_path, frontmatter))
+
+    if not matches:
+        return [
+            TextContent(
+                type="text", text=f"No files found with body containing: {query}"
+            )
+        ]
+
+    results = [format_file_info(fp, fm) for fp, fm in sorted(matches)]
+    output = f"Found {len(matches)} file(s) containing '{query}':\n\n"
     output += "\n\n".join(results)
     return [TextContent(type="text", text=output)]
 
