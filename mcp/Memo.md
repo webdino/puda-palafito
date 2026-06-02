@@ -15,7 +15,7 @@
   ```
   - サマリー    (外部LLMの呼び出しが必要。インタープリターのところで設定しておく)
     ```
-    summary: {{"a summary of the page, 日本語で}}
+    summary: {{"a summary of the page, 日本語で"}}
     ```
 
     詳細設定のインタプリターコンテキストを{{content}} にする
