@@ -1,6 +1,6 @@
 """WebClip Search MCP Server.
 
-Search Obsidian WebClip files by date or source URL.
+Search Obsidian WebClip files by date, source URL, fulltext, or semantic similarity.
 """
 
 from __future__ import annotations
@@ -15,6 +15,8 @@ import yaml
 from mcp.server import Server
 from mcp.server.stdio import stdio_server
 from mcp.types import TextContent, Tool
+
+from webclip_search.semantic_index import get_index_status, search_semantic
 
 app = Server("webclip-search")
 
@@ -202,6 +204,39 @@ async def list_tools() -> list[Tool]:
                 "required": ["query"],
             },
         ),
+        Tool(
+            name="search_semantic",
+            description=(
+                "Search WebClip files by semantic similarity to the query. "
+                "Indexes markdown body chunks (with optional title/description/summary context)."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "query": {
+                        "type": "string",
+                        "description": "Natural language search query",
+                    },
+                    "top_k": {
+                        "type": "integer",
+                        "description": "Maximum number of files to return (default: 10)",
+                    },
+                    "rebuild_index": {
+                        "type": "boolean",
+                        "description": "Rebuild the entire semantic index (default: false)",
+                    },
+                },
+                "required": ["query"],
+            },
+        ),
+        Tool(
+            name="index_status",
+            description="Show semantic index statistics and frontmatter coverage",
+            inputSchema={
+                "type": "object",
+                "properties": {},
+            },
+        ),
     ]
 
 
@@ -231,6 +266,15 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
         )
     elif name == "search_fulltext":
         return await handle_search_fulltext(webclip_dir, arguments.get("query", ""))
+    elif name == "search_semantic":
+        return await handle_search_semantic(
+            webclip_dir,
+            arguments.get("query", ""),
+            arguments.get("top_k", 10),
+            arguments.get("rebuild_index", False),
+        )
+    elif name == "index_status":
+        return await handle_index_status(webclip_dir)
     else:
         return [TextContent(type="text", text=f"Unknown tool: {name}")]
 
@@ -360,6 +404,96 @@ async def handle_search_fulltext(
     output = f"Found {len(matches)} file(s) containing '{query}':\n\n"
     output += "\n\n".join(results)
     return [TextContent(type="text", text=output)]
+
+
+async def handle_search_semantic(
+    webclip_dir: Path,
+    query: str,
+    top_k: int,
+    rebuild_index: bool,
+) -> list[TextContent]:
+    """Handle search_semantic tool call."""
+    if not query:
+        return [TextContent(type="text", text="Query cannot be empty.")]
+    if top_k < 1:
+        return [TextContent(type="text", text="top_k must be at least 1.")]
+
+    files = get_all_markdown_files(webclip_dir)
+    if not files:
+        return [TextContent(type="text", text="No WebClip files found.")]
+
+    try:
+        hits, _index_data = await asyncio.to_thread(
+            search_semantic,
+            webclip_dir,
+            query,
+            files,
+            parse_file_content,
+            top_k=top_k,
+            rebuild=rebuild_index,
+        )
+    except Exception as e:
+        return [TextContent(type="text", text=f"Semantic search failed: {e}")]
+
+    if not hits:
+        return [
+            TextContent(
+                type="text",
+                text=f"No semantically similar files found for: {query}",
+            )
+        ]
+
+    results = []
+    for rank, hit in enumerate(hits, start=1):
+        lines = [
+            f"{rank}. {hit.filename} (score: {hit.score:.3f})",
+            f"   Title: {hit.title or 'No title'}",
+            f"   Source: {hit.source or 'No source'}",
+            f"   Created: {hit.created or 'Unknown'}",
+            f"   Snippet: {hit.snippet}",
+        ]
+        results.append("\n".join(lines))
+
+    output = f"Found {len(hits)} semantically similar file(s) for '{query}':\n\n"
+    output += "\n\n".join(results)
+    return [TextContent(type="text", text=output)]
+
+
+async def handle_index_status(webclip_dir: Path) -> list[TextContent]:
+    """Handle index_status tool call."""
+    files = get_all_markdown_files(webclip_dir)
+    if not files:
+        return [TextContent(type="text", text="No WebClip files found.")]
+
+    try:
+        status = await asyncio.to_thread(
+            get_index_status,
+            webclip_dir,
+            files,
+            parse_file_content,
+        )
+    except Exception as e:
+        return [TextContent(type="text", text=f"Failed to read index status: {e}")]
+
+    summary_pct = (
+        100 * status.with_summary / status.total_files if status.total_files else 0
+    )
+    description_pct = (
+        100 * status.with_description / status.total_files if status.total_files else 0
+    )
+
+    lines = [
+        "Semantic index status:",
+        f"- Index path: {status.index_path}",
+        f"- Model: {status.model}",
+        f"- Total files: {status.total_files}",
+        f"- Indexed files (in cache): {status.indexed_files}",
+        f"- Pending update: {status.pending_files}",
+        f"- Total chunks: {status.chunk_count}",
+        f"- With summary: {status.with_summary} ({summary_pct:.0f}%)",
+        f"- With description: {status.with_description} ({description_pct:.0f}%)",
+    ]
+    return [TextContent(type="text", text="\n".join(lines))]
 
 
 async def handle_get_file(
