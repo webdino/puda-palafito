@@ -12,6 +12,7 @@ import numpy as np
 from fastembed import TextEmbedding
 
 from webclip_search.chunker import chunk_markdown_body
+from webclip_search.frontmatter_fields import get_created, get_source, get_time_on_page
 
 INDEX_VERSION = 1
 DEFAULT_MODEL = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
@@ -31,6 +32,7 @@ class SearchHit:
     title: str
     source: str
     created: str
+    time_on_page: str
 
 
 @dataclass
@@ -173,8 +175,9 @@ def _index_file_chunks(
                 "text": text,
                 "vector": vector,
                 "title": str(frontmatter.get("title", "")),
-                "source": str(frontmatter.get("source", "")),
-                "created": str(frontmatter.get("created", "")),
+                "source": get_source(frontmatter),
+                "created": get_created(frontmatter),
+                "time_on_page": get_time_on_page(frontmatter),
                 "has_summary": bool(frontmatter.get("summary")),
                 "has_description": bool(frontmatter.get("description")),
             }
@@ -300,6 +303,7 @@ def search_semantic(
                 title=chunk.get("title", ""),
                 source=chunk.get("source", ""),
                 created=chunk.get("created", ""),
+                time_on_page=chunk.get("time_on_page", ""),
             )
         )
     return hits, data

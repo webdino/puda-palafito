@@ -16,6 +16,7 @@ from mcp.server import Server
 from mcp.server.stdio import stdio_server
 from mcp.types import TextContent, Tool
 
+from webclip_search.frontmatter_fields import get_created, get_source, get_time_on_page
 from webclip_search.semantic_index import get_index_status, search_semantic
 
 app = Server("webclip-search")
@@ -98,14 +99,17 @@ def get_all_markdown_files(directory: Path) -> list[Path]:
 def format_file_info(file_path: Path, frontmatter: dict[str, Any]) -> str:
     """Format file information for output."""
     title = frontmatter.get("title", "No title")
-    source = frontmatter.get("source", "No source")
-    created = frontmatter.get("created", "Unknown")
+    source = get_source(frontmatter) or "No source"
+    created = get_created(frontmatter) or "Unknown"
     lines = [
         f"- {file_path.name}",
         f"  Title: {title}",
         f"  Source: {source}",
         f"  Created: {created}",
     ]
+    time_on_page = get_time_on_page(frontmatter)
+    if time_on_page:
+        lines.append(f"  Time on page: {time_on_page}")
     summary = frontmatter.get("summary")
     if summary:
         lines.append(f"  Summary: {summary}")
@@ -327,7 +331,7 @@ async def handle_search_by_date(
 
     for file_path in files:
         frontmatter = parse_frontmatter(file_path)
-        created = frontmatter.get("created")
+        created = get_created(frontmatter)
         if created:
             file_date = parse_date(str(created))
             if file_date and start_date <= file_date <= end_date:
@@ -360,7 +364,7 @@ async def handle_search_by_source(
 
     for file_path in files:
         frontmatter = parse_frontmatter(file_path)
-        source = frontmatter.get("source", "")
+        source = get_source(frontmatter)
         if source and url_pattern_lower in source.lower():
             matches.append((file_path, frontmatter))
 
@@ -450,8 +454,10 @@ async def handle_search_semantic(
             f"   Title: {hit.title or 'No title'}",
             f"   Source: {hit.source or 'No source'}",
             f"   Created: {hit.created or 'Unknown'}",
-            f"   Snippet: {hit.snippet}",
         ]
+        if hit.time_on_page:
+            lines.append(f"   Time on page: {hit.time_on_page}")
+        lines.append(f"   Snippet: {hit.snippet}")
         results.append("\n".join(lines))
 
     output = f"Found {len(hits)} semantically similar file(s) for '{query}':\n\n"
