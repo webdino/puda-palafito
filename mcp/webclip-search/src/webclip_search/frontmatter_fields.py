@@ -17,7 +17,7 @@ def get_created(frontmatter: dict[str, Any]) -> str:
     return str(value) if value else ""
 
 
-def get_time_on_page(frontmatter: dict[str, Any]) -> str:
-    """Return time_on_page when present."""
-    value = frontmatter.get("time_on_page")
+def get_visit_duration(frontmatter: dict[str, Any]) -> str:
+    """Return visit_duration when present."""
+    value = frontmatter.get("visit_duration")
     return str(value) if value else ""

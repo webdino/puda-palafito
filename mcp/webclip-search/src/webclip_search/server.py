@@ -16,7 +16,7 @@ from mcp.server import Server
 from mcp.server.stdio import stdio_server
 from mcp.types import TextContent, Tool
 
-from webclip_search.frontmatter_fields import get_created, get_source, get_time_on_page
+from webclip_search.frontmatter_fields import get_created, get_source, get_visit_duration
 from webclip_search.semantic_index import get_index_status, search_semantic
 
 app = Server("webclip-search")
@@ -107,9 +107,9 @@ def format_file_info(file_path: Path, frontmatter: dict[str, Any]) -> str:
         f"  Source: {source}",
         f"  Created: {created}",
     ]
-    time_on_page = get_time_on_page(frontmatter)
-    if time_on_page:
-        lines.append(f"  Time on page: {time_on_page}")
+    visit_duration = get_visit_duration(frontmatter)
+    if visit_duration:
+        lines.append(f"  Visit duration: {visit_duration}")
     summary = frontmatter.get("summary")
     if summary:
         lines.append(f"  Summary: {summary}")
@@ -455,8 +455,8 @@ async def handle_search_semantic(
             f"   Source: {hit.source or 'No source'}",
             f"   Created: {hit.created or 'Unknown'}",
         ]
-        if hit.time_on_page:
-            lines.append(f"   Time on page: {hit.time_on_page}")
+        if hit.visit_duration:
+            lines.append(f"   Visit duration: {hit.visit_duration}")
         lines.append(f"   Snippet: {hit.snippet}")
         results.append("\n".join(lines))
 
