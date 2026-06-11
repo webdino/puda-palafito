@@ -1,6 +1,6 @@
 # webclip-search
 
-Obsidian WebClipファイルを検索するMCPサーバ
+ WebClipファイルを検索するMCPサーバ
 
 ## 機能
 
@@ -29,27 +29,33 @@ cd mcp/webclip-search
 uv sync
 ```
 
-## 使用方法
+### MCPB（.mcpb）パッケージの作成
+必要なファイル: `manifest.json`, `pyproject.toml`, `uv.lock`, `src/`, `.mcpbignore`
 
-### Cursorでの設定
-
-`mcp.json` または Cursor の MCP 設定に以下を追加：
-
-```json
-{
-  "mcpServers": {
-    "webclip-search": {
-      "command": "uv",
-      "args": ["run", "--directory", "/path/to/mcp/webclip-search", "webclip-search"],
-      "env": {
-        "WEBCLIP_DIR": "/path/to/your/obsidian/webclips"
-      }
-    }
-  }
-}
+```bash
+cd mcp/webclip-search
+npm install -g @anthropic-ai/mcpb   # 初回のみ
+mcpb validate .
+mcpb pack .
 ```
 
-### Claude Desktopでの設定
+生成された `webclip-search.mcpb` を Claude Desktop にインストールします。
+
+
+## インストール方法
+
+### MCBPファイルを使用してインストールする場合
+
+- ファイル→設定…→拡張機能→詳細設定→「拡張機能をインストール」をクリック
+  MCBP ファイルを選択してインストールする
+  インストール時に WebClip ディレクトリの設定を求められます。
+
+- エラーが出て有効化できない場合:
+  最新の "Microsoft Visual C++ Redistributable for Visual Studio 2015-2022 (x64)" を Microsoft からダウンロード/インストールしてから、Claude を再起動してみてください
+
+
+
+### Claude Desktop に手動設定する場合
 
 設定ファイルの場所：
 - **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`

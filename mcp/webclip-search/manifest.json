@@ -1,0 +1,69 @@
+{
+  "manifest_version": "0.4",
+  "name": "webclip-search",
+  "display_name": "WebClip Search",
+  "version": "0.1.0",
+  "description": "WebClipファイルを検索するMCPサーバ",
+  "long_description": "WebClipで保存したMarkdownファイルを、日付・URL・全文・セマンティック類似度で検索します。frontmatter のメタデータ（title, source/url, created/clip_date, time_on_page など）も参照します。",
+  "author": {
+    "name": "webdino"
+  },
+  "server": {
+    "type": "uv",
+    "entry_point": "src/webclip_search/server.py",
+    "mcp_config": {
+      "command": "uv",
+      "args": ["run", "--directory", "${__dirname}", "webclip-search"],
+      "env": {
+        "WEBCLIP_DIR": "${user_config.webclip_dir}"
+      }
+    }
+  },
+  "tools": [
+    {
+      "name": "list_files",
+      "description": "List all WebClip files with their metadata"
+    },
+    {
+      "name": "search_by_date",
+      "description": "Search WebClip files by creation date range"
+    },
+    {
+      "name": "search_by_source",
+      "description": "Search WebClip files by source URL (partial match)"
+    },
+    {
+      "name": "get_contents",
+      "description": "Get the content of a WebClip file (frontmatter + truncated body)"
+    },
+    {
+      "name": "search_fulltext",
+      "description": "Search WebClip files by text in the body content (partial match, case-insensitive)"
+    },
+    {
+      "name": "search_semantic",
+      "description": "Search WebClip files by semantic similarity to the query"
+    },
+    {
+      "name": "index_status",
+      "description": "Show semantic index statistics and frontmatter coverage"
+    }
+  ],
+  "keywords": ["webclip", "search", "markdown", "semantic"],
+  "license": "MIT",
+  "user_config": {
+    "webclip_dir": {
+      "type": "directory",
+      "title": "WebClip Directory",
+      "description": "WebClipファイルが保存されているディレクトリ",
+      "required": true
+    }
+  },
+  "compatibility": {
+    "claude_desktop": ">=0.10.0",
+    "platforms": ["darwin", "win32", "linux"],
+    "runtimes": {
+      "python": ">=3.12,<4"
+    }
+  }
+}

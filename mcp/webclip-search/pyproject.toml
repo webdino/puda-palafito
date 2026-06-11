@@ -1,7 +1,7 @@
 [project]
 name = "webclip-search"
 version = "0.1.0"
-description = "MCP server to search Obsidian WebClip files"
+description = "MCP server to search WebClip files"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
