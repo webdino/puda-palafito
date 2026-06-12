@@ -51,10 +51,10 @@ mcpb pack .
   インストール時に WebClip ディレクトリの設定を求められます。
 
 - エラーが出て有効化できない場合:
-  最新の "Microsoft Visual C++ Redistributable for Visual Studio 2015-2022 (x64)" を Microsoft からダウンロード/インストールしてから、Claude を再起動してみてください
-
-
-
+  Microsoft から、最新のVisual C++ 再頒布可能パッケージ
+  "Microsoft Visual C++ v14 Redistributable (x64)"
+  をダウンロード/インストールしてから、Claude を再起動してみてください
+  
 ### Claude Desktop に手動設定する場合
 
 設定ファイルの場所：
