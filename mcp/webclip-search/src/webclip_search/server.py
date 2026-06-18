@@ -1,6 +1,6 @@
 """WebClip Search MCP Server.
 
-Search Obsidian WebClip files by date, source URL, fulltext, or semantic similarity.
+Search WebClip files by date, source URL, fulltext, or semantic similarity.
 """
 
 from __future__ import annotations
