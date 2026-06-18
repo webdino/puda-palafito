@@ -2,7 +2,34 @@
 
 from __future__ import annotations
 
+from datetime import date, datetime
 from typing import Any
+
+
+def normalize_to_date(value: Any) -> date | None:
+    """Normalize a frontmatter value or date string to a calendar date."""
+    if value is None or value == "":
+        return None
+    if isinstance(value, datetime):
+        return value.date()
+    if isinstance(value, date):
+        return value
+
+    text = str(value).strip()
+    if not text:
+        return None
+
+    try:
+        return datetime.fromisoformat(text).date()
+    except ValueError:
+        pass
+
+    for fmt in ("%Y-%m-%d %H:%M:%S", "%Y-%m-%d %H:%M", "%Y/%m/%d", "%Y-%m-%d"):
+        try:
+            return datetime.strptime(text, fmt).date()
+        except ValueError:
+            continue
+    return None
 
 
 def get_source(frontmatter: dict[str, Any]) -> str:
@@ -15,6 +42,12 @@ def get_created(frontmatter: dict[str, Any]) -> str:
     """Return creation date, falling back to clip_date when created is absent."""
     value = frontmatter.get("created") or frontmatter.get("clip_date")
     return str(value) if value else ""
+
+
+def get_created_date(frontmatter: dict[str, Any]) -> date | None:
+    """Return creation date as a date object for range comparisons."""
+    value = frontmatter.get("created") or frontmatter.get("clip_date")
+    return normalize_to_date(value)
 
 
 def get_visit_duration(frontmatter: dict[str, Any]) -> str:

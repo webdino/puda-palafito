@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import asyncio
 import os
-from datetime import date, datetime
+from datetime import date
 from pathlib import Path
 from typing import Any
 
@@ -17,13 +17,15 @@ from mcp.server.stdio import stdio_server
 from mcp.types import TextContent, Tool
 
 from webclip_search.frontmatter_fields import (
+    normalize_to_date,
     get_created,
+    get_created_date,
     get_source,
     get_tab_id,
     get_visit_duration,
     get_window_id,
 )
-from webclip_search.semantic_index import get_index_status, search_semantic
+from webclip_search.semantic_index import get_index_status, search_semantic, sync_index
 
 app = Server("webclip-search")
 
@@ -102,6 +104,11 @@ def get_all_markdown_files(directory: Path) -> list[Path]:
     return list(directory.glob("**/*.md"))
 
 
+def relative_path(webclip_dir: Path, file_path: Path) -> str:
+    """Return file path relative to the WebClip directory."""
+    return file_path.relative_to(webclip_dir).as_posix()
+
+
 def format_file_info(file_path: Path, frontmatter: dict[str, Any]) -> str:
     """Format file information for output."""
     title = frontmatter.get("title", "No title")
@@ -128,20 +135,54 @@ def format_file_info(file_path: Path, frontmatter: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
+def format_file_info_with_path(
+    webclip_dir: Path, file_path: Path, frontmatter: dict[str, Any]
+) -> str:
+    """Format file information including relative path."""
+    info = format_file_info(file_path, frontmatter)
+    return f"{info}\n  Relative path: {relative_path(webclip_dir, file_path)}"
+
+
+def match_files_by_date(
+    webclip_dir: Path, start_date: date, end_date: date
+) -> list[tuple[Path, dict[str, Any]]]:
+    """Return files whose created date falls within the inclusive range."""
+    matches: list[tuple[Path, dict[str, Any]]] = []
+    for file_path in get_all_markdown_files(webclip_dir):
+        frontmatter = parse_frontmatter(file_path)
+        file_date = get_created_date(frontmatter)
+        if file_date and start_date <= file_date <= end_date:
+            matches.append((file_path, frontmatter))
+    return sorted(matches)
+
+
+def parse_date_range(
+    start_date_str: str, end_date_str: str
+) -> tuple[date | None, date | None, str | None]:
+    """Parse and validate a date range. Returns (start, end, error_message)."""
+    start_date = parse_date(start_date_str)
+    if not start_date:
+        return None, None, f"Invalid start_date format: {start_date_str}. Use YYYY-MM-DD."
+
+    end_date = parse_date(end_date_str)
+    if not end_date:
+        return None, None, f"Invalid end_date format: {end_date_str}. Use YYYY-MM-DD."
+
+    if start_date > end_date:
+        return None, None, "start_date must be before or equal to end_date."
+
+    return start_date, end_date, None
+
+
+async def sync_semantic_index(webclip_dir: Path) -> None:
+    """Remove orphaned semantic index entries after file deletion."""
+    files = get_all_markdown_files(webclip_dir)
+    await asyncio.to_thread(sync_index, webclip_dir, files, parse_file_content)
+
+
 def parse_date(date_str: str) -> date | None:
-    """Parse a date string in YYYY-MM-DD or YYYY-MM-DD HH:mm:ss format."""
-    try:
-        # Try YYYY-MM-DD format first
-        return date.fromisoformat(date_str)
-    except (ValueError, TypeError):
-        pass
-    
-    try:
-        # Try YYYY-MM-DD HH:mm:ss format
-        dt = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
-        return dt.date()
-    except (ValueError, TypeError):
-        return None
+    """Parse a date string in common WebClip frontmatter formats."""
+    return normalize_to_date(date_str)
 
 
 @app.list_tools()
@@ -253,6 +294,46 @@ async def list_tools() -> list[Tool]:
                 "properties": {},
             },
         ),
+        Tool(
+            name="remove_contents",
+            description="Permanently delete a WebClip file by filename",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "filename": {
+                        "type": "string",
+                        "description": "Filename to delete (e.g., 'example.md')",
+                    },
+                    "dry_run": {
+                        "type": "boolean",
+                        "description": "Preview deletion without modifying files (default: false)",
+                    },
+                },
+                "required": ["filename"],
+            },
+        ),
+        Tool(
+            name="remove_contents_by_date",
+            description="Permanently delete WebClip files by creation date range",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "start_date": {
+                        "type": "string",
+                        "description": "Start date in YYYY-MM-DD format (inclusive)",
+                    },
+                    "end_date": {
+                        "type": "string",
+                        "description": "End date in YYYY-MM-DD format (inclusive)",
+                    },
+                    "dry_run": {
+                        "type": "boolean",
+                        "description": "Preview deletion without modifying files (default: false)",
+                    },
+                },
+                "required": ["start_date", "end_date"],
+            },
+        ),
     ]
 
 
@@ -291,6 +372,19 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
         )
     elif name == "index_status":
         return await handle_index_status(webclip_dir)
+    elif name == "remove_contents":
+        return await handle_remove_contents(
+            webclip_dir,
+            arguments.get("filename", ""),
+            arguments.get("dry_run", False),
+        )
+    elif name == "remove_contents_by_date":
+        return await handle_remove_contents_by_date(
+            webclip_dir,
+            arguments.get("start_date", ""),
+            arguments.get("end_date", ""),
+            arguments.get("dry_run", False),
+        )
     else:
         return [TextContent(type="text", text=f"Unknown tool: {name}")]
 
@@ -314,40 +408,11 @@ async def handle_search_by_date(
     webclip_dir: Path, start_date_str: str, end_date_str: str
 ) -> list[TextContent]:
     """Handle search_by_date tool call."""
-    start_date = parse_date(start_date_str)
-    end_date = parse_date(end_date_str)
+    start_date, end_date, error = parse_date_range(start_date_str, end_date_str)
+    if error:
+        return [TextContent(type="text", text=error)]
 
-    if not start_date:
-        return [
-            TextContent(
-                type="text",
-                text=f"Invalid start_date format: {start_date_str}. Use YYYY-MM-DD.",
-            )
-        ]
-    if not end_date:
-        return [
-            TextContent(
-                type="text",
-                text=f"Invalid end_date format: {end_date_str}. Use YYYY-MM-DD.",
-            )
-        ]
-    if start_date > end_date:
-        return [
-            TextContent(
-                type="text", text="start_date must be before or equal to end_date."
-            )
-        ]
-
-    files = get_all_markdown_files(webclip_dir)
-    matches = []
-
-    for file_path in files:
-        frontmatter = parse_frontmatter(file_path)
-        created = get_created(frontmatter)
-        if created:
-            file_date = parse_date(str(created))
-            if file_date and start_date <= file_date <= end_date:
-                matches.append((file_path, frontmatter))
+    matches = match_files_by_date(webclip_dir, start_date, end_date)
 
     if not matches:
         return [
@@ -357,7 +422,7 @@ async def handle_search_by_date(
             )
         ]
 
-    results = [format_file_info(fp, fm) for fp, fm in sorted(matches)]
+    results = [format_file_info(fp, fm) for fp, fm in matches]
     output = f"Found {len(matches)} file(s) between {start_date_str} and {end_date_str}:\n\n"
     output += "\n\n".join(results)
     return [TextContent(type="text", text=output)]
@@ -547,6 +612,121 @@ async def handle_get_file(
         output_parts.append(f"\n\n... (truncated, {len(body) - max_chars} more characters)")
     else:
         output_parts.append(body)
+
+    return [TextContent(type="text", text="\n".join(output_parts))]
+
+
+async def handle_remove_contents(
+    webclip_dir: Path, filename: str, dry_run: bool
+) -> list[TextContent]:
+    """Handle remove_contents tool call."""
+    if not filename:
+        return [TextContent(type="text", text="Filename cannot be empty.")]
+
+    file_path = find_file_by_name(webclip_dir, filename)
+    if not file_path:
+        return [TextContent(type="text", text=f"File not found: {filename}")]
+
+    frontmatter = parse_frontmatter(file_path)
+    file_info = format_file_info_with_path(webclip_dir, file_path, frontmatter)
+
+    if dry_run:
+        output = (
+            "[dry_run] remove_contents preview\n\n"
+            "Summary:\n"
+            "- matched: 1\n"
+            "- would_remove: 1\n\n"
+            "Would remove 1 file:\n\n"
+            f"{file_info}\n\n"
+            "No files were modified."
+        )
+        return [TextContent(type="text", text=output)]
+
+    try:
+        file_path.unlink()
+    except OSError as e:
+        return [TextContent(type="text", text=f"Failed to delete {filename}: {e}")]
+
+    try:
+        await sync_semantic_index(webclip_dir)
+    except Exception as e:
+        return [
+            TextContent(
+                type="text",
+                text=(
+                    f"Deleted {filename}, but failed to update semantic index: {e}"
+                ),
+            )
+        ]
+
+    output = (
+        "Removed 1 file:\n\n"
+        f"{file_info}"
+    )
+    return [TextContent(type="text", text=output)]
+
+
+async def handle_remove_contents_by_date(
+    webclip_dir: Path, start_date_str: str, end_date_str: str, dry_run: bool
+) -> list[TextContent]:
+    """Handle remove_contents_by_date tool call."""
+    start_date, end_date, error = parse_date_range(start_date_str, end_date_str)
+    if error:
+        return [TextContent(type="text", text=error)]
+
+    matches = match_files_by_date(webclip_dir, start_date, end_date)
+    if not matches:
+        return [
+            TextContent(
+                type="text",
+                text=f"No files found between {start_date_str} and {end_date_str}.",
+            )
+        ]
+
+    file_infos = [
+        format_file_info_with_path(webclip_dir, file_path, frontmatter)
+        for file_path, frontmatter in matches
+    ]
+
+    if dry_run:
+        output = (
+            "[dry_run] remove_contents_by_date preview\n\n"
+            "Criteria:\n"
+            f"  - start_date: {start_date_str}\n"
+            f"  - end_date: {end_date_str}\n\n"
+            "Summary:\n"
+            f"- matched: {len(matches)}\n"
+            f"- would_remove: {len(matches)}\n\n"
+            f"Would remove {len(matches)} file(s):\n\n"
+            + "\n\n".join(file_infos)
+            + "\n\nNo files were modified."
+        )
+        return [TextContent(type="text", text=output)]
+
+    removed: list[str] = []
+    errors: list[str] = []
+    for file_path, frontmatter in matches:
+        file_info = format_file_info_with_path(webclip_dir, file_path, frontmatter)
+        try:
+            file_path.unlink()
+            removed.append(file_info)
+        except OSError as e:
+            errors.append(f"- {file_path.name}: {e}")
+
+    if removed:
+        try:
+            await sync_semantic_index(webclip_dir)
+        except Exception as e:
+            errors.append(f"Failed to update semantic index: {e}")
+
+    output_parts = [f"Removed {len(removed)} file(s):"]
+    if removed:
+        output_parts.append("")
+        output_parts.append("\n\n".join(removed))
+    if errors:
+        output_parts.append("")
+        output_parts.append(f"Errors ({len(errors)}):")
+        output_parts.extend(errors)
 
     return [TextContent(type="text", text="\n".join(output_parts))]
 

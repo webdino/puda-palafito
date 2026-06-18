@@ -11,6 +11,8 @@
 - **search_semantic**: 本文チャンクの意味的類似度でファイルを検索
 - **index_status**: セマンティックインデックスの状態と frontmatter カバレッジを表示
 - **get_contents**: 特定のファイルの内容を取得（フロントマター + 本文の先頭N文字）
+- **remove_contents**: ファイル名を指定して WebClip ファイルを恒久削除
+- **remove_contents_by_date**: 作成日の範囲で WebClip ファイルを恒久削除
 
 ## 環境変数
 
@@ -126,3 +128,22 @@ mcpb pack .
 |------------|-----|------|
 | `filename` | string | 取得するファイル名（例: `example.md`） |
 | `max_chars` | integer | 本文の最大文字数（デフォルト: 2000） |
+
+### remove_contents
+
+| パラメータ | 型 | 説明 |
+|------------|-----|------|
+| `filename` | string | 削除するファイル名（例: `example.md`） |
+| `dry_run` | boolean | 削除対象のプレビューのみ行う（デフォルト: false） |
+
+ファイルを恒久削除します。削除後、セマンティックインデックスからも該当エントリを除去します。
+
+### remove_contents_by_date
+
+| パラメータ | 型 | 説明 |
+|------------|-----|------|
+| `start_date` | string | 開始日（YYYY-MM-DD形式、この日を含む） |
+| `end_date` | string | 終了日（YYYY-MM-DD形式、この日を含む） |
+| `dry_run` | boolean | 削除対象のプレビューのみ行う（デフォルト: false） |
+
+`search_by_date` と同じ日付条件でファイルを恒久削除します。削除後、セマンティックインデックスからも該当エントリを除去します。

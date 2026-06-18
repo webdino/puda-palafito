@@ -2,7 +2,7 @@
   "manifest_version": "0.4",
   "name": "webclip-search",
   "display_name": "WebClip Search",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "WebClipファイルを検索するMCPサーバ",
   "long_description": "WebClipで保存したMarkdownファイルを、日付・URL・全文・セマンティック類似度で検索します。frontmatter のメタデータ（title, source/url, created/clip_dateなど）も参照します。",
   "author": {
@@ -47,6 +47,14 @@
     {
       "name": "index_status",
       "description": "Show semantic index statistics and frontmatter coverage"
+    },
+    {
+      "name": "remove_contents",
+      "description": "Permanently delete a WebClip file by filename"
+    },
+    {
+      "name": "remove_contents_by_date",
+      "description": "Permanently delete WebClip files by creation date range"
     }
   ],
   "keywords": ["webclip", "search", "markdown", "semantic"],
