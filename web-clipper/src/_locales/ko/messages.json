@@ -45,7 +45,7 @@
 		"message": "API 키가 없습니다"
 	},
 	"apiKeysWarning": {
-		"message": "외부 제공자를 사용하면 해당 제공자의 이용 약관 및 개인정보 보호정책에 동의하는 것입니다. 인터프리터 요청은 선택한 제공자에게 직접 전송됩니다. Obsidian은 요청에 대한 데이터를 수집하거나 저장하지 않습니다."
+		"message": "외부 제공자를 사용하면 해당 제공자의 이용 약관 및 개인정보 보호정책에 동의하는 것입니다. 인터프리터 요청은 선택한 제공자에게 직접 전송됩니다. Puda Web Clipper은 요청에 대한 데이터를 수집하거나 저장하지 않습니다."
 	},
 	"appendToDaily": {
 		"message": "데일리 노트 맨 아래에 추가"
@@ -152,6 +152,9 @@
 	},
 	"copyToClipboard": {
 		"message": "클립보드에 복사하기"
+	},
+	"customModel": {
+		"message": "사용자 지정 모델"
 	},
 	"createNewNote": {
 		"message": "새 노트 만들기"
@@ -273,7 +276,7 @@
 		"message": "하이라이트한 웹페이지 내용을 Obsidian에 저장합니다."
 	},
 	"enableInterpreter": {
-		"message": "인터프리터 활성화"
+		"message": "AI 요약 활성화"
 	},
 	"enableInterpreterDescription": {
 		"message": "자연어를 사용하여 페이지에서 데이터를 추출합니다. 예를 들어, $strong_start${{\"페이지 요약\"}}$strong_end$ 템플릿 구문을 사용할 수 있습니다. API 키 또는 아래에서 구성된 사용자 지정 모델이 필요합니다. $link_start$자세히 알아보기$link_end$",
@@ -480,7 +483,7 @@
 		"message": "해석"
 	},
 	"interpreter": {
-		"message": "인터프리터"
+		"message": "AI 요약"
 	},
 	"interpreterContext": {
 		"message": "인터프리터 컨텍스트"
@@ -1039,7 +1042,7 @@
 		"message": "This is part of the article titled \"$1\". Extract the key facts from this section."
 	},
 	"summarizerModel": {
-		"message": "On-device summarizer"
+		"message": "Chrome 요약"
 	},
 	"summarizerModelDescription": {
 		"message": "Used as a fallback to generate the summary on-device when no LLM is configured or the LLM fails. Requires a one-time model download."

@@ -45,7 +45,7 @@
 		"message": "Không có khóa API"
 	},
 	"apiKeysWarning": {
-		"message": "Bằng cách sử dụng nhà cung cấp bên ngoài, bạn đồng ý với điều khoản và chính sách bảo mật của họ. Các yêu cầu thông dịch được gửi trực tiếp đến nhà cung cấp bạn chọn. Obsidian không thu thập hoặc lưu trữ bất kỳ dữ liệu nào về các yêu cầu của bạn."
+		"message": "Bằng cách sử dụng nhà cung cấp bên ngoài, bạn đồng ý với điều khoản và chính sách bảo mật của họ. Các yêu cầu thông dịch được gửi trực tiếp đến nhà cung cấp bạn chọn. Puda Web Clipper không thu thập hoặc lưu trữ bất kỳ dữ liệu nào về các yêu cầu của bạn."
 	},
 	"appendToDaily": {
 		"message": "Thêm vào ghi chú hàng ngày, ở cuối"
@@ -152,6 +152,9 @@
 	},
 	"copyToClipboard": {
 		"message": "Sao chép vào bộ nhớ tạm"
+	},
+	"customModel": {
+		"message": "Mô hình tùy chỉnh"
 	},
 	"createNewNote": {
 		"message": "Tạo ghi chú mới"
@@ -273,7 +276,7 @@
 		"message": "Đánh dấu nội dung trên trang web mà bạn có thể lưu vào Obsidian."
 	},
 	"enableInterpreter": {
-		"message": "Bật thông dịch"
+		"message": "Bật Tóm tắt AI"
 	},
 	"enableInterpreterDescription": {
 		"message": "Sử dụng ngôn ngữ tự nhiên để trích xuất dữ liệu từ trang. Ví dụ, bạn có thể sử dụng cú pháp mẫu $strong_start${{\"tóm tắt trang\"}}$strong_end$. Yêu cầu khóa API hoặc mô hình tùy chỉnh được cấu hình bên dưới. $link_start$Tìm hiểu thêm$link_end$.",
@@ -480,7 +483,7 @@
 		"message": "thông dịch"
 	},
 	"interpreter": {
-		"message": "Thông dịch"
+		"message": "Tóm tắt AI"
 	},
 	"interpreterContext": {
 		"message": "Ngữ cảnh thông dịch"
@@ -1039,7 +1042,7 @@
 		"message": "This is part of the article titled \"$1\". Extract the key facts from this section."
 	},
 	"summarizerModel": {
-		"message": "On-device summarizer"
+		"message": "Tóm tắt Chrome"
 	},
 	"summarizerModelDescription": {
 		"message": "Used as a fallback to generate the summary on-device when no LLM is configured or the LLM fails. Requires a one-time model download."

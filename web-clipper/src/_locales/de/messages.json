@@ -45,7 +45,7 @@
 		"message": "Kein API-Schlüssel"
 	},
 	"apiKeysWarning": {
-		"message": "Durch die Nutzung eines externen Anbieters stimmst du dessen Nutzungsbedingungen und Datenschutzrichtlinien zu. Interpreter-Anfragen werden direkt an den von Dir gewählten Anbieter gesendet. Obsidian sammelt und speichert keine Daten über Deine Anfragen."
+		"message": "Durch die Nutzung eines externen Anbieters stimmst du dessen Nutzungsbedingungen und Datenschutzrichtlinien zu. Interpreter-Anfragen werden direkt an den von Dir gewählten Anbieter gesendet. Puda Web Clipper sammelt und speichert keine Daten über Deine Anfragen."
 	},
 	"appendToDaily": {
 		"message": "Zum Ende der Tagesnotiz hinzufügen"
@@ -152,6 +152,9 @@
 	},
 	"copyToClipboard": {
 		"message": "In die Zwischenablage kopieren"
+	},
+	"customModel": {
+		"message": "Benutzerdefiniertes Modell"
 	},
 	"createNewNote": {
 		"message": "Neue Notiz erstellen"
@@ -273,7 +276,7 @@
 		"message": "Hebe Inhalte auf Webseiten hervor, die Du in Obsidian speichern möchtest."
 	},
 	"enableInterpreter": {
-		"message": "Interpreter aktivieren"
+		"message": "KI-Zusammenfassung aktivieren"
 	},
 	"enableInterpreterDescription": {
 		"message": "Nutze natürliche Sprache, um Daten aus Seiten zu extrahieren. Du kannst zum Beispiel die Vorlagensyntax $strong_start${{\"eine Zusammenfassung der Seite\"}}$strong_end$ verwenden. Erfordert einen API-Schlüssel oder ein unten konfiguriertes benutzerdefiniertes Modell. $link_start$Mehr erfahren$link_end$.",
@@ -480,7 +483,7 @@
 		"message": "interpretieren"
 	},
 	"interpreter": {
-		"message": "Interpreter"
+		"message": "KI-Zusammenfassung"
 	},
 	"interpreterContext": {
 		"message": "Interpreter-Kontext"
@@ -1039,7 +1042,7 @@
 		"message": "This is part of the article titled \"$1\". Extract the key facts from this section."
 	},
 	"summarizerModel": {
-		"message": "On-device summarizer"
+		"message": "Chrome-Zusammenfassung"
 	},
 	"summarizerModelDescription": {
 		"message": "Used as a fallback to generate the summary on-device when no LLM is configured or the LLM fails. Requires a one-time model download."

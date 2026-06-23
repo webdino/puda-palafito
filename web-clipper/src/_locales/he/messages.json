@@ -45,7 +45,7 @@
 		"message": "חסר מפתח API"
 	},
 	"apiKeysWarning": {
-		"message": "השימוש בספק חיצוני מהווה הסכמה לתנאי השימוש ומדיניות הפרטיות שלהם. בקשות המתרגם נשלחות ישירות לספק שבחרת. Obsidian אינו אוסף או מאחסן מידע על הבקשות שלך."
+		"message": "השימוש בספק חיצוני מהווה הסכמה לתנאי השימוש ומדיניות הפרטיות שלהם. בקשות המתרגם נשלחות ישירות לספק שבחרת. Puda Web Clipper אינו אוסף או מאחסן מידע על הבקשות שלך."
 	},
 	"appendToDaily": {
 		"message": "הוסף לרשימה היומית, בסוף"
@@ -152,6 +152,9 @@
 	},
 	"copyToClipboard": {
 		"message": "העתק ללוח"
+	},
+	"customModel": {
+		"message": "מודל מותאם אישית"
 	},
 	"createNewNote": {
 		"message": "צור פתק חדש"
@@ -273,7 +276,7 @@
 		"message": "סמן תוכן בדפי אינטרנט שניתן לשמור ב-Obsidian"
 	},
 	"enableInterpreter": {
-		"message": "הפעל מתרגם"
+		"message": "הפעל סיכום AI"
 	},
 	"enableInterpreterDescription": {
 		"message": "השתמש בשפה טבעית לחילוץ מידע מדפים. לדוגמה, תוכל להשתמש בתחביר התבנית $strong_start${{\"סיכום של דף זה\"}}$strong_end$. דורש מפתח API או הגדרת מודל מותאם אישית למטה. $link_start$למד עוד$link_end$",
@@ -480,7 +483,7 @@
 		"message": "פרש"
 	},
 	"interpreter": {
-		"message": "מתרגם"
+		"message": "סיכום AI"
 	},
 	"interpreterContext": {
 		"message": "הקשר המתרגם"
@@ -1031,7 +1034,7 @@
 		"message": "This is part of the article titled \"$1\". Extract the key facts from this section."
 	},
 	"summarizerModel": {
-		"message": "On-device summarizer"
+		"message": "סיכום Chrome"
 	},
 	"summarizerModelDescription": {
 		"message": "Used as a fallback to generate the summary on-device when no LLM is configured or the LLM fails. Requires a one-time model download."

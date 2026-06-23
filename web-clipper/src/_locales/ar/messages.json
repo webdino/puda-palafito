@@ -45,7 +45,7 @@
 		"message": "لا يوجد مفتاح API"
 	},
 	"apiKeysWarning": {
-		"message": "باستخدام مزود خارجي، فإنك توافق على شروطهم وسياسة الخصوصية الخاصة بهم. يتم إرسال طلبات المفسر مباشرة إلى المزود الذي تختاره. لا يقوم Obsidian بجمع أو تخزين أي بيانات حول طلباتك."
+		"message": "باستخدام مزود خارجي، فإنك توافق على شروطهم وسياسة الخصوصية الخاصة بهم. يتم إرسال طلبات المفسر مباشرة إلى المزود الذي تختاره. لا يقوم Puda Web Clipper بجمع أو تخزين أي بيانات حول طلباتك."
 	},
 	"appendToDaily": {
 		"message": "إضافة إلى الملاحظة اليومية، في النهاية"
@@ -152,6 +152,9 @@
 	},
 	"copyToClipboard": {
 		"message": "نسخ إلى الحافظة"
+	},
+	"customModel": {
+		"message": "نموذج مخصص"
 	},
 	"createNewNote": {
 		"message": "إنشاء ملاحظة جديدة"
@@ -273,7 +276,7 @@
 		"message": "قم بتظليل المحتوى على صفحات الويب الذي تريد حفظه في أوبسيديان."
 	},
 	"enableInterpreter": {
-		"message": "تمكين المفسر"
+		"message": "تمكين ملخص الذكاء الاصطناعي"
 	},
 	"enableInterpreterDescription": {
 		"message": "استخدم اللغة الطبيعية لاستخراج البيانات من الصفحات. على سبيل المثال، يمكنك استخدام صيغة القالب $strong_start${{\"ملخص للصفحة\"}}$strong_end$. يتطلب مفتاح API أو نموذج مخصص تم تكوينه أدناه. $link_start$تعلم المزيد$link_end$",
@@ -480,7 +483,7 @@
 		"message": "تفسير"
 	},
 	"interpreter": {
-		"message": "المفسر"
+		"message": "ملخص الذكاء الاصطناعي"
 	},
 	"interpreterContext": {
 		"message": "سياق المفسر"
@@ -1039,7 +1042,7 @@
 		"message": "This is part of the article titled \"$1\". Extract the key facts from this section."
 	},
 	"summarizerModel": {
-		"message": "On-device summarizer"
+		"message": "ملخص Chrome"
 	},
 	"summarizerModelDescription": {
 		"message": "Used as a fallback to generate the summary on-device when no LLM is configured or the LLM fails. Requires a one-time model download."

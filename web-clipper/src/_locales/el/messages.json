@@ -45,7 +45,7 @@
 		"message": "Λείπει το κλειδί API"
 	},
 	"apiKeysWarning": {
-		"message": "Χρησιμοποιώντας έναν εξωτερικό πάροχο, αποδέχεστε τους όρους χρήσης και την πολιτική απορρήτου τους. Τα αιτήματα διερμηνέα αποστέλλονται απευθείας στον επιλεγμένο πάροχό σας. Το Obsidian δεν συλλέγει ούτε αποθηκεύει πληροφορίες για τα αιτήματά σας."
+		"message": "Χρησιμοποιώντας έναν εξωτερικό πάροχο, αποδέχεστε τους όρους χρήσης και την πολιτική απορρήτου τους. Τα αιτήματα διερμηνέα αποστέλλονται απευθείας στον επιλεγμένο πάροχό σας. Το Puda Web Clipper δεν συλλέγει ούτε αποθηκεύει πληροφορίες για τα αιτήματά σας."
 	},
 	"appendToDaily": {
 		"message": "Προσθήκη στην ημερήσια σημείωση, στο τέλος"
@@ -152,6 +152,9 @@
 	},
 	"copyToClipboard": {
 		"message": "Αντιγραφή στο πρόχειρο"
+	},
+	"customModel": {
+		"message": "Προσαρμοσμένο μοντέλο"
 	},
 	"createNewNote": {
 		"message": "Δημιουργία νέας σημείωσης"
@@ -273,7 +276,7 @@
 		"message": "Επισημάνετε περιεχόμενο σε ιστοσελίδες που μπορείτε να αποθηκεύσετε στο Obsidian"
 	},
 	"enableInterpreter": {
-		"message": "Ενεργοποίηση διερμηνέα"
+		"message": "Ενεργοποίηση σύνοψης AI"
 	},
 	"enableInterpreterDescription": {
 		"message": "Χρησιμοποιήστε φυσική γλώσσα για την εξαγωγή πληροφοριών από σελίδες. Για παράδειγμα, μπορείτε να χρησιμοποιήσετε τη σύνταξη προτύπου $strong_start${{\"περίληψη αυτής της σελίδας\"}}$strong_end$. Απαιτεί κλειδί API ή διαμόρφωση προσαρμοσμένου μοντέλου παρακάτω. $link_start$Μάθετε περισσότερα$link_end$",
@@ -480,7 +483,7 @@
 		"message": "Ερμηνεία"
 	},
 	"interpreter": {
-		"message": "Διερμηνέας"
+		"message": "Σύνοψη AI"
 	},
 	"interpreterContext": {
 		"message": "Πλαίσιο διερμηνέα"
@@ -1031,7 +1034,7 @@
 		"message": "This is part of the article titled \"$1\". Extract the key facts from this section."
 	},
 	"summarizerModel": {
-		"message": "On-device summarizer"
+		"message": "Σύνοψη Chrome"
 	},
 	"summarizerModelDescription": {
 		"message": "Used as a fallback to generate the summary on-device when no LLM is configured or the LLM fails. Requires a one-time model download."

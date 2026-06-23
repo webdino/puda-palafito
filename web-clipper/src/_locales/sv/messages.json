@@ -45,7 +45,7 @@
 		"message": "Ingen API-nyckel"
 	},
 	"apiKeysWarning": {
-		"message": "Genom att använda en extern leverantör godkänner du deras villkor och sekretesspolicy. Tolkningsförfrågningar skickas direkt till leverantören du väljer. Obsidian samlar inte in eller lagrar någon data om dina förfrågningar."
+		"message": "Genom att använda en extern leverantör godkänner du deras villkor och sekretesspolicy. Tolkningsförfrågningar skickas direkt till leverantören du väljer. Puda Web Clipper samlar inte in eller lagrar någon data om dina förfrågningar."
 	},
 	"appendToDaily": {
 		"message": "Lägg till i daglig anteckning, i slutet"
@@ -152,6 +152,9 @@
 	},
 	"copyToClipboard": {
 		"message": "Kopiera till urklipp"
+	},
+	"customModel": {
+		"message": "Anpassad modell"
 	},
 	"createNewNote": {
 		"message": "Skapa ny anteckning"
@@ -273,7 +276,7 @@
 		"message": "Markera innehåll på webbsidor som du kan spara till Obsidian."
 	},
 	"enableInterpreter": {
-		"message": "Aktivera tolk"
+		"message": "Aktivera AI-sammanfattning"
 	},
 	"enableInterpreterDescription": {
 		"message": "Använd naturligt språk för att extrahera data från sidor. Till exempel kan du använda mallsyntaxen $strong_start${{\"en sammanfattning av sidan\"}}$strong_end$. Kräver en API-nyckel eller anpassad modell konfigurerad nedan. $link_start$Läs mer$link_end$.",
@@ -480,7 +483,7 @@
 		"message": "tolka"
 	},
 	"interpreter": {
-		"message": "Tolk"
+		"message": "AI-sammanfattning"
 	},
 	"interpreterContext": {
 		"message": "Tolkkontext"
@@ -1039,7 +1042,7 @@
 		"message": "This is part of the article titled \"$1\". Extract the key facts from this section."
 	},
 	"summarizerModel": {
-		"message": "On-device summarizer"
+		"message": "Chrome-sammanfattning"
 	},
 	"summarizerModelDescription": {
 		"message": "Used as a fallback to generate the summary on-device when no LLM is configured or the LLM fails. Requires a one-time model download."

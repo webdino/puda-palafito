@@ -45,7 +45,7 @@
 		"message": "Tidak ada kunci API"
 	},
 	"apiKeysWarning": {
-		"message": "Dengan menggunakan penyedia eksternal, Anda menyetujui persyaratan dan kebijakan privasi mereka. Permintaan interpreter dikirim langsung ke penyedia yang Anda pilih. Obsidian tidak mengumpulkan atau menyimpan data apa pun tentang permintaan Anda."
+		"message": "Dengan menggunakan penyedia eksternal, Anda menyetujui persyaratan dan kebijakan privasi mereka. Permintaan interpreter dikirim langsung ke penyedia yang Anda pilih. Puda Web Clipper tidak mengumpulkan atau menyimpan data apa pun tentang permintaan Anda."
 	},
 	"appendToDaily": {
 		"message": "Tambah ke catatan harian, di bagian akhir"
@@ -152,6 +152,9 @@
 	},
 	"copyToClipboard": {
 		"message": "Salin ke clipboard"
+	},
+	"customModel": {
+		"message": "Model khusus"
 	},
 	"createNewNote": {
 		"message": "Buat catatan baru"
@@ -273,7 +276,7 @@
 		"message": "Sorot konten di laman web yang dapat disimpan ke Obsidian."
 	},
 	"enableInterpreter": {
-		"message": "Aktifkan interpreter"
+		"message": "Aktifkan Ringkasan AI"
 	},
 	"enableInterpreterDescription": {
 		"message": "Gunakan bahasa alami untuk mengekstrak data dari halaman. Misalnya, Anda dapat menggunakan sintaks template $strong_start${{\"ringkasan halaman\"}}$strong_end$. Memerlukan kunci API atau model kustom yang dikonfigurasi di bawah. $link_start$Pelajari lebih lanjut$link_end$",
@@ -480,7 +483,7 @@
 		"message": "interpretasi"
 	},
 	"interpreter": {
-		"message": "Interpreter"
+		"message": "Ringkasan AI"
 	},
 	"interpreterContext": {
 		"message": "Konteks interpreter"
@@ -1039,7 +1042,7 @@
 		"message": "This is part of the article titled \"$1\". Extract the key facts from this section."
 	},
 	"summarizerModel": {
-		"message": "On-device summarizer"
+		"message": "Ringkasan Chrome"
 	},
 	"summarizerModelDescription": {
 		"message": "Used as a fallback to generate the summary on-device when no LLM is configured or the LLM fails. Requires a one-time model download."

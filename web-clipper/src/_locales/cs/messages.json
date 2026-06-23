@@ -45,7 +45,7 @@
 		"message": "Chybí API klíč"
 	},
 	"apiKeysWarning": {
-		"message": "Používáním externího poskytovatele souhlasíte s jejich podmínkami a zásadami ochrany osobních údajů. Požadavky překladače jsou odesílány přímo vašemu vybranému poskytovateli. Obsidian neshromažďuje ani neukládá žádné informace o vašich požadavcích."
+		"message": "Používáním externího poskytovatele souhlasíte s jejich podmínkami a zásadami ochrany osobních údajů. Požadavky překladače jsou odesílány přímo vašemu vybranému poskytovateli. Puda Web Clipper neshromažďuje ani neukládá žádné informace o vašich požadavcích."
 	},
 	"appendToDaily": {
 		"message": "Připojit k denní poznámce, na konec"
@@ -152,6 +152,9 @@
 	},
 	"copyToClipboard": {
 		"message": "Kopírovat do schránky"
+	},
+	"customModel": {
+		"message": "Vlastní model"
 	},
 	"createNewNote": {
 		"message": "Vytvořit novou poznámku"
@@ -273,7 +276,7 @@
 		"message": "Zvýrazněte obsah na webových stránkách, který můžete uložit do Obsidian."
 	},
 	"enableInterpreter": {
-		"message": "Povolit překladač"
+		"message": "Povolit souhrn AI"
 	},
 	"enableInterpreterDescription": {
 		"message": "Použijte přirozený jazyk k extrakci dat ze stránek. Například můžete použít syntaxi šablony $strong_start${{\"shrnutí stránky\"}}$strong_end$. Vyžaduje klíč API nebo vlastní model nakonfigurovaný níže. $link_start$Zjistěte více$link_end$.",
@@ -480,7 +483,7 @@
 		"message": "Interpretovat"
 	},
 	"interpreter": {
-		"message": "Překladač"
+		"message": "Souhrn AI"
 	},
 	"interpreterContext": {
 		"message": "Kontext překladače"
@@ -1031,7 +1034,7 @@
 		"message": "This is part of the article titled \"$1\". Extract the key facts from this section."
 	},
 	"summarizerModel": {
-		"message": "On-device summarizer"
+		"message": "Souhrn Chrome"
 	},
 	"summarizerModelDescription": {
 		"message": "Used as a fallback to generate the summary on-device when no LLM is configured or the LLM fails. Requires a one-time model download."

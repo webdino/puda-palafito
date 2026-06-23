@@ -45,7 +45,7 @@
 		"message": "Brak klucza API"
 	},
 	"apiKeysWarning": {
-		"message": "Korzystając z usług zewnętrznego operatora, użytkownik akceptuje jego regulamin i politykę prywatności. Zapytania użytkowników wysyłane są bezpośrednio do wybranego operatora. Obsidian nie gromadzi ani nie przechowuje żadnych danych dotyczących zapytań."
+		"message": "Korzystając z usług zewnętrznego operatora, użytkownik akceptuje jego regulamin i politykę prywatności. Zapytania użytkowników wysyłane są bezpośrednio do wybranego operatora. Puda Web Clipper nie gromadzi ani nie przechowuje żadnych danych dotyczących zapytań."
 	},
 	"appendToDaily": {
 		"message": "Zapisz na końcu w dzienniku"
@@ -152,6 +152,9 @@
 	},
 	"copyToClipboard": {
 		"message": "Skopiuj do schowka"
+	},
+	"customModel": {
+		"message": "Model niestandardowy"
 	},
 	"createNewNote": {
 		"message": "Stwórz nową notatkę"
@@ -273,7 +276,7 @@
 		"message": "Wyróżniaj treści na stronach, które możesz zapisać w Obsidian."
 	},
 	"enableInterpreter": {
-		"message": "Włącz tłumacza"
+		"message": "Włącz podsumowanie AI"
 	},
 	"enableInterpreterDescription": {
 		"message": "Użyj języka naturalnego, aby wyodrębnić dane ze stron. Można na przykład użyć szablonu $strong_start${{\"podsumowanie strony\"}}$strong_end$. Wymaga klucza API lub niestandardowego modelu skonfigurowanego poniżej. $link_start$Dowiedz się więcej$link_end$.",
@@ -480,7 +483,7 @@
 		"message": "wyślij zapytanie"
 	},
 	"interpreter": {
-		"message": "Tłumacz"
+		"message": "Podsumowanie AI"
 	},
 	"interpreterContext": {
 		"message": "Kontekst zapytania"
@@ -1039,7 +1042,7 @@
 		"message": "This is part of the article titled \"$1\". Extract the key facts from this section."
 	},
 	"summarizerModel": {
-		"message": "On-device summarizer"
+		"message": "Podsumowanie Chrome"
 	},
 	"summarizerModelDescription": {
 		"message": "Used as a fallback to generate the summary on-device when no LLM is configured or the LLM fails. Requires a one-time model download."

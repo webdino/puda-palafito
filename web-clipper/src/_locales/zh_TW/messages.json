@@ -45,7 +45,7 @@
 		"message": "無 API 金鑰"
 	},
 	"apiKeysWarning": {
-		"message": "使用外部提供者即表示您同意其條款和隐私政策。解譯器請求直接發送給您選擇的提供者。Obsidian 不會收集或儲存任何關於您請求的資料。"
+		"message": "使用外部提供者即表示您同意其條款和隐私政策。解譯器請求直接發送給您選擇的提供者。Puda Web Clipper 不會收集或儲存任何關於您請求的資料。"
 	},
 	"appendToDaily": {
 		"message": "新增到每日筆記底部"
@@ -152,6 +152,9 @@
 	},
 	"copyToClipboard": {
 		"message": "複製到剪貼簿"
+	},
+	"customModel": {
+		"message": "自訂模型"
 	},
 	"createNewNote": {
 		"message": "建立新筆記"
@@ -273,7 +276,7 @@
 		"message": "在網頁上標記內容，您可以將其儲存到 Obsidian。"
 	},
 	"enableInterpreter": {
-		"message": "啟用解譯器"
+		"message": "啟用 AI 摘要"
 	},
 	"enableInterpreterDescription": {
 		"message": "使用自然語言從頁面提取資料。例如，您可以使用範本語法 $strong_start${{\"頁面摘要\"}}$strong_end$。需要 API 金鑰或下面配置的自定義模型。$link_start$了解更多$link_end$",
@@ -480,7 +483,7 @@
 		"message": "解譯"
 	},
 	"interpreter": {
-		"message": "解譯器"
+		"message": "AI 摘要"
 	},
 	"interpreterContext": {
 		"message": "解譯器上下文"
@@ -1039,7 +1042,7 @@
 		"message": "This is part of the article titled \"$1\". Extract the key facts from this section."
 	},
 	"summarizerModel": {
-		"message": "On-device summarizer"
+		"message": "Chrome 摘要"
 	},
 	"summarizerModelDescription": {
 		"message": "Used as a fallback to generate the summary on-device when no LLM is configured or the LLM fails. Requires a one-time model download."

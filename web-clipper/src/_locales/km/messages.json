@@ -45,7 +45,7 @@
 		"message": "គ្មានសោ API"
 	},
 	"apiKeysWarning": {
-		"message": "ដោយប្រើអ្នកផ្តល់សេវាខាងក្រៅ អ្នកយល់ព្រមតាមលក្ខខណ្ឌ និងគោលការណ៍ឯកជនភាពរបស់ពួកគេ។ សំណើ Interpreter ត្រូវបានផ្ញើដោយផ្ទាល់ទៅកាន់អ្នកផ្តល់សេវាដែលអ្នកជ្រើសរើស។ Obsidian មិនប្រមូល ឬរក្សាទុកទិន្នន័យណាមួយអំពីសំណើរបស់អ្នកទេ។"
+		"message": "ដោយប្រើអ្នកផ្តល់សេវាខាងក្រៅ អ្នកយល់ព្រមតាមលក្ខខណ្ឌ និងគោលការណ៍ឯកជនភាពរបស់ពួកគេ។ សំណើ Interpreter ត្រូវបានផ្ញើដោយផ្ទាល់ទៅកាន់អ្នកផ្តល់សេវាដែលអ្នកជ្រើសរើស។ Puda Web Clipper មិនប្រមូល ឬរក្សាទុកទិន្នន័យណាមួយអំពីសំណើរបស់អ្នកទេ។"
 	},
 	"appendToDaily": {
 		"message": "បន្ថែមទៅកំណត់ត្រាប្រចាំថ្ងៃ នៅខាងក្រោម"
@@ -152,6 +152,9 @@
 	},
 	"copyToClipboard": {
 		"message": "ចម្លងទៅក្តារតម្បៀតខ្ទាស់"
+	},
+	"customModel": {
+		"message": "ម៉ូដែលផ្ទាល់ខ្លួន"
 	},
 	"createNewNote": {
 		"message": "បង្កើតកំណត់ត្រាថ្មី"
@@ -273,7 +276,7 @@
 		"message": "រំលេចមាតិកានៅលើទំព័របណ្ដាញ ដែលអ្នកអាចរក្សាទុកទៅ Obsidian។"
 	},
 	"enableInterpreter": {
-		"message": "បើក Interpreter"
+		"message": "បើកសេចក្ដីសង្ខេប AI"
 	},
 	"enableInterpreterDescription": {
 		"message": "ប្រើភាសាធម្មជាតិដើម្បីស្រង់ទិន្នន័យពីទំព័រ។ ឧទាហរណ៍ អ្នកអាចប្រើវាក្យសម្ព័ន្ធគំរូ $strong_start${{\"a summary of the page\"}}$strong_end$។ ត្រូវការសោ API ឬម៉ូដែលផ្ទាល់ខ្លួនដែលបានកំណត់រចនាសម្ព័ន្ធខាងក្រោម។ $link_start$ស្វែងយល់បន្ថែម$link_end$។",
@@ -480,7 +483,7 @@
 		"message": "បកស្រាយ"
 	},
 	"interpreter": {
-		"message": "Interpreter"
+		"message": "សេចក្ដីសង្ខេប AI"
 	},
 	"interpreterContext": {
 		"message": "បរិបទ Interpreter"
@@ -1039,7 +1042,7 @@
 		"message": "This is part of the article titled \"$1\". Extract the key facts from this section."
 	},
 	"summarizerModel": {
-		"message": "On-device summarizer"
+		"message": "សេចក្ដីសង្ខេប Chrome"
 	},
 	"summarizerModelDescription": {
 		"message": "Used as a fallback to generate the summary on-device when no LLM is configured or the LLM fails. Requires a one-time model download."

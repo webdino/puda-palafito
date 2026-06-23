@@ -45,7 +45,7 @@
 		"message": "Geen API-sleutel"
 	},
 	"apiKeysWarning": {
-		"message": "Door een externe provider te gebruiken ga je akkoord met hun voorwaarden en privacybeleid. Interpreter-verzoeken worden direct naar de provider van jouw keuze gestuurd. Obsidian verzamelt of bewaart geen gegevens over je verzoeken."
+		"message": "Door een externe provider te gebruiken ga je akkoord met hun voorwaarden en privacybeleid. Interpreter-verzoeken worden direct naar de provider van jouw keuze gestuurd. Puda Web Clipper verzamelt of bewaart geen gegevens over je verzoeken."
 	},
 	"appendToDaily": {
 		"message": "Toevoegen aan dagelijkse notitie, onderaan"
@@ -152,6 +152,9 @@
 	},
 	"copyToClipboard": {
 		"message": "Kopiëren naar klembord"
+	},
+	"customModel": {
+		"message": "Aangepast model"
 	},
 	"createNewNote": {
 		"message": "Nieuwe notitie maken"
@@ -273,7 +276,7 @@
 		"message": "Markeer inhoud op webpagina's die je kunt opslaan in Obsidian."
 	},
 	"enableInterpreter": {
-		"message": "Interpreter inschakelen"
+		"message": "AI-samenvatting inschakelen"
 	},
 	"enableInterpreterDescription": {
 		"message": "Gebruik natuurlijke taal om gegevens uit pagina's te halen. Je kunt bijvoorbeeld de sjabloonsyntax $strong_start${{\"een samenvatting van de pagina\"}}$strong_end$ gebruiken. Vereist een API-sleutel of aangepast model hieronder geconfigureerd. $link_start$Meer informatie$link_end$",
@@ -480,7 +483,7 @@
 		"message": "interpreteren"
 	},
 	"interpreter": {
-		"message": "Interpreter"
+		"message": "AI-samenvatting"
 	},
 	"interpreterContext": {
 		"message": "Interpreter context"
@@ -1039,7 +1042,7 @@
 		"message": "This is part of the article titled \"$1\". Extract the key facts from this section."
 	},
 	"summarizerModel": {
-		"message": "On-device summarizer"
+		"message": "Chrome-samenvatting"
 	},
 	"summarizerModelDescription": {
 		"message": "Used as a fallback to generate the summary on-device when no LLM is configured or the LLM fails. Requires a one-time model download."

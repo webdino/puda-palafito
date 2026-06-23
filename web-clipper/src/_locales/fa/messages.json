@@ -45,7 +45,7 @@
 		"message": "کلید API وجود ندارد"
 	},
 	"apiKeysWarning": {
-		"message": "با استفاده از یک ارائه‌دهنده خارجی، شما با شرایط و سیاست حریم خصوصی آنها موافقت می‌کنید. درخواست‌های مفسر مستقیماً به ارائه‌دهنده انتخابی شما ارسال می‌شود. Obsidian هیچ داده‌ای در مورد درخواست‌های شما جمع‌آوری یا ذخیره نمی‌کند."
+		"message": "با استفاده از یک ارائه‌دهنده خارجی، شما با شرایط و سیاست حریم خصوصی آنها موافقت می‌کنید. درخواست‌های مفسر مستقیماً به ارائه‌دهنده انتخابی شما ارسال می‌شود. Puda Web Clipper هیچ داده‌ای در مورد درخواست‌های شما جمع‌آوری یا ذخیره نمی‌کند."
 	},
 	"appendToDaily": {
 		"message": "اضافه کردن به یادداشت روزانه، در آخر آن "
@@ -152,6 +152,9 @@
 	},
 	"copyToClipboard": {
 		"message": "به کلیپ بورد کپی کن"
+	},
+	"customModel": {
+		"message": "مدل سفارشی"
 	},
 	"createNewNote": {
 		"message": "یادداشت جدید ایجاد کن"
@@ -273,7 +276,7 @@
 		"message": "محتوایی را که می‌خواهید در ابسیدین ذخیره کنید را برجسته کنید"
 	},
 	"enableInterpreter": {
-		"message": "فعال‌سازی مفسر"
+		"message": "فعال‌سازی خلاصه هوش مصنوعی"
 	},
 	"enableInterpreterDescription": {
 		"message": "از زبان طبیعی برای استخراج داده‌ها از صفحات استفاده کنید. برای مثال، می‌توانید از نحو قالب $strong_start${{\"خلاصه‌ای از صفحه\"}}$strong_end$ استفاده کنید. نیاز به کلید API یا مدل سفارشی پیکربندی شده در زیر دارد. $link_start$بیشتر بدانید$link_end$",
@@ -480,7 +483,7 @@
 		"message": "تفسیر"
 	},
 	"interpreter": {
-		"message": "تفسیرگر"
+		"message": "خلاصه هوش مصنوعی"
 	},
 	"interpreterContext": {
 		"message": "زمینه تفسیرگر"
@@ -1039,7 +1042,7 @@
 		"message": "This is part of the article titled \"$1\". Extract the key facts from this section."
 	},
 	"summarizerModel": {
-		"message": "On-device summarizer"
+		"message": "خلاصه Chrome"
 	},
 	"summarizerModelDescription": {
 		"message": "Used as a fallback to generate the summary on-device when no LLM is configured or the LLM fails. Requires a one-time model download."

@@ -45,7 +45,7 @@
 		"message": "Ei API-avainta"
 	},
 	"apiKeysWarning": {
-		"message": "Käyttämällä ulkoista palveluntarjoajaa hyväksyt heidän käyttöehtonsa ja tietosuojakäytäntönsä. Tulkin pyynnöt lähetetään suoraan valitsemallesi palveluntarjoajalle. Obsidian ei kerää tai tallenna mitään tietoja pyynnöistäsi."
+		"message": "Käyttämällä ulkoista palveluntarjoajaa hyväksyt heidän käyttöehtonsa ja tietosuojakäytäntönsä. Tulkin pyynnöt lähetetään suoraan valitsemallesi palveluntarjoajalle. Puda Web Clipper ei kerää tai tallenna mitään tietoja pyynnöistäsi."
 	},
 	"appendToDaily": {
 		"message": "Lisää päivittäiseen muistiinpanoon, loppuun"
@@ -152,6 +152,9 @@
 	},
 	"copyToClipboard": {
 		"message": "Kopioi leikepöydälle"
+	},
+	"customModel": {
+		"message": "Mukautettu malli"
 	},
 	"createNewNote": {
 		"message": "Luo uusi muistiinpano"
@@ -273,7 +276,7 @@
 		"message": "Korosta verkkosivujen sisältöä, jonka voit tallentaa Obsidianiin"
 	},
 	"enableInterpreter": {
-		"message": "Ota tulkki käyttöön"
+		"message": "Ota tekoälytiivistelmä käyttöön"
 	},
 	"enableInterpreterDescription": {
 		"message": "Käytä luonnollista kieltä tietojen poimimiseen sivuilta. Voit esimerkiksi käyttää mallisyntaksia $strong_start${{\"sivun yhteenveto\"}}$strong_end$. Vaatii API-avaimen tai mukautetun mallin määrittämisen alla. $link_start$Lue lisää$link_end$.",
@@ -480,7 +483,7 @@
 		"message": "Tulkitse"
 	},
 	"interpreter": {
-		"message": "Tulkki"
+		"message": "Tekoälytiivistelmä"
 	},
 	"interpreterContext": {
 		"message": "Tulkkauksen konteksti"
@@ -1047,7 +1050,7 @@
 		"message": "This is part of the article titled \"$1\". Extract the key facts from this section."
 	},
 	"summarizerModel": {
-		"message": "On-device summarizer"
+		"message": "Chrome-tiivistelmä"
 	},
 	"summarizerModelDescription": {
 		"message": "Used as a fallback to generate the summary on-device when no LLM is configured or the LLM fails. Requires a one-time model download."

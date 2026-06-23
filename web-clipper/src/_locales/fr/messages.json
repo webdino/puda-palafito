@@ -45,7 +45,7 @@
 		"message": "Pas de clé API"
 	},
 	"apiKeysWarning": {
-		"message": "En utilisant un fournisseur externe, vous acceptez leurs conditions d'utilisation et leur politique de confidentialité. Les requêtes de l'interpréteur sont envoyées directement au fournisseur que vous choisissez. Obsidian ne collecte et ne stocke aucune donnée concernant vos requêtes."
+		"message": "En utilisant un fournisseur externe, vous acceptez leurs conditions d'utilisation et leur politique de confidentialité. Les requêtes de l'interpréteur sont envoyées directement au fournisseur que vous choisissez. Puda Web Clipper ne collecte et ne stocke aucune donnée concernant vos requêtes."
 	},
 	"appendToDaily": {
 		"message": "Ajouter à la note quotidienne, à la fin"
@@ -152,6 +152,9 @@
 	},
 	"copyToClipboard": {
 		"message": "Copier dans le presse-papiers"
+	},
+	"customModel": {
+		"message": "Modèle personnalisé"
 	},
 	"createNewNote": {
 		"message": "Créer une nouvelle note"
@@ -273,7 +276,7 @@
 		"message": "Surlignez du contenu sur les pages web que vous pouvez enrengistrer dans Obsidian."
 	},
 	"enableInterpreter": {
-		"message": "Activer l'interpréteur"
+		"message": "Activer le résumé IA"
 	},
 	"enableInterpreterDescription": {
 		"message": "Utilisez le langage naturel pour extraire des données des pages. Par exemple, vous pouvez utiliser la syntaxe $strong_start${{\"un résumé de la page\"}}$strong_end$. Nécessite une clé API ou un modèle personnalisé configuré ci-dessous. $link_start$En savoir plus$link_end$.",
@@ -480,7 +483,7 @@
 		"message": "interpréter"
 	},
 	"interpreter": {
-		"message": "Interpréteur"
+		"message": "Résumé IA"
 	},
 	"interpreterContext": {
 		"message": "Contexte de l'interpréteur"
@@ -1039,7 +1042,7 @@
 		"message": "This is part of the article titled \"$1\". Extract the key facts from this section."
 	},
 	"summarizerModel": {
-		"message": "On-device summarizer"
+		"message": "Résumé Chrome"
 	},
 	"summarizerModelDescription": {
 		"message": "Used as a fallback to generate the summary on-device when no LLM is configured or the LLM fails. Requires a one-time model download."

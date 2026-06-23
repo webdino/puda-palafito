@@ -45,7 +45,7 @@
 		"message": "Sem chave de API"
 	},
 	"apiKeysWarning": {
-		"message": "Ao utilizar um fornecedor externo, concorda com os respetivos termos e política de privacidade. Os pedidos do intérprete são enviados diretamente para o fornecedor que escolher. O Obsidian não recolhe nem armazena quaisquer dados sobre os seus pedidos."
+		"message": "Ao utilizar um fornecedor externo, concorda com os respetivos termos e política de privacidade. Os pedidos do intérprete são enviados diretamente para o fornecedor que escolher. O Puda Web Clipper não recolhe nem armazena quaisquer dados sobre os seus pedidos."
 	},
 	"appendToDaily": {
 		"message": "Adicionar à nota diária, no fim"
@@ -152,6 +152,9 @@
 	},
 	"copyToClipboard": {
 		"message": "Copiar para a área de transferência"
+	},
+	"customModel": {
+		"message": "Modelo personalizado"
 	},
 	"createNewNote": {
 		"message": "Criar nova nota"
@@ -273,7 +276,7 @@
 		"message": "Realce conteúdo em páginas web que pode guardar no Obsidian."
 	},
 	"enableInterpreter": {
-		"message": "Ativar intérprete"
+		"message": "Ativar resumo de IA"
 	},
 	"enableInterpreterDescription": {
 		"message": "Use linguagem natural para extrair dados das páginas. Por exemplo, pode usar a sintaxe de modelo $strong_start${{\"a summary of the page\"}}$strong_end$. Requer uma chave de API ou um modelo personalizado configurado abaixo. $link_start$Saiba mais$link_end$.",
@@ -480,7 +483,7 @@
 		"message": "interpretar"
 	},
 	"interpreter": {
-		"message": "Intérprete"
+		"message": "Resumo de IA"
 	},
 	"interpreterContext": {
 		"message": "Contexto do intérprete"
@@ -1039,7 +1042,7 @@
 		"message": "This is part of the article titled \"$1\". Extract the key facts from this section."
 	},
 	"summarizerModel": {
-		"message": "On-device summarizer"
+		"message": "Resumo do Chrome"
 	},
 	"summarizerModelDescription": {
 		"message": "Used as a fallback to generate the summary on-device when no LLM is configured or the LLM fails. Requires a one-time model download."

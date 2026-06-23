@@ -45,7 +45,7 @@
 		"message": "API কী নেই"
 	},
 	"apiKeysWarning": {
-		"message": "বাহ্যিক প্রোভাইডার ব্যবহার করে আপনি তাদের শর্তাবলী এবং গোপনীয়তা নীতির সাথে সম্মত হচ্ছেন। ইন্টারপ্রিটার রিকোয়েস্টগুলি আপনার নির্বাচিত প্রোভাইডারের কাছে সরাসরি পাঠানো হয়। Obsidian আপনার রিকোয়েস্ট সম্পর্কিত কোনও তথ্য সংগ্রহ বা সংরক্ষণ করে না।"
+		"message": "বাহ্যিক প্রোভাইডার ব্যবহার করে আপনি তাদের শর্তাবলী এবং গোপনীয়তা নীতির সাথে সম্মত হচ্ছেন। ইন্টারপ্রিটার রিকোয়েস্টগুলি আপনার নির্বাচিত প্রোভাইডারের কাছে সরাসরি পাঠানো হয়। Puda Web Clipper আপনার রিকোয়েস্ট সম্পর্কিত কোনও তথ্য সংগ্রহ বা সংরক্ষণ করে না।"
 	},
 	"appendToDaily": {
 		"message": "ডেইলি নোটের শেষে যোগ করুন"
@@ -152,6 +152,9 @@
 	},
 	"copyToClipboard": {
 		"message": "ক্লিপবোর্ডে কপি করুন"
+	},
+	"customModel": {
+		"message": "কাস্টম মডেল"
 	},
 	"createNewNote": {
 		"message": "নতুন নোট তৈরি করুন"
@@ -273,7 +276,7 @@
 		"message": "ওয়েব পেজ থেকে বিষয়বস্তু হাইলাইট করে Obsidian এ সংরক্ষণ করুন।"
 	},
 	"enableInterpreter": {
-		"message": "ইন্টারপ্রিটার সক্রিয় করুন"
+		"message": "AI সারসংক্ষেপ সক্রিয় করুন"
 	},
 	"enableInterpreterDescription": {
 		"message": "পেজগুলো থেকে তথ্য আহরণের জন্য ন্যাচারাল ল্যাঙ্গুয়েজ ব্যবহার করুন। উদাহরণস্বরূপ, আপনি টেমপ্লেট সিনট্যাক্স $strong_start${{\"পৃষ্ঠার একটি সারাংশ\"}}$strong_end$ ব্যবহার করতে পারেন। নীচে কনফিগার করা একটি এপিআই কী বা কাস্টম মডেল প্রয়োজন।  $link_start$আরও জানুন$link_end$।",
@@ -480,7 +483,7 @@
 		"message": "ইন্টারপ্রিট করুন"
 	},
 	"interpreter": {
-		"message": "ইন্টারপ্রিটার"
+		"message": "AI সারসংক্ষেপ"
 	},
 	"interpreterContext": {
 		"message": "ইন্টারপ্রিটার কনটেক্সট"
@@ -1039,7 +1042,7 @@
 		"message": "This is part of the article titled \"$1\". Extract the key facts from this section."
 	},
 	"summarizerModel": {
-		"message": "On-device summarizer"
+		"message": "Chrome সারসংক্ষেপ"
 	},
 	"summarizerModelDescription": {
 		"message": "Used as a fallback to generate the summary on-device when no LLM is configured or the LLM fails. Requires a one-time model download."

@@ -45,7 +45,7 @@
 		"message": "Nincs API-kulcs"
 	},
 	"apiKeysWarning": {
-		"message": "Külső szolgáltató használatával elfogadod annak feltételeit és adatvédelmi irányelveit. Az interpreter kérései közvetlenül a választott szolgáltatóhoz kerülnek elküldésre. Az Obsidian nem gyűjt és nem tárol semmilyen adatot a kéréseidről."
+		"message": "Külső szolgáltató használatával elfogadod annak feltételeit és adatvédelmi irányelveit. Az interpreter kérései közvetlenül a választott szolgáltatóhoz kerülnek elküldésre. Az Puda Web Clipper nem gyűjt és nem tárol semmilyen adatot a kéréseidről."
 	},
 	"appendToDaily": {
 		"message": "Hozzáadás a napi jegyzethez, alul"
@@ -152,6 +152,9 @@
 	},
 	"copyToClipboard": {
 		"message": "Másolás a vágólapra"
+	},
+	"customModel": {
+		"message": "Egyéni modell"
 	},
 	"createNewNote": {
 		"message": "Új jegyzet létrehozása"
@@ -273,7 +276,7 @@
 		"message": "Kiemelheted a weboldalakon a tartalmat, amit elmenthetsz az Obsidianba."
 	},
 	"enableInterpreter": {
-		"message": "Interpreter engedélyezése"
+		"message": "AI-összefoglaló engedélyezése"
 	},
 	"enableInterpreterDescription": {
 		"message": "Használj természetes nyelvet az oldalakból való adatkinyeréshez. Például használhatod a sablonszintaxist: $strong_start${{\"a summary of the page\"}}$strong_end$. Ehhez API-kulcs vagy egy alább beállított egyéni modell szükséges. $link_start$További információ$link_end$.",
@@ -480,7 +483,7 @@
 		"message": "értelmezés"
 	},
 	"interpreter": {
-		"message": "Interpreter"
+		"message": "AI-összefoglaló"
 	},
 	"interpreterContext": {
 		"message": "Interpreter kontextus"
@@ -1039,7 +1042,7 @@
 		"message": "This is part of the article titled \"$1\". Extract the key facts from this section."
 	},
 	"summarizerModel": {
-		"message": "On-device summarizer"
+		"message": "Chrome-összefoglaló"
 	},
 	"summarizerModelDescription": {
 		"message": "Used as a fallback to generate the summary on-device when no LLM is configured or the LLM fails. Requires a one-time model download."

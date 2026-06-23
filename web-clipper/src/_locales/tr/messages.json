@@ -153,6 +153,9 @@
 	"copyToClipboard": {
 		"message": "Panoya kopyala"
 	},
+	"customModel": {
+		"message": "Özel model"
+	},
 	"createNewNote": {
 		"message": "Yeni not oluştur"
 	},
@@ -273,7 +276,7 @@
 		"message": "Web sayfalarındaki Obsidian'a kaydedebileceğiniz içeriği vurgulayın."
 	},
 	"enableInterpreter": {
-		"message": "Yorumlayıcıyı etkinleştir"
+		"message": "AI Özetini etkinleştir"
 	},
 	"enableInterpreterDescription": {
 		"message": "Sayfalardan veri çıkarmak için doğal dil kullanın. Örneğin, $strong_start${{\"sayfanın özeti\"}}$strong_end$ şablon sözdizimini kullanabilirsiniz. Aşağıda yapılandırılmış bir API anahtarı veya özel model gerektirir. $link_start$Daha fazla bilgi$link_end$",
@@ -480,7 +483,7 @@
 		"message": "Yorumla"
 	},
 	"interpreter": {
-		"message": "Yorumlayıcı"
+		"message": "AI Özeti"
 	},
 	"interpreterContext": {
 		"message": "Yorumlayıcı bağlamı"
@@ -1039,7 +1042,7 @@
 		"message": "This is part of the article titled \"$1\". Extract the key facts from this section."
 	},
 	"summarizerModel": {
-		"message": "On-device summarizer"
+		"message": "Chrome özeti"
 	},
 	"summarizerModelDescription": {
 		"message": "Used as a fallback to generate the summary on-device when no LLM is configured or the LLM fails. Requires a one-time model download."

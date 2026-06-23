@@ -45,7 +45,7 @@
 		"message": "Nawawala ang API key"
 	},
 	"apiKeysWarning": {
-		"message": "Sa paggamit ng external provider, tinatanggap mo ang kanilang mga tuntunin at patakaran sa privacy. Ang mga kahilingan sa interpreter ay direktang ipinapadala sa iyong napiling provider. Hindi nangongolekta o nag-iimbak ang Obsidian ng impormasyon tungkol sa iyong mga kahilingan."
+		"message": "Sa paggamit ng external provider, tinatanggap mo ang kanilang mga tuntunin at patakaran sa privacy. Ang mga kahilingan sa interpreter ay direktang ipinapadala sa iyong napiling provider. Hindi nangongolekta o nag-iimbak ang Puda Web Clipper ng impormasyon tungkol sa iyong mga kahilingan."
 	},
 	"appendToDaily": {
 		"message": "Idagdag sa daily note, sa dulo"
@@ -152,6 +152,9 @@
 	},
 	"copyToClipboard": {
 		"message": "Kopyahin sa clipboard"
+	},
+	"customModel": {
+		"message": "Pasadyang modelo"
 	},
 	"createNewNote": {
 		"message": "Gumawa ng bagong note"
@@ -273,7 +276,7 @@
 		"message": "Mag-highlight ng content sa mga webpage para i-save sa Obsidian"
 	},
 	"enableInterpreter": {
-		"message": "I-enable ang interpreter"
+		"message": "Paganahin ang Buod ng AI"
 	},
 	"enableInterpreterDescription": {
 		"message": "Gumamit ng natural na wika para kunin ang impormasyon mula sa mga pahina. Halimbawa, maaari mong gamitin ang template syntax na $strong_start${{\"i-summarize ang pahinang ito\"}}$strong_end$. Nangangailangan ng API key o pag-setup ng custom model sa ibaba. $link_start$Matuto pa$link_end$",
@@ -480,7 +483,7 @@
 		"message": "I-interpret"
 	},
 	"interpreter": {
-		"message": "Interpreter"
+		"message": "Buod ng AI"
 	},
 	"interpreterContext": {
 		"message": "Konteksto ng interpreter"
@@ -1031,7 +1034,7 @@
 		"message": "This is part of the article titled \"$1\". Extract the key facts from this section."
 	},
 	"summarizerModel": {
-		"message": "On-device summarizer"
+		"message": "Buod ng Chrome"
 	},
 	"summarizerModelDescription": {
 		"message": "Used as a fallback to generate the summary on-device when no LLM is configured or the LLM fails. Requires a one-time model download."

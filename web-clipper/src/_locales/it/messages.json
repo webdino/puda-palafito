@@ -45,7 +45,7 @@
 		"message": "Nessuna chiave API"
 	},
 	"apiKeysWarning": {
-		"message": "Utilizzando un fornitore esterno, accetti i loro termini e la loro politica sulla privacy. Le richieste dell'interprete vengono inviate direttamente al fornitore che scegli. Obsidian non raccoglie o memorizza alcun dato sulle tue richieste."
+		"message": "Utilizzando un fornitore esterno, accetti i loro termini e la loro politica sulla privacy. Le richieste dell'interprete vengono inviate direttamente al fornitore che scegli. Puda Web Clipper non raccoglie o memorizza alcun dato sulle tue richieste."
 	},
 	"appendToDaily": {
 		"message": "Aggiungi alla nota giornaliera, in fondo"
@@ -152,6 +152,9 @@
 	},
 	"copyToClipboard": {
 		"message": "Copia negli appunti"
+	},
+	"customModel": {
+		"message": "Modello personalizzato"
 	},
 	"createNewNote": {
 		"message": "Crea nuova nota"
@@ -273,7 +276,7 @@
 		"message": "Evidenzia il contenuto sulle pagine web che puoi salvare in Obsidian."
 	},
 	"enableInterpreter": {
-		"message": "Abilita interprete"
+		"message": "Abilita riepilogo IA"
 	},
 	"enableInterpreterDescription": {
 		"message": "Usa il linguaggio naturale per estrarre dati dalle pagine. Ad esempio, puoi usare la sintassi $strong_start${{\"un riassunto della pagina\"}}$strong_end$. Richiede una chiave API o un modello personalizzato configurato qui sotto. $link_start$Scopri di più$link_end$",
@@ -480,7 +483,7 @@
 		"message": "interpretare"
 	},
 	"interpreter": {
-		"message": "Interprete"
+		"message": "Riepilogo IA"
 	},
 	"interpreterContext": {
 		"message": "Contesto dell'interprete"
@@ -1039,7 +1042,7 @@
 		"message": "This is part of the article titled \"$1\". Extract the key facts from this section."
 	},
 	"summarizerModel": {
-		"message": "On-device summarizer"
+		"message": "Riepilogo Chrome"
 	},
 	"summarizerModelDescription": {
 		"message": "Used as a fallback to generate the summary on-device when no LLM is configured or the LLM fails. Requires a one-time model download."

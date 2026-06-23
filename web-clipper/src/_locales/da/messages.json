@@ -45,7 +45,7 @@
 		"message": "API-nøgle mangler"
 	},
 	"apiKeysWarning": {
-		"message": "Ved at bruge en ekstern udbyder accepterer du deres vilkår og betingelser samt privatlivspolitik. Fortolkerforespørgsler sendes direkte til din valgte udbyder. Obsidian indsamler eller gemmer ikke information om dine forespørgsler."
+		"message": "Ved at bruge en ekstern udbyder accepterer du deres vilkår og betingelser samt privatlivspolitik. Fortolkerforespørgsler sendes direkte til din valgte udbyder. Puda Web Clipper indsamler eller gemmer ikke information om dine forespørgsler."
 	},
 	"appendToDaily": {
 		"message": "Tilføj til daglig note, i slutningen"
@@ -152,6 +152,9 @@
 	},
 	"copyToClipboard": {
 		"message": "Kopiér til udklipsholder"
+	},
+	"customModel": {
+		"message": "Tilpasset model"
 	},
 	"createNewNote": {
 		"message": "Opret ny note"
@@ -273,7 +276,7 @@
 		"message": "Fremhæv indhold på websider for at gemme i Obsidian"
 	},
 	"enableInterpreter": {
-		"message": "Aktivér fortolker"
+		"message": "Aktivér AI-resumé"
 	},
 	"enableInterpreterDescription": {
 		"message": "Brug naturligt sprog til at udtrække information fra sider. For eksempel kan du bruge skabelonsyntaksen $strong_start${{\"opsummér denne side\"}}$strong_end$. Kræver en API-nøgle eller opsætning af en tilpasset model nedenfor. $link_start$Lær mere$link_end$",
@@ -480,7 +483,7 @@
 		"message": "Fortolk"
 	},
 	"interpreter": {
-		"message": "Fortolker"
+		"message": "AI-resumé"
 	},
 	"interpreterContext": {
 		"message": "Fortolkerkontekst"
@@ -1031,7 +1034,7 @@
 		"message": "This is part of the article titled \"$1\". Extract the key facts from this section."
 	},
 	"summarizerModel": {
-		"message": "On-device summarizer"
+		"message": "Chrome-resumé"
 	},
 	"summarizerModelDescription": {
 		"message": "Used as a fallback to generate the summary on-device when no LLM is configured or the LLM fails. Requires a one-time model download."

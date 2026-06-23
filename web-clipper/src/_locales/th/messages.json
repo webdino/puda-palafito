@@ -45,7 +45,7 @@
 		"message": "ไม่มีคีย์ API"
 	},
 	"apiKeysWarning": {
-		"message": "การใช้ผู้ให้บริการภายนอกถือว่าคุณยอมรับข้อกำหนดและนโยบายความเป็นส่วนตัวของพวกเขา คำขอตัวแปลจะถูกส่งตรงไปยังผู้ให้บริการที่คุณเลือก Obsidian ไม่ได้เก็บรวบรวมหรือจัดเก็บข้อมูลใดๆ เกี่ยวกับคำขอของคุณ"
+		"message": "การใช้ผู้ให้บริการภายนอกถือว่าคุณยอมรับข้อกำหนดและนโยบายความเป็นส่วนตัวของพวกเขา คำขอตัวแปลจะถูกส่งตรงไปยังผู้ให้บริการที่คุณเลือก Puda Web Clipper ไม่ได้เก็บรวบรวมหรือจัดเก็บข้อมูลใดๆ เกี่ยวกับคำขอของคุณ"
 	},
 	"appendToDaily": {
 		"message": "เพิ่มไปยังบันทึกประจำวัน ที่ท้าย"
@@ -152,6 +152,9 @@
 	},
 	"copyToClipboard": {
 		"message": "คัดลอกไปยังคลิปบอร์ด"
+	},
+	"customModel": {
+		"message": "โมเดลที่กำหนดเอง"
 	},
 	"createNewNote": {
 		"message": "สร้างบันทึกใหม่"
@@ -273,7 +276,7 @@
 		"message": "ไฮไลต์เนื้อหาบนหน้าเว็บที่คุณสามารถบันทึกไปยัง Obsidian"
 	},
 	"enableInterpreter": {
-		"message": "เปิดใช้งานตัวแปล"
+		"message": "เปิดใช้งานสรุปด้วย AI"
 	},
 	"enableInterpreterDescription": {
 		"message": "ใช้ภาษาธรรมชาติเพื่อดึงข้อมูลจากหน้า ตัวอย่างเช่น คุณสามารถใช้ไวยากรณ์เทมเพลต $strong_start${{\"สรุปของหน้านี้\"}}$strong_end$ ต้องใช้คีย์ API หรือกำหนดค่าโมเดลที่กำหนดเองด้านล่าง $link_start$เรียนรู้เพิ่มเติม$link_end$",
@@ -480,7 +483,7 @@
 		"message": "แปล"
 	},
 	"interpreter": {
-		"message": "ตัวแปล"
+		"message": "สรุปด้วย AI"
 	},
 	"interpreterContext": {
 		"message": "บริบทตัวแปล"
@@ -1039,7 +1042,7 @@
 		"message": "This is part of the article titled \"$1\". Extract the key facts from this section."
 	},
 	"summarizerModel": {
-		"message": "On-device summarizer"
+		"message": "สรุปด้วย Chrome"
 	},
 	"summarizerModelDescription": {
 		"message": "Used as a fallback to generate the summary on-device when no LLM is configured or the LLM fails. Requires a one-time model download."

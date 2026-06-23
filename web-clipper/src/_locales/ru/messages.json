@@ -45,7 +45,7 @@
 		"message": "Отсутствует API ключ"
 	},
 	"apiKeysWarning": {
-		"message": "Используя внешнего провайдера, вы соглашаетесь с их условиями использования и политикой конфиденциальности. Запросы интерпретатора отправляются напрямую выбранному вами провайдеру. Obsidian не собирает и не хранит никаких данных о ваших запросах."
+		"message": "Используя внешнего провайдера, вы соглашаетесь с их условиями использования и политикой конфиденциальности. Запросы интерпретатора отправляются напрямую выбранному вами провайдеру. Puda Web Clipper не собирает и не хранит никаких данных о ваших запросах."
 	},
 	"appendToDaily": {
 		"message": "Добавлять в конец ежедневной заметки"
@@ -152,6 +152,9 @@
 	},
 	"copyToClipboard": {
 		"message": "Копировать в буфер обмена"
+	},
+	"customModel": {
+		"message": "Пользовательская модель"
 	},
 	"createNewNote": {
 		"message": "Создать заметку"
@@ -273,7 +276,7 @@
 		"message": "Выделите содержимое веб-страниц, которое хотите сохранить в Obsidian."
 	},
 	"enableInterpreter": {
-		"message": "Включить интерпретатор"
+		"message": "Включить AI-резюме"
 	},
 	"enableInterpreterDescription": {
 		"message": "Используйте естественный язык для извлечения данных из страниц. Например, вы можете использовать синтаксис шаблона $strong_start${{\"краткое содержание страницы\"}}$strong_end$. Требуется ключ API или настроенная ниже пользовательская модель. $link_start$Узнать больше$link_end$",
@@ -480,7 +483,7 @@
 		"message": "интерпретировать"
 	},
 	"interpreter": {
-		"message": "Интерпретатор"
+		"message": "AI-резюме"
 	},
 	"interpreterContext": {
 		"message": "Контекст интерпретатора"
@@ -1039,7 +1042,7 @@
 		"message": "This is part of the article titled \"$1\". Extract the key facts from this section."
 	},
 	"summarizerModel": {
-		"message": "On-device summarizer"
+		"message": "Резюме Chrome"
 	},
 	"summarizerModelDescription": {
 		"message": "Used as a fallback to generate the summary on-device when no LLM is configured or the LLM fails. Requires a one-time model download."

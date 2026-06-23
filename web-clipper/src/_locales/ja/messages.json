@@ -45,7 +45,7 @@
 		"message": "\"APIキーがありません\""
 	},
 	"apiKeysWarning": {
-		"message": "外部プロバイダーを使用することで、そのプロバイダーの利用規約とプライバシーポリシーに同意したことになります。インタープリターのリクエストは選択したプロバイダーに直接送信されます。Obsidianはリクエストに関するデータを収集または保存しません。"
+		"message": "外部プロバイダーを使用することで、そのプロバイダーの利用規約とプライバシーポリシーに同意したことになります。インタープリターのリクエストは選択したプロバイダーに直接送信されます。Puda Web Clipperはリクエストに関するデータを収集または保存しません。"
 	},
 	"appendToDaily": {
 		"message": "デイリーノートの末尾に追加"
@@ -152,6 +152,9 @@
 	},
 	"copyToClipboard": {
 		"message": "クリップボードにコピー"
+	},
+	"customModel": {
+		"message": "カスタムモデル"
 	},
 	"createNewNote": {
 		"message": "新規ノートを作成"
@@ -273,7 +276,7 @@
 		"message": "WebページのコンテンツをハイライトしてObsidianに保存できます。"
 	},
 	"enableInterpreter": {
-		"message": "インタープリターを有効化"
+		"message": "AI要約を有効化"
 	},
 	"enableInterpreterDescription": {
 		"message": "自然言語を使用してページからデータを抽出します。例えば、テンプレート構文$strong_start${{\"ページの要約\"}}$strong_end$を使用できます。APIキーまたは以下で設定したカスタムモデルが必要です。$link_start$詳細$link_end$",
@@ -480,7 +483,7 @@
 		"message": "解釈"
 	},
 	"interpreter": {
-		"message": "インタープリター"
+		"message": "AI要約"
 	},
 	"interpreterContext": {
 		"message": "インタープリターコンテキスト"
@@ -1039,7 +1042,7 @@
 		"message": "タイトル「$1」の記事の一部です。このセクションから重要な事実を抽出してください。"
 	},
 	"summarizerModel": {
-		"message": "オンデバイス要約"
+		"message": "Chrome要約"
 	},
 	"summarizerModelDescription": {
 		"message": "LLM が未設定、または LLM が失敗したときに、オンデバイスで要約を生成するフォールバックとして使用します。初回のみモデルのダウンロードが必要です。"

@@ -45,7 +45,7 @@
 		"message": "Lipsește cheia API"
 	},
 	"apiKeysWarning": {
-		"message": "Folosind un furnizor extern, ești de acord cu termenii și condițiile lor de utilizare și politica de confidențialitate. Cererile interpretorului sunt trimise direct către furnizorul ales. Obsidian nu colectează și nu stochează informații despre cererile tale."
+		"message": "Folosind un furnizor extern, ești de acord cu termenii și condițiile lor de utilizare și politica de confidențialitate. Cererile interpretorului sunt trimise direct către furnizorul ales. Puda Web Clipper nu colectează și nu stochează informații despre cererile tale."
 	},
 	"appendToDaily": {
 		"message": "Adaugă la nota zilnică, la sfârșit"
@@ -152,6 +152,9 @@
 	},
 	"copyToClipboard": {
 		"message": "Copiază în clipboard"
+	},
+	"customModel": {
+		"message": "Model personalizat"
 	},
 	"createNewNote": {
 		"message": "Creează notă nouă"
@@ -273,7 +276,7 @@
 		"message": "Evidențiază conținut pe pagini web pentru a-l salva în Obsidian"
 	},
 	"enableInterpreter": {
-		"message": "Activează interpretorul"
+		"message": "Activează rezumatul AI"
 	},
 	"enableInterpreterDescription": {
 		"message": "Folosește limbaj natural pentru a extrage informații din pagini. De exemplu, poți folosi sintaxa șablonului $strong_start${{\"rezumatul acestei pagini\"}}$strong_end$. Necesită o cheie API sau configurarea unui model personalizat mai jos. $link_start$Află mai multe$link_end$",
@@ -480,7 +483,7 @@
 		"message": "Interpretează"
 	},
 	"interpreter": {
-		"message": "Interpretor"
+		"message": "Rezumat AI"
 	},
 	"interpreterContext": {
 		"message": "Context interpretor"
@@ -1031,7 +1034,7 @@
 		"message": "This is part of the article titled \"$1\". Extract the key facts from this section."
 	},
 	"summarizerModel": {
-		"message": "On-device summarizer"
+		"message": "Rezumat Chrome"
 	},
 	"summarizerModelDescription": {
 		"message": "Used as a fallback to generate the summary on-device when no LLM is configured or the LLM fails. Requires a one-time model download."

@@ -153,6 +153,9 @@
 	"copyToClipboard": {
 		"message": "Clipboard par copy karein"
 	},
+	"customModel": {
+		"message": "कस्टम मॉडल"
+	},
 	"createNewNote": {
 		"message": "Naya note banayein"
 	},
@@ -273,7 +276,7 @@
 		"message": "Web page par content highlight karein jise aap Obsidian mein save kar sakte hain."
 	},
 	"enableInterpreter": {
-		"message": "Interpreter enable karein"
+		"message": "AI सारांश सक्षम करें"
 	},
 	"enableInterpreterDescription": {
 		"message": "Page se data nikalne ke liye natural language ka upyog karein. Udaharan ke liye, aap template syntax $strong_start${{\"page ka summary\"}}$strong_end$ ka upyog kar sakte hain. Niche configure kiye gaye API key ya custom model ki zarurat hai. $link_start$Aur janein$link_end$",
@@ -480,7 +483,7 @@
 		"message": "Interpret"
 	},
 	"interpreter": {
-		"message": "Interpreter"
+		"message": "AI सारांश"
 	},
 	"interpreterContext": {
 		"message": "Interpreter context"
@@ -1039,7 +1042,7 @@
 		"message": "This is part of the article titled \"$1\". Extract the key facts from this section."
 	},
 	"summarizerModel": {
-		"message": "On-device summarizer"
+		"message": "Chrome सारांश"
 	},
 	"summarizerModelDescription": {
 		"message": "Used as a fallback to generate the summary on-device when no LLM is configured or the LLM fails. Requires a one-time model download."

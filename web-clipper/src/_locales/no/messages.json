@@ -45,7 +45,7 @@
 		"message": "API-nøkkel mangler"
 	},
 	"apiKeysWarning": {
-		"message": "Ved å bruke en ekstern leverandør godtar du deres vilkår og personvernregler. Tolkningsforespørsler sendes direkte til din valgte leverandør. Obsidian samler ikke inn eller lagrer informasjon om dine forespørsler."
+		"message": "Ved å bruke en ekstern leverandør godtar du deres vilkår og personvernregler. Tolkningsforespørsler sendes direkte til din valgte leverandør. Puda Web Clipper samler ikke inn eller lagrer informasjon om dine forespørsler."
 	},
 	"appendToDaily": {
 		"message": "Legg til i daglig notat, på slutten"
@@ -152,6 +152,9 @@
 	},
 	"copyToClipboard": {
 		"message": "Kopier til utklippstavle"
+	},
+	"customModel": {
+		"message": "Egendefinert modell"
 	},
 	"createNewNote": {
 		"message": "Opprett nytt notat"
@@ -273,7 +276,7 @@
 		"message": "Uthev innhold på nettsider for å lagre i Obsidian"
 	},
 	"enableInterpreter": {
-		"message": "Aktiver tolk"
+		"message": "Aktiver AI-sammendrag"
 	},
 	"enableInterpreterDescription": {
 		"message": "Bruk naturlig språk for å trekke ut informasjon fra sider. For eksempel kan du bruke malsyntaksen $strong_start${{\"oppsummer denne siden\"}}$strong_end$. Krever en API-nøkkel eller oppsett av en tilpasset modell nedenfor. $link_start$Lær mer$link_end$",
@@ -480,7 +483,7 @@
 		"message": "Tolk"
 	},
 	"interpreter": {
-		"message": "Tolk"
+		"message": "AI-sammendrag"
 	},
 	"interpreterContext": {
 		"message": "Tolkningskontekst"
@@ -1031,7 +1034,7 @@
 		"message": "This is part of the article titled \"$1\". Extract the key facts from this section."
 	},
 	"summarizerModel": {
-		"message": "On-device summarizer"
+		"message": "Chrome-sammendrag"
 	},
 	"summarizerModelDescription": {
 		"message": "Used as a fallback to generate the summary on-device when no LLM is configured or the LLM fails. Requires a one-time model download."

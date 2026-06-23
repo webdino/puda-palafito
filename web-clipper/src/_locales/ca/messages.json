@@ -45,7 +45,7 @@
 		"message": "Sense clau API"
 	},
 	"apiKeysWarning": {
-		"message": "En usar un proveïdor extern, accepta els seus termes i política de privacitat. Les sol·licituds de l'intèrpret s'envien directament al proveïdor que esculli. Obsidian no recopila ni emmagatzema cap dada sobre les seves sol·licituds."
+		"message": "En usar un proveïdor extern, accepta els seus termes i política de privacitat. Les sol·licituds de l'intèrpret s'envien directament al proveïdor que esculli. Puda Web Clipper no recopila ni emmagatzema cap dada sobre les seves sol·licituds."
 	},
 	"appendToDaily": {
 		"message": "Agregar a la nota diària, al final"
@@ -152,6 +152,9 @@
 	},
 	"copyToClipboard": {
 		"message": "Copiar al porta-retalls"
+	},
+	"customModel": {
+		"message": "Model personalitzat"
 	},
 	"createNewNote": {
 		"message": "Crear nova nota"
@@ -273,7 +276,7 @@
 		"message": "Ressalti contingut en pàgines web que pot guardar a Obsidian."
 	},
 	"enableInterpreter": {
-		"message": "Habilitar intèrpret"
+		"message": "Habilita el resum d'IA"
 	},
 	"enableInterpreterDescription": {
 		"message": "Usi llenguatge natural per extraure dades de les pàgines. Per exemple, pot usar la sintaxi de plantilla $strong_start${{\"un resum de la pàgina\"}}$strong_end$. Requereix una clau API o model personalitzat configurat a sota. $link_start$Més informació$link_end$",
@@ -480,7 +483,7 @@
 		"message": "interpretar"
 	},
 	"interpreter": {
-		"message": "Intèrpret"
+		"message": "Resum d'IA"
 	},
 	"interpreterContext": {
 		"message": "Context de l'intèrpret"
@@ -1039,7 +1042,7 @@
 		"message": "This is part of the article titled \"$1\". Extract the key facts from this section."
 	},
 	"summarizerModel": {
-		"message": "On-device summarizer"
+		"message": "Resum de Chrome"
 	},
 	"summarizerModelDescription": {
 		"message": "Used as a fallback to generate the summary on-device when no LLM is configured or the LLM fails. Requires a one-time model download."
