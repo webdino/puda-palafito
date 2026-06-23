@@ -227,12 +227,6 @@ export async function initializeInterpreterSettings(): Promise<void> {
 			summaryPromptInput.value = generalSettings.summaryPrompt ?? '';
 		}
 
-		const defaultPromptContextInput = document.getElementById('default-prompt-context') as HTMLTextAreaElement;
-		if (defaultPromptContextInput) {
-			defaultPromptContextInput.value = generalSettings.defaultPromptContext;
-		}
-
-
 		updatePromptContextVisibility();
 		initializeToggles();
 		initializeAutoSave();
@@ -1099,17 +1093,13 @@ function initializeAutoSave(): void {
 function saveInterpreterSettingsFromForm(): void {
 	const interpreterToggle = document.getElementById('interpreter-toggle') as HTMLInputElement;
 	const interpreterAutoRunToggle = document.getElementById('interpreter-auto-run-toggle') as HTMLInputElement;
-	const defaultPromptContextInput = document.getElementById('default-prompt-context') as HTMLTextAreaElement;
 
-	const updatedSettings: Partial<typeof generalSettings> = {}; 
+	const updatedSettings: Partial<typeof generalSettings> = {};
 	if (interpreterToggle) {
 		updatedSettings.interpreterEnabled = interpreterToggle.checked;
 	}
 	if (interpreterAutoRunToggle) {
 		updatedSettings.interpreterAutoRun = interpreterAutoRunToggle.checked;
-	}
-	if (defaultPromptContextInput) {
-		updatedSettings.defaultPromptContext = defaultPromptContextInput.value;
 	}
 	const summaryPromptInput = document.getElementById('summary-prompt') as HTMLTextAreaElement;
 	if (summaryPromptInput) {
