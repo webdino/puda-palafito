@@ -41,6 +41,49 @@ def get_webclip_dir() -> Path:
     return path
 
 
+def _is_frontmatter_close(line: str) -> bool:
+    return line.strip() == "---"
+
+
+def _read_markdown_parts(
+    file_path: Path, *, read_body: bool
+) -> tuple[dict[str, Any], str]:
+    """Read YAML frontmatter from a markdown file.
+
+    When read_body is False, stops after the closing delimiter without reading
+    the body (faster for metadata-only lookups).
+    """
+    try:
+        with file_path.open(encoding="utf-8") as f:
+            first_line = f.readline()
+            if first_line == "":
+                return {}, ""
+
+            if not first_line.startswith("---"):
+                if read_body:
+                    return {}, first_line + f.read()
+                return {}, ""
+
+            yaml_lines: list[str] = []
+            while True:
+                line = f.readline()
+                if line == "":
+                    if read_body:
+                        return {}, first_line + "".join(yaml_lines)
+                    return {}, ""
+
+                if _is_frontmatter_close(line):
+                    frontmatter = yaml.safe_load("".join(yaml_lines)) or {}
+                    if read_body:
+                        return frontmatter, f.read().strip()
+                    return frontmatter, ""
+
+                yaml_lines.append(line)
+
+    except Exception:
+        return {}, ""
+
+
 def parse_frontmatter(file_path: Path) -> dict[str, Any]:
     """Parse YAML frontmatter from a markdown file.
 
@@ -50,15 +93,8 @@ def parse_frontmatter(file_path: Path) -> dict[str, Any]:
     Returns:
         Dictionary containing the frontmatter data, or empty dict if not found.
     """
-    try:
-        content = file_path.read_text(encoding="utf-8")
-        if content.startswith("---"):
-            parts = content.split("---", 2)
-            if len(parts) >= 3:
-                return yaml.safe_load(parts[1]) or {}
-    except Exception:
-        pass
-    return {}
+    frontmatter, _ = _read_markdown_parts(file_path, read_body=False)
+    return frontmatter
 
 
 def parse_file_content(file_path: Path) -> tuple[dict[str, Any], str]:
@@ -70,17 +106,7 @@ def parse_file_content(file_path: Path) -> tuple[dict[str, Any], str]:
     Returns:
         Tuple of (frontmatter dict, body text).
     """
-    try:
-        content = file_path.read_text(encoding="utf-8")
-        if content.startswith("---"):
-            parts = content.split("---", 2)
-            if len(parts) >= 3:
-                frontmatter = yaml.safe_load(parts[1]) or {}
-                body = parts[2].strip()
-                return frontmatter, body
-        return {}, content
-    except Exception:
-        return {}, ""
+    return _read_markdown_parts(file_path, read_body=True)
 
 
 def find_file_by_name(directory: Path, filename: str) -> Path | None:
@@ -557,7 +583,7 @@ async def handle_index_status(webclip_dir: Path) -> list[TextContent]:
             get_index_status,
             webclip_dir,
             files,
-            parse_file_content,
+            parse_frontmatter,
         )
     except Exception as e:
         return [TextContent(type="text", text=f"Failed to read index status: {e}")]
