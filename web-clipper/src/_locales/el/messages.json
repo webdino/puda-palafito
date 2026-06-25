@@ -45,7 +45,7 @@
 		"message": "Λείπει το κλειδί API"
 	},
 	"apiKeysWarning": {
-		"message": "Χρησιμοποιώντας έναν εξωτερικό πάροχο, αποδέχεστε τους όρους χρήσης και την πολιτική απορρήτου τους. Τα αιτήματα διερμηνέα αποστέλλονται απευθείας στον επιλεγμένο πάροχό σας. Το Obsidian δεν συλλέγει ούτε αποθηκεύει πληροφορίες για τα αιτήματά σας."
+		"message": "Χρησιμοποιώντας έναν εξωτερικό πάροχο, αποδέχεστε τους όρους χρήσης και την πολιτική απορρήτου τους. Τα αιτήματα διερμηνέα αποστέλλονται απευθείας στον επιλεγμένο πάροχό σας. Το Puda Web Clipper δεν συλλέγει ούτε αποθηκεύει πληροφορίες για τα αιτήματά σας."
 	},
 	"appendToDaily": {
 		"message": "Προσθήκη στην ημερήσια σημείωση, στο τέλος"
@@ -59,8 +59,14 @@
 	"autoRunInterpreterDescription": {
 		"message": "Εκτελεί αμέσως τις μεταβλητές προτροπής εάν υπάρχουν στο πρότυπο. Καταναλώνει μονάδες API από τον πάροχο του μοντέλου σας. Απενεργοποιήστε εάν θέλετε να εκτελείτε τον διερμηνέα μόνο χειροκίνητα."
 	},
+	"autoSaveEnabled": {
+		"message": "Auto-save"
+	},
 	"behavior": {
 		"message": "Συμπεριφορά"
+	},
+	"browse": {
+		"message": "Browse"
 	},
 	"byDay": {
 		"message": "Ημέρα"
@@ -91,6 +97,9 @@
 	},
 	"chooseTemplateFile": {
 		"message": "Επιλογή αρχείου προτύπου"
+	},
+	"clear": {
+		"message": "Clear"
 	},
 	"clipBehavior": {
 		"message": "Συμπεριφορά αποκοπής"
@@ -144,6 +153,9 @@
 	"copyToClipboard": {
 		"message": "Αντιγραφή στο πρόχειρο"
 	},
+	"customModel": {
+		"message": "Προσαρμοσμένο μοντέλο"
+	},
 	"createNewNote": {
 		"message": "Δημιουργία νέας σημείωσης"
 	},
@@ -158,6 +170,12 @@
 	},
 	"defaultInterpreterContextDescription": {
 		"message": "Αντικαθιστά το πλαίσιο που χρησιμοποιείται για την ερμηνεία των μεταβλητών προτροπής. Μπορείτε να χρησιμοποιήσετε μεταβλητές εδώ."
+	},
+	"defaultSaveDirectoryDescription": {
+		"message": "Choose a folder to save files to when using \"Save file\". The folder can be anywhere on your computer."
+	},
+	"defaultSaveDirectoryLabel": {
+		"message": "Default save directory"
 	},
 	"defaultTemplateName": {
 		"message": "Προεπιλογή"
@@ -185,6 +203,36 @@
 	},
 	"disableReader": {
 		"message": "Απενεργοποίηση προβολής ανάγνωσης"
+	},
+	"domainFilterAdd": {
+		"message": "Add"
+	},
+	"domainFilterBlockedTooltip": {
+		"message": "This site is excluded from auto-save by the domain filter."
+	},
+	"domainFilterDescription": {
+		"message": "Pages on these domains (and their subdomains) are excluded from auto-save."
+	},
+	"domainFilterEmpty": {
+		"message": "No domains added."
+	},
+	"domainFilterErrorDuplicate": {
+		"message": "That domain has already been added."
+	},
+	"domainFilterErrorEmpty": {
+		"message": "Please enter a domain."
+	},
+	"domainFilterErrorInvalid": {
+		"message": "Please enter a valid domain."
+	},
+	"domainFilterLabel": {
+		"message": "Domain filter"
+	},
+	"domainFilterPlaceholder": {
+		"message": "example.com"
+	},
+	"domainFilterRemove": {
+		"message": "Remove"
 	},
 	"done": {
 		"message": "Ολοκληρώθηκε"
@@ -228,7 +276,7 @@
 		"message": "Επισημάνετε περιεχόμενο σε ιστοσελίδες που μπορείτε να αποθηκεύσετε στο Obsidian"
 	},
 	"enableInterpreter": {
-		"message": "Ενεργοποίηση διερμηνέα"
+		"message": "Ενεργοποίηση σύνοψης AI"
 	},
 	"enableInterpreterDescription": {
 		"message": "Χρησιμοποιήστε φυσική γλώσσα για την εξαγωγή πληροφοριών από σελίδες. Για παράδειγμα, μπορείτε να χρησιμοποιήσετε τη σύνταξη προτύπου $strong_start${{\"περίληψη αυτής της σελίδας\"}}$strong_end$. Απαιτεί κλειδί API ή διαμόρφωση προσαρμοσμένου μοντέλου παρακάτω. $link_start$Μάθετε περισσότερα$link_end$",
@@ -435,7 +483,7 @@
 		"message": "Ερμηνεία"
 	},
 	"interpreter": {
-		"message": "Διερμηνέας"
+		"message": "Σύνοψη AI"
 	},
 	"interpreterContext": {
 		"message": "Πλαίσιο διερμηνέα"
@@ -504,6 +552,9 @@
 	},
 	"newTemplate": {
 		"message": "Νέο πρότυπο"
+	},
+	"noDirectorySelected": {
+		"message": "No directory selected"
 	},
 	"noHighlights": {
 		"message": "Καμία ενέργεια"
@@ -969,6 +1020,66 @@
 	},
 	"specificNoteName": {
 		"message": "Συγκεκριμένο όνομα σημείωσης"
+	},
+	"summarizerDownload": {
+		"message": "Download / verify model"
+	},
+	"summarizerDownloadError": {
+		"message": "Model download failed:"
+	},
+	"summarizerDownloading": {
+		"message": "Downloading model... $1%"
+	},
+	"summarizerMapContext": {
+		"message": "This is part of the article titled \"$1\". Extract the key facts from this section."
+	},
+	"summarizerModel": {
+		"message": "Σύνοψη Chrome"
+	},
+	"summarizerModelDescription": {
+		"message": "Used as a fallback to generate the summary on-device when no LLM is configured or the LLM fails. Requires a one-time model download."
+	},
+	"summarizerModelLabel": {
+		"message": "Chrome built-in summarizer"
+	},
+	"summarizerNotDownloaded": {
+		"message": "Model not downloaded yet."
+	},
+	"summarizerReady": {
+		"message": "Model ready. Summaries can be generated on-device."
+	},
+	"summarizerSharedContext": {
+		"message": "This summary is used as a knowledge base. Preserve technical terms and do not omit important figures or definitions."
+	},
+	"summarizerStatusAvailable": {
+		"message": "Available: the model is downloaded."
+	},
+	"summarizerStatusDownloadable": {
+		"message": "Not downloaded: click to download the model."
+	},
+	"summarizerStatusDownloading": {
+		"message": "Downloading: fetching the model."
+	},
+	"summarizerStatusUnavailable": {
+		"message": "Unavailable: the model cannot be used in this environment."
+	},
+	"summarizerStatusUnknown": {
+		"message": "Unknown status: click to verify."
+	},
+	"summarizerTestFailed": {
+		"message": "Summarizer model is not usable:"
+	},
+	"summarizerUnsupported": {
+		"message": "This browser does not support the built-in Summarizer. Update Chrome to use the on-device fallback."
+	},
+	"summarizerVerified": {
+		"message": "Verified. On-device summaries work."
+	},
+	"summaryPromptDescription": {
+		"message": "Prompt used to generate the summary field in the clipped note's front matter. Leave empty to disable."
+	},
+	"summaryPromptLabel": {
+		"message": "Summary prompt"
 	},
 	"systemDefault": {
 		"message": "Προεπιλογή συστήματος"

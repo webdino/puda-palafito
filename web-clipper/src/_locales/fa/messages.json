@@ -45,7 +45,7 @@
 		"message": "کلید API وجود ندارد"
 	},
 	"apiKeysWarning": {
-		"message": "با استفاده از یک ارائه‌دهنده خارجی، شما با شرایط و سیاست حریم خصوصی آنها موافقت می‌کنید. درخواست‌های مفسر مستقیماً به ارائه‌دهنده انتخابی شما ارسال می‌شود. Obsidian هیچ داده‌ای در مورد درخواست‌های شما جمع‌آوری یا ذخیره نمی‌کند."
+		"message": "با استفاده از یک ارائه‌دهنده خارجی، شما با شرایط و سیاست حریم خصوصی آنها موافقت می‌کنید. درخواست‌های مفسر مستقیماً به ارائه‌دهنده انتخابی شما ارسال می‌شود. Puda Web Clipper هیچ داده‌ای در مورد درخواست‌های شما جمع‌آوری یا ذخیره نمی‌کند."
 	},
 	"appendToDaily": {
 		"message": "اضافه کردن به یادداشت روزانه، در آخر آن "
@@ -59,8 +59,14 @@
 	"autoRunInterpreterDescription": {
 		"message": "اگر قالب شامل متغیرهای پرامپت باشد، فوراً اجرا می‌شود. این کار اعتبار API ارائه‌دهنده مدل شما را مصرف می‌کند. اگر می‌خواهید مفسر را فقط به صورت دستی اجرا کنید، آن را خاموش کنید."
 	},
+	"autoSaveEnabled": {
+		"message": "Auto-save"
+	},
 	"behavior": {
 		"message": "رفتار"
+	},
+	"browse": {
+		"message": "Browse"
 	},
 	"byDay": {
 		"message": "روزها"
@@ -91,6 +97,9 @@
 	},
 	"chooseTemplateFile": {
 		"message": "فایل قالب را انتخاب کنید"
+	},
+	"clear": {
+		"message": "Clear"
 	},
 	"clipBehavior": {
 		"message": "رفتار کلیپ"
@@ -144,6 +153,9 @@
 	"copyToClipboard": {
 		"message": "به کلیپ بورد کپی کن"
 	},
+	"customModel": {
+		"message": "مدل سفارشی"
+	},
 	"createNewNote": {
 		"message": "یادداشت جدید ایجاد کن"
 	},
@@ -158,6 +170,12 @@
 	},
 	"defaultInterpreterContextDescription": {
 		"message": "مدل از این متن برای تفسیر متغیرهای پرامپت استفاده خواهد کرد. متغیرها و فیلترها می‌توانند اینجا استفاده شوند."
+	},
+	"defaultSaveDirectoryDescription": {
+		"message": "Choose a folder to save files to when using \"Save file\". The folder can be anywhere on your computer."
+	},
+	"defaultSaveDirectoryLabel": {
+		"message": "Default save directory"
 	},
 	"defaultTemplateName": {
 		"message": "پیش فرض"
@@ -185,6 +203,36 @@
 	},
 	"disableReader": {
 		"message": "غیرفعال کردن نمای خواندن"
+	},
+	"domainFilterAdd": {
+		"message": "Add"
+	},
+	"domainFilterBlockedTooltip": {
+		"message": "This site is excluded from auto-save by the domain filter."
+	},
+	"domainFilterDescription": {
+		"message": "Pages on these domains (and their subdomains) are excluded from auto-save."
+	},
+	"domainFilterEmpty": {
+		"message": "No domains added."
+	},
+	"domainFilterErrorDuplicate": {
+		"message": "That domain has already been added."
+	},
+	"domainFilterErrorEmpty": {
+		"message": "Please enter a domain."
+	},
+	"domainFilterErrorInvalid": {
+		"message": "Please enter a valid domain."
+	},
+	"domainFilterLabel": {
+		"message": "Domain filter"
+	},
+	"domainFilterPlaceholder": {
+		"message": "example.com"
+	},
+	"domainFilterRemove": {
+		"message": "Remove"
 	},
 	"done": {
 		"message": "انجام شد"
@@ -228,7 +276,7 @@
 		"message": "محتوایی را که می‌خواهید در ابسیدین ذخیره کنید را برجسته کنید"
 	},
 	"enableInterpreter": {
-		"message": "فعال‌سازی مفسر"
+		"message": "فعال‌سازی خلاصه هوش مصنوعی"
 	},
 	"enableInterpreterDescription": {
 		"message": "از زبان طبیعی برای استخراج داده‌ها از صفحات استفاده کنید. برای مثال، می‌توانید از نحو قالب $strong_start${{\"خلاصه‌ای از صفحه\"}}$strong_end$ استفاده کنید. نیاز به کلید API یا مدل سفارشی پیکربندی شده در زیر دارد. $link_start$بیشتر بدانید$link_end$",
@@ -435,7 +483,7 @@
 		"message": "تفسیر"
 	},
 	"interpreter": {
-		"message": "تفسیرگر"
+		"message": "خلاصه هوش مصنوعی"
 	},
 	"interpreterContext": {
 		"message": "زمینه تفسیرگر"
@@ -504,6 +552,9 @@
 	},
 	"newTemplate": {
 		"message": "قالب جدید"
+	},
+	"noDirectorySelected": {
+		"message": "No directory selected"
 	},
 	"noHighlights": {
 		"message": "هیچ کاری نکن"
@@ -977,6 +1028,66 @@
 	},
 	"specificNoteName": {
 		"message": "نام یادداشت خاص"
+	},
+	"summarizerDownload": {
+		"message": "Download / verify model"
+	},
+	"summarizerDownloadError": {
+		"message": "Model download failed:"
+	},
+	"summarizerDownloading": {
+		"message": "Downloading model... $1%"
+	},
+	"summarizerMapContext": {
+		"message": "This is part of the article titled \"$1\". Extract the key facts from this section."
+	},
+	"summarizerModel": {
+		"message": "خلاصه Chrome"
+	},
+	"summarizerModelDescription": {
+		"message": "Used as a fallback to generate the summary on-device when no LLM is configured or the LLM fails. Requires a one-time model download."
+	},
+	"summarizerModelLabel": {
+		"message": "Chrome built-in summarizer"
+	},
+	"summarizerNotDownloaded": {
+		"message": "Model not downloaded yet."
+	},
+	"summarizerReady": {
+		"message": "Model ready. Summaries can be generated on-device."
+	},
+	"summarizerSharedContext": {
+		"message": "This summary is used as a knowledge base. Preserve technical terms and do not omit important figures or definitions."
+	},
+	"summarizerStatusAvailable": {
+		"message": "Available: the model is downloaded."
+	},
+	"summarizerStatusDownloadable": {
+		"message": "Not downloaded: click to download the model."
+	},
+	"summarizerStatusDownloading": {
+		"message": "Downloading: fetching the model."
+	},
+	"summarizerStatusUnavailable": {
+		"message": "Unavailable: the model cannot be used in this environment."
+	},
+	"summarizerStatusUnknown": {
+		"message": "Unknown status: click to verify."
+	},
+	"summarizerTestFailed": {
+		"message": "Summarizer model is not usable:"
+	},
+	"summarizerUnsupported": {
+		"message": "This browser does not support the built-in Summarizer. Update Chrome to use the on-device fallback."
+	},
+	"summarizerVerified": {
+		"message": "Verified. On-device summaries work."
+	},
+	"summaryPromptDescription": {
+		"message": "Prompt used to generate the summary field in the clipped note's front matter. Leave empty to disable."
+	},
+	"summaryPromptLabel": {
+		"message": "Summary prompt"
 	},
 	"systemDefault": {
 		"message": "سیستم"

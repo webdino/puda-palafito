@@ -123,11 +123,40 @@ label {
 	}
 }
 
+.settings-subgroup {
+	margin: 0.25rem 0 0 1rem;
+	padding-left: 1rem;
+	border-left: 2px solid var(--background-modifier-border);
+
+	.setting-item-heading.mod-sub:first-child {
+		margin-top: 0.75rem;
+	}
+}
+
 .setting-item {
 	margin: 0.75rem 0;
 
 	&.setting-item-heading {
 		margin: 2rem 0 0.75rem;
+
+		&.mod-primary {
+			margin-top: 2.5rem;
+			h3 {
+				font-size: var(--font-ui-medium);
+				font-weight: 600;
+			}
+		}
+
+		&.mod-sub {
+			margin-top: 1.5rem;
+			h3 {
+				font-size: var(--font-ui-smaller);
+				font-weight: 600;
+				text-transform: uppercase;
+				letter-spacing: 0.04em;
+				color: var(--text-muted);
+			}
+		}
 	}
 	&:first-child {
 		border-top: none;

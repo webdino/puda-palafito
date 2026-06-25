@@ -45,7 +45,7 @@
 		"message": "Ei API-avainta"
 	},
 	"apiKeysWarning": {
-		"message": "Käyttämällä ulkoista palveluntarjoajaa hyväksyt heidän käyttöehtonsa ja tietosuojakäytäntönsä. Tulkin pyynnöt lähetetään suoraan valitsemallesi palveluntarjoajalle. Obsidian ei kerää tai tallenna mitään tietoja pyynnöistäsi."
+		"message": "Käyttämällä ulkoista palveluntarjoajaa hyväksyt heidän käyttöehtonsa ja tietosuojakäytäntönsä. Tulkin pyynnöt lähetetään suoraan valitsemallesi palveluntarjoajalle. Puda Web Clipper ei kerää tai tallenna mitään tietoja pyynnöistäsi."
 	},
 	"appendToDaily": {
 		"message": "Lisää päivittäiseen muistiinpanoon, loppuun"
@@ -59,8 +59,14 @@
 	"autoRunInterpreterDescription": {
 		"message": "Suorittaa kehotteen muuttujat välittömästi, jos mallissa on niitä. Tämä kuluttaa API-krediittejä mallintarjoajaltasi. Poista käytöstä, jos haluat suorittaa tulkin vain manuaalisesti."
 	},
+	"autoSaveEnabled": {
+		"message": "Auto-save"
+	},
 	"behavior": {
 		"message": "Käyttäytyminen"
+	},
+	"browse": {
+		"message": "Browse"
 	},
 	"byDay": {
 		"message": "Päivät"
@@ -91,6 +97,9 @@
 	},
 	"chooseTemplateFile": {
 		"message": "Valitse mallitiedosto"
+	},
+	"clear": {
+		"message": "Clear"
 	},
 	"clipBehavior": {
 		"message": "Leikkauksen käyttäytyminen"
@@ -144,6 +153,9 @@
 	"copyToClipboard": {
 		"message": "Kopioi leikepöydälle"
 	},
+	"customModel": {
+		"message": "Mukautettu malli"
+	},
 	"createNewNote": {
 		"message": "Luo uusi muistiinpano"
 	},
@@ -158,6 +170,12 @@
 	},
 	"defaultInterpreterContextDescription": {
 		"message": "Korvaa kehotemuuttujien tulkitsemiseen käytettävä konteksti. Muuttujia voi käyttää tässä."
+	},
+	"defaultSaveDirectoryDescription": {
+		"message": "Choose a folder to save files to when using \"Save file\". The folder can be anywhere on your computer."
+	},
+	"defaultSaveDirectoryLabel": {
+		"message": "Default save directory"
 	},
 	"defaultTemplateName": {
 		"message": "Oletus"
@@ -185,6 +203,36 @@
 	},
 	"disableReader": {
 		"message": "Poista lukunäkymä käytöstä"
+	},
+	"domainFilterAdd": {
+		"message": "Add"
+	},
+	"domainFilterBlockedTooltip": {
+		"message": "This site is excluded from auto-save by the domain filter."
+	},
+	"domainFilterDescription": {
+		"message": "Pages on these domains (and their subdomains) are excluded from auto-save."
+	},
+	"domainFilterEmpty": {
+		"message": "No domains added."
+	},
+	"domainFilterErrorDuplicate": {
+		"message": "That domain has already been added."
+	},
+	"domainFilterErrorEmpty": {
+		"message": "Please enter a domain."
+	},
+	"domainFilterErrorInvalid": {
+		"message": "Please enter a valid domain."
+	},
+	"domainFilterLabel": {
+		"message": "Domain filter"
+	},
+	"domainFilterPlaceholder": {
+		"message": "example.com"
+	},
+	"domainFilterRemove": {
+		"message": "Remove"
 	},
 	"done": {
 		"message": "Valmis"
@@ -228,7 +276,7 @@
 		"message": "Korosta verkkosivujen sisältöä, jonka voit tallentaa Obsidianiin"
 	},
 	"enableInterpreter": {
-		"message": "Ota tulkki käyttöön"
+		"message": "Ota tekoälytiivistelmä käyttöön"
 	},
 	"enableInterpreterDescription": {
 		"message": "Käytä luonnollista kieltä tietojen poimimiseen sivuilta. Voit esimerkiksi käyttää mallisyntaksia $strong_start${{\"sivun yhteenveto\"}}$strong_end$. Vaatii API-avaimen tai mukautetun mallin määrittämisen alla. $link_start$Lue lisää$link_end$.",
@@ -435,7 +483,7 @@
 		"message": "Tulkitse"
 	},
 	"interpreter": {
-		"message": "Tulkki"
+		"message": "Tekoälytiivistelmä"
 	},
 	"interpreterContext": {
 		"message": "Tulkkauksen konteksti"
@@ -504,6 +552,9 @@
 	},
 	"newTemplate": {
 		"message": "Uusi malli"
+	},
+	"noDirectorySelected": {
+		"message": "No directory selected"
 	},
 	"noHighlights": {
 		"message": "Ei korostuksia"
@@ -985,6 +1036,66 @@
 	},
 	"specificNoteName": {
 		"message": "Tietty muistiinpanon nimi"
+	},
+	"summarizerDownload": {
+		"message": "Download / verify model"
+	},
+	"summarizerDownloadError": {
+		"message": "Model download failed:"
+	},
+	"summarizerDownloading": {
+		"message": "Downloading model... $1%"
+	},
+	"summarizerMapContext": {
+		"message": "This is part of the article titled \"$1\". Extract the key facts from this section."
+	},
+	"summarizerModel": {
+		"message": "Chrome-tiivistelmä"
+	},
+	"summarizerModelDescription": {
+		"message": "Used as a fallback to generate the summary on-device when no LLM is configured or the LLM fails. Requires a one-time model download."
+	},
+	"summarizerModelLabel": {
+		"message": "Chrome built-in summarizer"
+	},
+	"summarizerNotDownloaded": {
+		"message": "Model not downloaded yet."
+	},
+	"summarizerReady": {
+		"message": "Model ready. Summaries can be generated on-device."
+	},
+	"summarizerSharedContext": {
+		"message": "This summary is used as a knowledge base. Preserve technical terms and do not omit important figures or definitions."
+	},
+	"summarizerStatusAvailable": {
+		"message": "Available: the model is downloaded."
+	},
+	"summarizerStatusDownloadable": {
+		"message": "Not downloaded: click to download the model."
+	},
+	"summarizerStatusDownloading": {
+		"message": "Downloading: fetching the model."
+	},
+	"summarizerStatusUnavailable": {
+		"message": "Unavailable: the model cannot be used in this environment."
+	},
+	"summarizerStatusUnknown": {
+		"message": "Unknown status: click to verify."
+	},
+	"summarizerTestFailed": {
+		"message": "Summarizer model is not usable:"
+	},
+	"summarizerUnsupported": {
+		"message": "This browser does not support the built-in Summarizer. Update Chrome to use the on-device fallback."
+	},
+	"summarizerVerified": {
+		"message": "Verified. On-device summaries work."
+	},
+	"summaryPromptDescription": {
+		"message": "Prompt used to generate the summary field in the clipped note's front matter. Leave empty to disable."
+	},
+	"summaryPromptLabel": {
+		"message": "Summary prompt"
 	},
 	"systemDefault": {
 		"message": "Järjestelmän oletus"

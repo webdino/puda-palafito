@@ -45,7 +45,7 @@
 		"message": "Отсутствует API ключ"
 	},
 	"apiKeysWarning": {
-		"message": "Используя внешнего провайдера, вы соглашаетесь с их условиями использования и политикой конфиденциальности. Запросы интерпретатора отправляются напрямую выбранному вами провайдеру. Obsidian не собирает и не хранит никаких данных о ваших запросах."
+		"message": "Используя внешнего провайдера, вы соглашаетесь с их условиями использования и политикой конфиденциальности. Запросы интерпретатора отправляются напрямую выбранному вами провайдеру. Puda Web Clipper не собирает и не хранит никаких данных о ваших запросах."
 	},
 	"appendToDaily": {
 		"message": "Добавлять в конец ежедневной заметки"
@@ -59,8 +59,14 @@
 	"autoRunInterpreterDescription": {
 		"message": "Немедленно выполнять переменные подсказок, если они есть в шаблоне. Это будет расходовать API-кредиты вашего провайдера модели. Отключите, если хотите запускать интерпретатор только вручную."
 	},
+	"autoSaveEnabled": {
+		"message": "Auto-save"
+	},
 	"behavior": {
 		"message": "Поведение"
+	},
+	"browse": {
+		"message": "Browse"
 	},
 	"byDay": {
 		"message": "Дни"
@@ -91,6 +97,9 @@
 	},
 	"chooseTemplateFile": {
 		"message": "Выберите файл шаблона"
+	},
+	"clear": {
+		"message": "Clear"
 	},
 	"clipBehavior": {
 		"message": "Поведение при сохранении"
@@ -144,6 +153,9 @@
 	"copyToClipboard": {
 		"message": "Копировать в буфер обмена"
 	},
+	"customModel": {
+		"message": "Пользовательская модель"
+	},
 	"createNewNote": {
 		"message": "Создать заметку"
 	},
@@ -158,6 +170,12 @@
 	},
 	"defaultInterpreterContextDescription": {
 		"message": "Модель будет использовать этот контекст для интерпретации переменных подсказок. Здесь можно использовать переменные и фильтры."
+	},
+	"defaultSaveDirectoryDescription": {
+		"message": "Choose a folder to save files to when using \"Save file\". The folder can be anywhere on your computer."
+	},
+	"defaultSaveDirectoryLabel": {
+		"message": "Default save directory"
 	},
 	"defaultTemplateName": {
 		"message": "По умолчанию"
@@ -185,6 +203,36 @@
 	},
 	"disableReader": {
 		"message": "Отключить режим чтения"
+	},
+	"domainFilterAdd": {
+		"message": "Add"
+	},
+	"domainFilterBlockedTooltip": {
+		"message": "This site is excluded from auto-save by the domain filter."
+	},
+	"domainFilterDescription": {
+		"message": "Pages on these domains (and their subdomains) are excluded from auto-save."
+	},
+	"domainFilterEmpty": {
+		"message": "No domains added."
+	},
+	"domainFilterErrorDuplicate": {
+		"message": "That domain has already been added."
+	},
+	"domainFilterErrorEmpty": {
+		"message": "Please enter a domain."
+	},
+	"domainFilterErrorInvalid": {
+		"message": "Please enter a valid domain."
+	},
+	"domainFilterLabel": {
+		"message": "Domain filter"
+	},
+	"domainFilterPlaceholder": {
+		"message": "example.com"
+	},
+	"domainFilterRemove": {
+		"message": "Remove"
 	},
 	"done": {
 		"message": "готово"
@@ -228,7 +276,7 @@
 		"message": "Выделите содержимое веб-страниц, которое хотите сохранить в Obsidian."
 	},
 	"enableInterpreter": {
-		"message": "Включить интерпретатор"
+		"message": "Включить AI-резюме"
 	},
 	"enableInterpreterDescription": {
 		"message": "Используйте естественный язык для извлечения данных из страниц. Например, вы можете использовать синтаксис шаблона $strong_start${{\"краткое содержание страницы\"}}$strong_end$. Требуется ключ API или настроенная ниже пользовательская модель. $link_start$Узнать больше$link_end$",
@@ -435,7 +483,7 @@
 		"message": "интерпретировать"
 	},
 	"interpreter": {
-		"message": "Интерпретатор"
+		"message": "AI-резюме"
 	},
 	"interpreterContext": {
 		"message": "Контекст интерпретатора"
@@ -504,6 +552,9 @@
 	},
 	"newTemplate": {
 		"message": "Новый шаблон"
+	},
+	"noDirectorySelected": {
+		"message": "No directory selected"
 	},
 	"noHighlights": {
 		"message": "Ничего не делать"
@@ -977,6 +1028,66 @@
 	},
 	"specificNoteName": {
 		"message": "Особое название заметки"
+	},
+	"summarizerDownload": {
+		"message": "Download / verify model"
+	},
+	"summarizerDownloadError": {
+		"message": "Model download failed:"
+	},
+	"summarizerDownloading": {
+		"message": "Downloading model... $1%"
+	},
+	"summarizerMapContext": {
+		"message": "This is part of the article titled \"$1\". Extract the key facts from this section."
+	},
+	"summarizerModel": {
+		"message": "Резюме Chrome"
+	},
+	"summarizerModelDescription": {
+		"message": "Used as a fallback to generate the summary on-device when no LLM is configured or the LLM fails. Requires a one-time model download."
+	},
+	"summarizerModelLabel": {
+		"message": "Chrome built-in summarizer"
+	},
+	"summarizerNotDownloaded": {
+		"message": "Model not downloaded yet."
+	},
+	"summarizerReady": {
+		"message": "Model ready. Summaries can be generated on-device."
+	},
+	"summarizerSharedContext": {
+		"message": "This summary is used as a knowledge base. Preserve technical terms and do not omit important figures or definitions."
+	},
+	"summarizerStatusAvailable": {
+		"message": "Available: the model is downloaded."
+	},
+	"summarizerStatusDownloadable": {
+		"message": "Not downloaded: click to download the model."
+	},
+	"summarizerStatusDownloading": {
+		"message": "Downloading: fetching the model."
+	},
+	"summarizerStatusUnavailable": {
+		"message": "Unavailable: the model cannot be used in this environment."
+	},
+	"summarizerStatusUnknown": {
+		"message": "Unknown status: click to verify."
+	},
+	"summarizerTestFailed": {
+		"message": "Summarizer model is not usable:"
+	},
+	"summarizerUnsupported": {
+		"message": "This browser does not support the built-in Summarizer. Update Chrome to use the on-device fallback."
+	},
+	"summarizerVerified": {
+		"message": "Verified. On-device summaries work."
+	},
+	"summaryPromptDescription": {
+		"message": "Prompt used to generate the summary field in the clipped note's front matter. Leave empty to disable."
+	},
+	"summaryPromptLabel": {
+		"message": "Summary prompt"
 	},
 	"systemDefault": {
 		"message": "Системный"

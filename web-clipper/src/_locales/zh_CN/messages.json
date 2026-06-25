@@ -45,7 +45,7 @@
 		"message": "无 API 密钥"
 	},
 	"apiKeysWarning": {
-		"message": "使用外部提供商即表示您同意其条款和隐私政策。解释器请求直接发送给您选择的提供商。Obsidian 不会收集或存储任何关于您请求的数据。"
+		"message": "使用外部提供商即表示您同意其条款和隐私政策。解释器请求直接发送给您选择的提供商。Puda Web Clipper 不会收集或存储任何关于您请求的数据。"
 	},
 	"appendToDaily": {
 		"message": "添加到日记末尾"
@@ -59,8 +59,14 @@
 	"autoRunInterpreterDescription": {
 		"message": "如果模板包含提示变量，则立即运行。这将消耗模型提供商的 API 额度。如果您只想手动运行解释器，请关闭此选项。"
 	},
+	"autoSaveEnabled": {
+		"message": "Auto-save"
+	},
 	"behavior": {
 		"message": "行为"
+	},
+	"browse": {
+		"message": "Browse"
 	},
 	"byDay": {
 		"message": "天"
@@ -91,6 +97,9 @@
 	},
 	"chooseTemplateFile": {
 		"message": "选择模板文件"
+	},
+	"clear": {
+		"message": "Clear"
 	},
 	"clipBehavior": {
 		"message": "保存方式"
@@ -144,6 +153,9 @@
 	"copyToClipboard": {
 		"message": "复制到剪贴板"
 	},
+	"customModel": {
+		"message": "自定义模型"
+	},
 	"createNewNote": {
 		"message": "创建新笔记"
 	},
@@ -158,6 +170,12 @@
 	},
 	"defaultInterpreterContextDescription": {
 		"message": "模型将使用此上下文来解释提示变量。可以在此处使用变量和过滤器。"
+	},
+	"defaultSaveDirectoryDescription": {
+		"message": "Choose a folder to save files to when using \"Save file\". The folder can be anywhere on your computer."
+	},
+	"defaultSaveDirectoryLabel": {
+		"message": "Default save directory"
 	},
 	"defaultTemplateName": {
 		"message": "默认"
@@ -185,6 +203,36 @@
 	},
 	"disableReader": {
 		"message": "禁用阅读视图"
+	},
+	"domainFilterAdd": {
+		"message": "Add"
+	},
+	"domainFilterBlockedTooltip": {
+		"message": "This site is excluded from auto-save by the domain filter."
+	},
+	"domainFilterDescription": {
+		"message": "Pages on these domains (and their subdomains) are excluded from auto-save."
+	},
+	"domainFilterEmpty": {
+		"message": "No domains added."
+	},
+	"domainFilterErrorDuplicate": {
+		"message": "That domain has already been added."
+	},
+	"domainFilterErrorEmpty": {
+		"message": "Please enter a domain."
+	},
+	"domainFilterErrorInvalid": {
+		"message": "Please enter a valid domain."
+	},
+	"domainFilterLabel": {
+		"message": "Domain filter"
+	},
+	"domainFilterPlaceholder": {
+		"message": "example.com"
+	},
+	"domainFilterRemove": {
+		"message": "Remove"
 	},
 	"done": {
 		"message": "完成"
@@ -228,7 +276,7 @@
 		"message": "在网页上高亮内容并保存到 Obsidian。"
 	},
 	"enableInterpreter": {
-		"message": "启用解释器"
+		"message": "启用 AI 摘要"
 	},
 	"enableInterpreterDescription": {
 		"message": "使用自然语言从页面提取数据。例如，您可以使用模板语法 $strong_start${{\"页面摘要\"}}$strong_end$。需要 API 密钥或下面配置的自定义模型。$link_start$了解更多$link_end$",
@@ -435,7 +483,7 @@
 		"message": "解释"
 	},
 	"interpreter": {
-		"message": "解释器"
+		"message": "AI 摘要"
 	},
 	"interpreterContext": {
 		"message": "解释器上下文"
@@ -504,6 +552,9 @@
 	},
 	"newTemplate": {
 		"message": "新建模板"
+	},
+	"noDirectorySelected": {
+		"message": "No directory selected"
 	},
 	"noHighlights": {
 		"message": "不执行任何操作"
@@ -977,6 +1028,66 @@
 	},
 	"specificNoteName": {
 		"message": "特定笔记名称"
+	},
+	"summarizerDownload": {
+		"message": "Download / verify model"
+	},
+	"summarizerDownloadError": {
+		"message": "Model download failed:"
+	},
+	"summarizerDownloading": {
+		"message": "Downloading model... $1%"
+	},
+	"summarizerMapContext": {
+		"message": "This is part of the article titled \"$1\". Extract the key facts from this section."
+	},
+	"summarizerModel": {
+		"message": "Chrome 摘要"
+	},
+	"summarizerModelDescription": {
+		"message": "Used as a fallback to generate the summary on-device when no LLM is configured or the LLM fails. Requires a one-time model download."
+	},
+	"summarizerModelLabel": {
+		"message": "Chrome built-in summarizer"
+	},
+	"summarizerNotDownloaded": {
+		"message": "Model not downloaded yet."
+	},
+	"summarizerReady": {
+		"message": "Model ready. Summaries can be generated on-device."
+	},
+	"summarizerSharedContext": {
+		"message": "This summary is used as a knowledge base. Preserve technical terms and do not omit important figures or definitions."
+	},
+	"summarizerStatusAvailable": {
+		"message": "Available: the model is downloaded."
+	},
+	"summarizerStatusDownloadable": {
+		"message": "Not downloaded: click to download the model."
+	},
+	"summarizerStatusDownloading": {
+		"message": "Downloading: fetching the model."
+	},
+	"summarizerStatusUnavailable": {
+		"message": "Unavailable: the model cannot be used in this environment."
+	},
+	"summarizerStatusUnknown": {
+		"message": "Unknown status: click to verify."
+	},
+	"summarizerTestFailed": {
+		"message": "Summarizer model is not usable:"
+	},
+	"summarizerUnsupported": {
+		"message": "This browser does not support the built-in Summarizer. Update Chrome to use the on-device fallback."
+	},
+	"summarizerVerified": {
+		"message": "Verified. On-device summaries work."
+	},
+	"summaryPromptDescription": {
+		"message": "Prompt used to generate the summary field in the clipped note's front matter. Leave empty to disable."
+	},
+	"summaryPromptLabel": {
+		"message": "Summary prompt"
 	},
 	"systemDefault": {
 		"message": "系统默认"

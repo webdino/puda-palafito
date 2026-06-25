@@ -2,9 +2,6 @@
 	"activity": {
 		"message": "アクティビティ"
 	},
-	"autoSaveEnabled": {
-		"message": "自動保存"
-	},
 	"addModel": {
 		"message": "+ モデルを追加"
 	},
@@ -48,7 +45,7 @@
 		"message": "\"APIキーがありません\""
 	},
 	"apiKeysWarning": {
-		"message": "外部プロバイダーを使用することで、そのプロバイダーの利用規約とプライバシーポリシーに同意したことになります。インタープリターのリクエストは選択したプロバイダーに直接送信されます。Obsidianはリクエストに関するデータを収集または保存しません。"
+		"message": "外部プロバイダーを使用することで、そのプロバイダーの利用規約とプライバシーポリシーに同意したことになります。インタープリターのリクエストは選択したプロバイダーに直接送信されます。Puda Web Clipperはリクエストに関するデータを収集または保存しません。"
 	},
 	"appendToDaily": {
 		"message": "デイリーノートの末尾に追加"
@@ -62,8 +59,14 @@
 	"autoRunInterpreterDescription": {
 		"message": "テンプレートにプロンプト変数が含まれている場合、即座に実行します。これによりモデルプロバイダーのAPIクレジットが消費されます。インタープリターを手動でのみ実行したい場合はオフにしてください。"
 	},
+	"autoSaveEnabled": {
+		"message": "自動保存"
+	},
 	"behavior": {
 		"message": "動作"
+	},
+	"browse": {
+		"message": "参照"
 	},
 	"byDay": {
 		"message": "日別"
@@ -94,6 +97,9 @@
 	},
 	"chooseTemplateFile": {
 		"message": "\"テンプレートファイルを選択\""
+	},
+	"clear": {
+		"message": "クリア"
 	},
 	"clipBehavior": {
 		"message": "クリップの動作"
@@ -147,6 +153,9 @@
 	"copyToClipboard": {
 		"message": "クリップボードにコピー"
 	},
+	"customModel": {
+		"message": "カスタムモデル"
+	},
 	"createNewNote": {
 		"message": "新規ノートを作成"
 	},
@@ -161,6 +170,12 @@
 	},
 	"defaultInterpreterContextDescription": {
 		"message": "モデルはプロンプト変数を解釈する際にこのコンテキストを使用します。変数とフィルターを使用できます。"
+	},
+	"defaultSaveDirectoryDescription": {
+		"message": "「ファイルを保存」使用時に保存するフォルダを選択します。コンピュータ上の任意の場所を選択できます。"
+	},
+	"defaultSaveDirectoryLabel": {
+		"message": "デフォルト保存ディレクトリ"
 	},
 	"defaultTemplateName": {
 		"message": "デフォルト"
@@ -188,6 +203,36 @@
 	},
 	"disableReader": {
 		"message": "閲覧ビューを無効にする"
+	},
+	"domainFilterAdd": {
+		"message": "追加"
+	},
+	"domainFilterBlockedTooltip": {
+		"message": "このサイトはドメインフィルタにより自動保存の対象外です。"
+	},
+	"domainFilterDescription": {
+		"message": "これらのドメイン（およびそのサブドメイン）のページは自動保存の対象外になります。"
+	},
+	"domainFilterEmpty": {
+		"message": "ドメインが登録されていません。"
+	},
+	"domainFilterErrorDuplicate": {
+		"message": "そのドメインはすでに追加されています。"
+	},
+	"domainFilterErrorEmpty": {
+		"message": "ドメインを入力してください。"
+	},
+	"domainFilterErrorInvalid": {
+		"message": "有効なドメインを入力してください。"
+	},
+	"domainFilterLabel": {
+		"message": "ドメインフィルタ"
+	},
+	"domainFilterPlaceholder": {
+		"message": "example.com"
+	},
+	"domainFilterRemove": {
+		"message": "削除"
 	},
 	"done": {
 		"message": "完了"
@@ -231,7 +276,7 @@
 		"message": "WebページのコンテンツをハイライトしてObsidianに保存できます。"
 	},
 	"enableInterpreter": {
-		"message": "インタープリターを有効化"
+		"message": "AI要約を有効化"
 	},
 	"enableInterpreterDescription": {
 		"message": "自然言語を使用してページからデータを抽出します。例えば、テンプレート構文$strong_start${{\"ページの要約\"}}$strong_end$を使用できます。APIキーまたは以下で設定したカスタムモデルが必要です。$link_start$詳細$link_end$",
@@ -438,7 +483,7 @@
 		"message": "解釈"
 	},
 	"interpreter": {
-		"message": "インタープリター"
+		"message": "AI要約"
 	},
 	"interpreterContext": {
 		"message": "インタープリターコンテキスト"
@@ -507,6 +552,9 @@
 	},
 	"newTemplate": {
 		"message": "新規テンプレート"
+	},
+	"noDirectorySelected": {
+		"message": "フォルダが選択されていません"
 	},
 	"noHighlights": {
 		"message": "何もしない"
@@ -891,99 +939,6 @@
 	"save": {
 		"message": "保存"
 	},
-	"browse": {
-		"message": "参照"
-	},
-	"clear": {
-		"message": "クリア"
-	},
-	"defaultSaveDirectoryDescription": {
-		"message": "「ファイルを保存」使用時に保存するフォルダを選択します。コンピュータ上の任意の場所を選択できます。"
-	},
-	"defaultSaveDirectoryLabel": {
-		"message": "デフォルト保存ディレクトリ"
-	},
-	"domainFilterLabel": {
-		"message": "ドメインフィルタ"
-	},
-	"domainFilterDescription": {
-		"message": "これらのドメイン（およびそのサブドメイン）のページは自動保存の対象外になります。"
-	},
-	"domainFilterPlaceholder": {
-		"message": "example.com"
-	},
-	"domainFilterAdd": {
-		"message": "追加"
-	},
-	"domainFilterEmpty": {
-		"message": "ドメインが登録されていません。"
-	},
-	"domainFilterRemove": {
-		"message": "削除"
-	},
-	"domainFilterErrorEmpty": {
-		"message": "ドメインを入力してください。"
-	},
-	"domainFilterErrorInvalid": {
-		"message": "有効なドメインを入力してください。"
-	},
-	"domainFilterErrorDuplicate": {
-		"message": "そのドメインはすでに追加されています。"
-	},
-	"domainFilterBlockedTooltip": {
-		"message": "このサイトはドメインフィルタにより自動保存の対象外です。"
-	},
-	"noDirectorySelected": {
-		"message": "フォルダが選択されていません"
-	},
-	"summaryPromptDescription": {
-		"message": "クリップしたノートのFront Matterにsummaryフィールドを生成するプロンプト。空にすると無効になります。"
-	},
-	"summaryPromptLabel": {
-		"message": "要約プロンプト"
-	},
-	"summarizerModel": {
-		"message": "オンデバイス要約"
-	},
-	"summarizerModelLabel": {
-		"message": "Chrome 組み込み要約モデル"
-	},
-	"summarizerModelDescription": {
-		"message": "LLM が未設定、または LLM が失敗したときに、オンデバイスで要約を生成するフォールバックとして使用します。初回のみモデルのダウンロードが必要です。"
-	},
-	"summarizerDownload": {
-		"message": "モデルをダウンロード / 動作確認"
-	},
-	"summarizerUnverified": {
-		"message": "利用可能と報告されていますが未確認です。クリックでダウンロード/動作確認し、テスト要約を実行します。"
-	},
-	"summarizerVerified": {
-		"message": "動作確認できました。オンデバイス要約が利用できます。"
-	},
-	"summarizerTestFailed": {
-		"message": "要約モデルを利用できませんでした:"
-	},
-	"summarizerUnsupported": {
-		"message": "このブラウザは組み込み要約に対応していません。オンデバイスのフォールバックを使うには Chrome を更新してください。"
-	},
-	"summarizerReady": {
-		"message": "モデルの準備ができました。オンデバイスで要約を生成できます。"
-	},
-	"summarizerNotDownloaded": {
-		"message": "モデルはまだダウンロードされていません。"
-	},
-	"summarizerDownloading": {
-		"message": "モデルをダウンロード中... $1%"
-	},
-	"summarizerDownloadError": {
-		"message": "モデルのダウンロードに失敗しました:"
-	},
-	"summarizerSharedContext": {
-		"message": "この要約は知識ベースとして使用します。専門用語を保持し、重要な数値や定義を省略しないでください。"
-	},
-	"summarizerMapContext": {
-		"message": "タイトル「$1」の記事の一部です。このセクションから重要な事実を抽出してください。"
-	},
 	"saveBehaviorDescription": {
 		"message": "ページを保存するためのデフォルトオプションを選択します。他のオプションはメインボタンの隣のドロップダウンメニューに表示されます。"
 	},
@@ -1073,6 +1028,66 @@
 	},
 	"specificNoteName": {
 		"message": "特定のノート名"
+	},
+	"summarizerDownload": {
+		"message": "モデルをダウンロード / 動作確認"
+	},
+	"summarizerDownloadError": {
+		"message": "モデルのダウンロードに失敗しました:"
+	},
+	"summarizerDownloading": {
+		"message": "モデルをダウンロード中... $1%"
+	},
+	"summarizerMapContext": {
+		"message": "タイトル「$1」の記事の一部です。このセクションから重要な事実を抽出してください。"
+	},
+	"summarizerModel": {
+		"message": "Chrome要約"
+	},
+	"summarizerModelDescription": {
+		"message": "LLM が未設定、または LLM が失敗したときに、オンデバイスで要約を生成するフォールバックとして使用します。初回のみモデルのダウンロードが必要です。"
+	},
+	"summarizerModelLabel": {
+		"message": "Chrome 組み込み要約モデル"
+	},
+	"summarizerNotDownloaded": {
+		"message": "モデルはまだダウンロードされていません。"
+	},
+	"summarizerReady": {
+		"message": "モデルの準備ができました。オンデバイスで要約を生成できます。"
+	},
+	"summarizerSharedContext": {
+		"message": "この要約は知識ベースとして使用します。専門用語を保持し、重要な数値や定義を省略しないでください。"
+	},
+	"summarizerStatusAvailable": {
+		"message": "利用可能：モデルはダウンロード済みです。"
+	},
+	"summarizerStatusDownloadable": {
+		"message": "未ダウンロード：クリックしてモデルをダウンロードします。"
+	},
+	"summarizerStatusDownloading": {
+		"message": "ダウンロード中：モデルを取得しています。"
+	},
+	"summarizerStatusUnavailable": {
+		"message": "利用不可：この環境ではモデルを利用できません。"
+	},
+	"summarizerStatusUnknown": {
+		"message": "状態不明：クリックして動作確認します。"
+	},
+	"summarizerTestFailed": {
+		"message": "要約モデルを利用できませんでした:"
+	},
+	"summarizerUnsupported": {
+		"message": "このブラウザは組み込み要約に対応していません。オンデバイスのフォールバックを使うには Chrome を更新してください。"
+	},
+	"summarizerVerified": {
+		"message": "動作確認できました。オンデバイス要約が利用できます。"
+	},
+	"summaryPromptDescription": {
+		"message": "クリップしたノートのFront Matterにsummaryフィールドを生成するプロンプト。空にすると無効になります。"
+	},
+	"summaryPromptLabel": {
+		"message": "要約プロンプト"
 	},
 	"systemDefault": {
 		"message": "システム"

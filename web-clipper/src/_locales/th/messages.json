@@ -45,7 +45,7 @@
 		"message": "ไม่มีคีย์ API"
 	},
 	"apiKeysWarning": {
-		"message": "การใช้ผู้ให้บริการภายนอกถือว่าคุณยอมรับข้อกำหนดและนโยบายความเป็นส่วนตัวของพวกเขา คำขอตัวแปลจะถูกส่งตรงไปยังผู้ให้บริการที่คุณเลือก Obsidian ไม่ได้เก็บรวบรวมหรือจัดเก็บข้อมูลใดๆ เกี่ยวกับคำขอของคุณ"
+		"message": "การใช้ผู้ให้บริการภายนอกถือว่าคุณยอมรับข้อกำหนดและนโยบายความเป็นส่วนตัวของพวกเขา คำขอตัวแปลจะถูกส่งตรงไปยังผู้ให้บริการที่คุณเลือก Puda Web Clipper ไม่ได้เก็บรวบรวมหรือจัดเก็บข้อมูลใดๆ เกี่ยวกับคำขอของคุณ"
 	},
 	"appendToDaily": {
 		"message": "เพิ่มไปยังบันทึกประจำวัน ที่ท้าย"
@@ -59,8 +59,14 @@
 	"autoRunInterpreterDescription": {
 		"message": "เรียกใช้ตัวแปรพรอมต์ทันทีหากเทมเพลตมี จะใช้เครดิต API กับผู้ให้บริการโมเดลของคุณ ปิดถ้าคุณต้องการเรียกใช้ตัวแปลด้วยตนเองเท่านั้น"
 	},
+	"autoSaveEnabled": {
+		"message": "Auto-save"
+	},
 	"behavior": {
 		"message": "พฤติกรรม"
+	},
+	"browse": {
+		"message": "Browse"
 	},
 	"byDay": {
 		"message": "วัน"
@@ -91,6 +97,9 @@
 	},
 	"chooseTemplateFile": {
 		"message": "เลือกไฟล์เทมเพลต"
+	},
+	"clear": {
+		"message": "Clear"
 	},
 	"clipBehavior": {
 		"message": "พฤติกรรมการคลิป"
@@ -144,6 +153,9 @@
 	"copyToClipboard": {
 		"message": "คัดลอกไปยังคลิปบอร์ด"
 	},
+	"customModel": {
+		"message": "โมเดลที่กำหนดเอง"
+	},
 	"createNewNote": {
 		"message": "สร้างบันทึกใหม่"
 	},
@@ -158,6 +170,12 @@
 	},
 	"defaultInterpreterContextDescription": {
 		"message": "แทนที่บริบทที่ใช้ในการแปลตัวแปรพรอมต์ สามารถใช้ตัวแปรได้ที่นี่"
+	},
+	"defaultSaveDirectoryDescription": {
+		"message": "Choose a folder to save files to when using \"Save file\". The folder can be anywhere on your computer."
+	},
+	"defaultSaveDirectoryLabel": {
+		"message": "Default save directory"
 	},
 	"defaultTemplateName": {
 		"message": "ค่าเริ่มต้น"
@@ -185,6 +203,36 @@
 	},
 	"disableReader": {
 		"message": "ปิดการใช้งานมุมมองการอ่าน"
+	},
+	"domainFilterAdd": {
+		"message": "Add"
+	},
+	"domainFilterBlockedTooltip": {
+		"message": "This site is excluded from auto-save by the domain filter."
+	},
+	"domainFilterDescription": {
+		"message": "Pages on these domains (and their subdomains) are excluded from auto-save."
+	},
+	"domainFilterEmpty": {
+		"message": "No domains added."
+	},
+	"domainFilterErrorDuplicate": {
+		"message": "That domain has already been added."
+	},
+	"domainFilterErrorEmpty": {
+		"message": "Please enter a domain."
+	},
+	"domainFilterErrorInvalid": {
+		"message": "Please enter a valid domain."
+	},
+	"domainFilterLabel": {
+		"message": "Domain filter"
+	},
+	"domainFilterPlaceholder": {
+		"message": "example.com"
+	},
+	"domainFilterRemove": {
+		"message": "Remove"
 	},
 	"done": {
 		"message": "เสร็จสิ้น"
@@ -228,7 +276,7 @@
 		"message": "ไฮไลต์เนื้อหาบนหน้าเว็บที่คุณสามารถบันทึกไปยัง Obsidian"
 	},
 	"enableInterpreter": {
-		"message": "เปิดใช้งานตัวแปล"
+		"message": "เปิดใช้งานสรุปด้วย AI"
 	},
 	"enableInterpreterDescription": {
 		"message": "ใช้ภาษาธรรมชาติเพื่อดึงข้อมูลจากหน้า ตัวอย่างเช่น คุณสามารถใช้ไวยากรณ์เทมเพลต $strong_start${{\"สรุปของหน้านี้\"}}$strong_end$ ต้องใช้คีย์ API หรือกำหนดค่าโมเดลที่กำหนดเองด้านล่าง $link_start$เรียนรู้เพิ่มเติม$link_end$",
@@ -435,7 +483,7 @@
 		"message": "แปล"
 	},
 	"interpreter": {
-		"message": "ตัวแปล"
+		"message": "สรุปด้วย AI"
 	},
 	"interpreterContext": {
 		"message": "บริบทตัวแปล"
@@ -504,6 +552,9 @@
 	},
 	"newTemplate": {
 		"message": "เทมเพลตใหม่"
+	},
+	"noDirectorySelected": {
+		"message": "No directory selected"
 	},
 	"noHighlights": {
 		"message": "ไม่ทำอะไร"
@@ -977,6 +1028,66 @@
 	},
 	"specificNoteName": {
 		"message": "ชื่อบันทึกเฉพาะ"
+	},
+	"summarizerDownload": {
+		"message": "Download / verify model"
+	},
+	"summarizerDownloadError": {
+		"message": "Model download failed:"
+	},
+	"summarizerDownloading": {
+		"message": "Downloading model... $1%"
+	},
+	"summarizerMapContext": {
+		"message": "This is part of the article titled \"$1\". Extract the key facts from this section."
+	},
+	"summarizerModel": {
+		"message": "สรุปด้วย Chrome"
+	},
+	"summarizerModelDescription": {
+		"message": "Used as a fallback to generate the summary on-device when no LLM is configured or the LLM fails. Requires a one-time model download."
+	},
+	"summarizerModelLabel": {
+		"message": "Chrome built-in summarizer"
+	},
+	"summarizerNotDownloaded": {
+		"message": "Model not downloaded yet."
+	},
+	"summarizerReady": {
+		"message": "Model ready. Summaries can be generated on-device."
+	},
+	"summarizerSharedContext": {
+		"message": "This summary is used as a knowledge base. Preserve technical terms and do not omit important figures or definitions."
+	},
+	"summarizerStatusAvailable": {
+		"message": "Available: the model is downloaded."
+	},
+	"summarizerStatusDownloadable": {
+		"message": "Not downloaded: click to download the model."
+	},
+	"summarizerStatusDownloading": {
+		"message": "Downloading: fetching the model."
+	},
+	"summarizerStatusUnavailable": {
+		"message": "Unavailable: the model cannot be used in this environment."
+	},
+	"summarizerStatusUnknown": {
+		"message": "Unknown status: click to verify."
+	},
+	"summarizerTestFailed": {
+		"message": "Summarizer model is not usable:"
+	},
+	"summarizerUnsupported": {
+		"message": "This browser does not support the built-in Summarizer. Update Chrome to use the on-device fallback."
+	},
+	"summarizerVerified": {
+		"message": "Verified. On-device summaries work."
+	},
+	"summaryPromptDescription": {
+		"message": "Prompt used to generate the summary field in the clipped note's front matter. Leave empty to disable."
+	},
+	"summaryPromptLabel": {
+		"message": "Summary prompt"
 	},
 	"systemDefault": {
 		"message": "ค่าเริ่มต้นของระบบ"

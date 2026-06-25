@@ -25,6 +25,23 @@ export async function initializeSummarizerModelSection(): Promise<void> {
 		statusEl.className = 'summarizer-status' + (mod ? ` mod-${mod}` : '');
 	};
 
+	// Maps the raw availability string to a clear, human-readable status and
+	// severity. One of: 'unavailable' | 'downloadable' | 'downloading' | 'available'.
+	const statusForAvailability = (availability: string): { text: string; mod: StatusMod } => {
+		switch (availability) {
+			case 'available':
+				return { text: getMessage('summarizerStatusAvailable'), mod: 'ok' };
+			case 'downloading':
+				return { text: getMessage('summarizerStatusDownloading'), mod: 'warn' };
+			case 'downloadable':
+				return { text: getMessage('summarizerStatusDownloadable'), mod: 'warn' };
+			case 'unavailable':
+				return { text: getMessage('summarizerStatusUnavailable'), mod: 'error' };
+			default:
+				return { text: getMessage('summarizerStatusUnknown'), mod: 'warn' };
+		}
+	};
+
 	// Browser does not expose the Summarizer API at all.
 	if (!isSummarizerSupported()) {
 		btn.style.display = 'none';
@@ -42,11 +59,8 @@ export async function initializeSummarizerModelSection(): Promise<void> {
 	} catch (err) {
 		console.warn('Summarizer availability check failed:', err);
 	}
-	setStatus(
-		availability === 'available'
-			? getMessage('summarizerUnverified')
-			: `${getMessage('summarizerNotDownloaded')} (availability: ${availability})`,
-	);
+	const { text, mod } = statusForAvailability(availability);
+	setStatus(text, mod);
 
 	btn.addEventListener('click', async () => {
 		btn.disabled = true;

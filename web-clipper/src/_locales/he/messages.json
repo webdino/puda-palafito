@@ -45,7 +45,7 @@
 		"message": "חסר מפתח API"
 	},
 	"apiKeysWarning": {
-		"message": "השימוש בספק חיצוני מהווה הסכמה לתנאי השימוש ומדיניות הפרטיות שלהם. בקשות המתרגם נשלחות ישירות לספק שבחרת. Obsidian אינו אוסף או מאחסן מידע על הבקשות שלך."
+		"message": "השימוש בספק חיצוני מהווה הסכמה לתנאי השימוש ומדיניות הפרטיות שלהם. בקשות המתרגם נשלחות ישירות לספק שבחרת. Puda Web Clipper אינו אוסף או מאחסן מידע על הבקשות שלך."
 	},
 	"appendToDaily": {
 		"message": "הוסף לרשימה היומית, בסוף"
@@ -59,8 +59,14 @@
 	"autoRunInterpreterDescription": {
 		"message": "מפעיל מיד משתני הנחיה אם הם קיימים בתבנית. צורך קרדיט API מספק המודל שלך. כבה אם ברצונך להפעיל את המתרגם ידנית בלבד."
 	},
+	"autoSaveEnabled": {
+		"message": "Auto-save"
+	},
 	"behavior": {
 		"message": "התנהגות"
+	},
+	"browse": {
+		"message": "Browse"
 	},
 	"byDay": {
 		"message": "יום"
@@ -91,6 +97,9 @@
 	},
 	"chooseTemplateFile": {
 		"message": "בחר קובץ תבנית"
+	},
+	"clear": {
+		"message": "Clear"
 	},
 	"clipBehavior": {
 		"message": "אופן השמירה"
@@ -144,6 +153,9 @@
 	"copyToClipboard": {
 		"message": "העתק ללוח"
 	},
+	"customModel": {
+		"message": "מודל מותאם אישית"
+	},
 	"createNewNote": {
 		"message": "צור פתק חדש"
 	},
@@ -158,6 +170,12 @@
 	},
 	"defaultInterpreterContextDescription": {
 		"message": "מחליף את ההקשר המשמש לפירוש משתני ההנחיה. ניתן להשתמש במשתנים כאן."
+	},
+	"defaultSaveDirectoryDescription": {
+		"message": "Choose a folder to save files to when using \"Save file\". The folder can be anywhere on your computer."
+	},
+	"defaultSaveDirectoryLabel": {
+		"message": "Default save directory"
 	},
 	"defaultTemplateName": {
 		"message": "ברירת מחדל"
@@ -185,6 +203,36 @@
 	},
 	"disableReader": {
 		"message": "השבת מצב קריאה"
+	},
+	"domainFilterAdd": {
+		"message": "Add"
+	},
+	"domainFilterBlockedTooltip": {
+		"message": "This site is excluded from auto-save by the domain filter."
+	},
+	"domainFilterDescription": {
+		"message": "Pages on these domains (and their subdomains) are excluded from auto-save."
+	},
+	"domainFilterEmpty": {
+		"message": "No domains added."
+	},
+	"domainFilterErrorDuplicate": {
+		"message": "That domain has already been added."
+	},
+	"domainFilterErrorEmpty": {
+		"message": "Please enter a domain."
+	},
+	"domainFilterErrorInvalid": {
+		"message": "Please enter a valid domain."
+	},
+	"domainFilterLabel": {
+		"message": "Domain filter"
+	},
+	"domainFilterPlaceholder": {
+		"message": "example.com"
+	},
+	"domainFilterRemove": {
+		"message": "Remove"
 	},
 	"done": {
 		"message": "סיום"
@@ -228,7 +276,7 @@
 		"message": "סמן תוכן בדפי אינטרנט שניתן לשמור ב-Obsidian"
 	},
 	"enableInterpreter": {
-		"message": "הפעל מתרגם"
+		"message": "הפעל סיכום AI"
 	},
 	"enableInterpreterDescription": {
 		"message": "השתמש בשפה טבעית לחילוץ מידע מדפים. לדוגמה, תוכל להשתמש בתחביר התבנית $strong_start${{\"סיכום של דף זה\"}}$strong_end$. דורש מפתח API או הגדרת מודל מותאם אישית למטה. $link_start$למד עוד$link_end$",
@@ -435,7 +483,7 @@
 		"message": "פרש"
 	},
 	"interpreter": {
-		"message": "מתרגם"
+		"message": "סיכום AI"
 	},
 	"interpreterContext": {
 		"message": "הקשר המתרגם"
@@ -504,6 +552,9 @@
 	},
 	"newTemplate": {
 		"message": "תבנית חדשה"
+	},
+	"noDirectorySelected": {
+		"message": "No directory selected"
 	},
 	"noHighlights": {
 		"message": "אל תעשה כלום"
@@ -969,6 +1020,66 @@
 	},
 	"specificNoteName": {
 		"message": "שם פתק ספציפי"
+	},
+	"summarizerDownload": {
+		"message": "Download / verify model"
+	},
+	"summarizerDownloadError": {
+		"message": "Model download failed:"
+	},
+	"summarizerDownloading": {
+		"message": "Downloading model... $1%"
+	},
+	"summarizerMapContext": {
+		"message": "This is part of the article titled \"$1\". Extract the key facts from this section."
+	},
+	"summarizerModel": {
+		"message": "סיכום Chrome"
+	},
+	"summarizerModelDescription": {
+		"message": "Used as a fallback to generate the summary on-device when no LLM is configured or the LLM fails. Requires a one-time model download."
+	},
+	"summarizerModelLabel": {
+		"message": "Chrome built-in summarizer"
+	},
+	"summarizerNotDownloaded": {
+		"message": "Model not downloaded yet."
+	},
+	"summarizerReady": {
+		"message": "Model ready. Summaries can be generated on-device."
+	},
+	"summarizerSharedContext": {
+		"message": "This summary is used as a knowledge base. Preserve technical terms and do not omit important figures or definitions."
+	},
+	"summarizerStatusAvailable": {
+		"message": "Available: the model is downloaded."
+	},
+	"summarizerStatusDownloadable": {
+		"message": "Not downloaded: click to download the model."
+	},
+	"summarizerStatusDownloading": {
+		"message": "Downloading: fetching the model."
+	},
+	"summarizerStatusUnavailable": {
+		"message": "Unavailable: the model cannot be used in this environment."
+	},
+	"summarizerStatusUnknown": {
+		"message": "Unknown status: click to verify."
+	},
+	"summarizerTestFailed": {
+		"message": "Summarizer model is not usable:"
+	},
+	"summarizerUnsupported": {
+		"message": "This browser does not support the built-in Summarizer. Update Chrome to use the on-device fallback."
+	},
+	"summarizerVerified": {
+		"message": "Verified. On-device summaries work."
+	},
+	"summaryPromptDescription": {
+		"message": "Prompt used to generate the summary field in the clipped note's front matter. Leave empty to disable."
+	},
+	"summaryPromptLabel": {
+		"message": "Summary prompt"
 	},
 	"systemDefault": {
 		"message": "ברירת מחדל של המערכת"

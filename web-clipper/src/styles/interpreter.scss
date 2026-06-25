@@ -237,16 +237,12 @@
 
 #interpreter-section {
 	&.is-disabled {
-		form > div:not(:first-child) {
+		// Only the custom-model sub-sections (providers / models / advanced)
+		// are dimmed. The "Enable AI summary" toggle and the on-device
+		// summarizer stay interactive so the feature can be turned back on.
+		.settings-subgroup {
 			opacity: 0.5;
 			pointer-events: none;
-		}
-
-		// The on-device summarizer is the fallback used precisely when the
-		// interpreter/LLM is unavailable, so keep it interactive even here.
-		form > div.mod-always-enabled {
-			opacity: 1;
-			pointer-events: auto;
 		}
 	}
 }

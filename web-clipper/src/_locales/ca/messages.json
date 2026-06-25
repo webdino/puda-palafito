@@ -45,7 +45,7 @@
 		"message": "Sense clau API"
 	},
 	"apiKeysWarning": {
-		"message": "En usar un proveïdor extern, accepta els seus termes i política de privacitat. Les sol·licituds de l'intèrpret s'envien directament al proveïdor que esculli. Obsidian no recopila ni emmagatzema cap dada sobre les seves sol·licituds."
+		"message": "En usar un proveïdor extern, accepta els seus termes i política de privacitat. Les sol·licituds de l'intèrpret s'envien directament al proveïdor que esculli. Puda Web Clipper no recopila ni emmagatzema cap dada sobre les seves sol·licituds."
 	},
 	"appendToDaily": {
 		"message": "Agregar a la nota diària, al final"
@@ -59,8 +59,14 @@
 	"autoRunInterpreterDescription": {
 		"message": "Executi les variables de prompt immediatament si la plantilla en conté alguna. Això consumirà crèdits d'API amb el teu proveïdor de model. Desactivi-ho si només vol executar l'intèrpret manualment."
 	},
+	"autoSaveEnabled": {
+		"message": "Auto-save"
+	},
 	"behavior": {
 		"message": "Comportament"
+	},
+	"browse": {
+		"message": "Browse"
 	},
 	"byDay": {
 		"message": "Dies"
@@ -91,6 +97,9 @@
 	},
 	"chooseTemplateFile": {
 		"message": "Escollir fitxer de plantilla"
+	},
+	"clear": {
+		"message": "Clear"
 	},
 	"clipBehavior": {
 		"message": "Comportament de guardat"
@@ -144,6 +153,9 @@
 	"copyToClipboard": {
 		"message": "Copiar al porta-retalls"
 	},
+	"customModel": {
+		"message": "Model personalitzat"
+	},
 	"createNewNote": {
 		"message": "Crear nova nota"
 	},
@@ -158,6 +170,12 @@
 	},
 	"defaultInterpreterContextDescription": {
 		"message": "El model usarà aquest context per interpretar les variables de prompt. Aquí, es poden fer servir variables."
+	},
+	"defaultSaveDirectoryDescription": {
+		"message": "Choose a folder to save files to when using \"Save file\". The folder can be anywhere on your computer."
+	},
+	"defaultSaveDirectoryLabel": {
+		"message": "Default save directory"
 	},
 	"defaultTemplateName": {
 		"message": "Predeterminat"
@@ -185,6 +203,36 @@
 	},
 	"disableReader": {
 		"message": "Deshabilita la vista de lectura"
+	},
+	"domainFilterAdd": {
+		"message": "Add"
+	},
+	"domainFilterBlockedTooltip": {
+		"message": "This site is excluded from auto-save by the domain filter."
+	},
+	"domainFilterDescription": {
+		"message": "Pages on these domains (and their subdomains) are excluded from auto-save."
+	},
+	"domainFilterEmpty": {
+		"message": "No domains added."
+	},
+	"domainFilterErrorDuplicate": {
+		"message": "That domain has already been added."
+	},
+	"domainFilterErrorEmpty": {
+		"message": "Please enter a domain."
+	},
+	"domainFilterErrorInvalid": {
+		"message": "Please enter a valid domain."
+	},
+	"domainFilterLabel": {
+		"message": "Domain filter"
+	},
+	"domainFilterPlaceholder": {
+		"message": "example.com"
+	},
+	"domainFilterRemove": {
+		"message": "Remove"
 	},
 	"done": {
 		"message": "fet"
@@ -228,7 +276,7 @@
 		"message": "Ressalti contingut en pàgines web que pot guardar a Obsidian."
 	},
 	"enableInterpreter": {
-		"message": "Habilitar intèrpret"
+		"message": "Habilita el resum d'IA"
 	},
 	"enableInterpreterDescription": {
 		"message": "Usi llenguatge natural per extraure dades de les pàgines. Per exemple, pot usar la sintaxi de plantilla $strong_start${{\"un resum de la pàgina\"}}$strong_end$. Requereix una clau API o model personalitzat configurat a sota. $link_start$Més informació$link_end$",
@@ -435,7 +483,7 @@
 		"message": "interpretar"
 	},
 	"interpreter": {
-		"message": "Intèrpret"
+		"message": "Resum d'IA"
 	},
 	"interpreterContext": {
 		"message": "Context de l'intèrpret"
@@ -504,6 +552,9 @@
 	},
 	"newTemplate": {
 		"message": "Nova plantilla"
+	},
+	"noDirectorySelected": {
+		"message": "No directory selected"
 	},
 	"noHighlights": {
 		"message": "No fer res"
@@ -977,6 +1028,66 @@
 	},
 	"specificNoteName": {
 		"message": "Nom específic de la nota"
+	},
+	"summarizerDownload": {
+		"message": "Download / verify model"
+	},
+	"summarizerDownloadError": {
+		"message": "Model download failed:"
+	},
+	"summarizerDownloading": {
+		"message": "Downloading model... $1%"
+	},
+	"summarizerMapContext": {
+		"message": "This is part of the article titled \"$1\". Extract the key facts from this section."
+	},
+	"summarizerModel": {
+		"message": "Resum de Chrome"
+	},
+	"summarizerModelDescription": {
+		"message": "Used as a fallback to generate the summary on-device when no LLM is configured or the LLM fails. Requires a one-time model download."
+	},
+	"summarizerModelLabel": {
+		"message": "Chrome built-in summarizer"
+	},
+	"summarizerNotDownloaded": {
+		"message": "Model not downloaded yet."
+	},
+	"summarizerReady": {
+		"message": "Model ready. Summaries can be generated on-device."
+	},
+	"summarizerSharedContext": {
+		"message": "This summary is used as a knowledge base. Preserve technical terms and do not omit important figures or definitions."
+	},
+	"summarizerStatusAvailable": {
+		"message": "Available: the model is downloaded."
+	},
+	"summarizerStatusDownloadable": {
+		"message": "Not downloaded: click to download the model."
+	},
+	"summarizerStatusDownloading": {
+		"message": "Downloading: fetching the model."
+	},
+	"summarizerStatusUnavailable": {
+		"message": "Unavailable: the model cannot be used in this environment."
+	},
+	"summarizerStatusUnknown": {
+		"message": "Unknown status: click to verify."
+	},
+	"summarizerTestFailed": {
+		"message": "Summarizer model is not usable:"
+	},
+	"summarizerUnsupported": {
+		"message": "This browser does not support the built-in Summarizer. Update Chrome to use the on-device fallback."
+	},
+	"summarizerVerified": {
+		"message": "Verified. On-device summaries work."
+	},
+	"summaryPromptDescription": {
+		"message": "Prompt used to generate the summary field in the clipped note's front matter. Leave empty to disable."
+	},
+	"summaryPromptLabel": {
+		"message": "Summary prompt"
 	},
 	"systemDefault": {
 		"message": "Sistema"

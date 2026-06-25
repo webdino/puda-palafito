@@ -45,7 +45,7 @@
 		"message": "API-nøgle mangler"
 	},
 	"apiKeysWarning": {
-		"message": "Ved at bruge en ekstern udbyder accepterer du deres vilkår og betingelser samt privatlivspolitik. Fortolkerforespørgsler sendes direkte til din valgte udbyder. Obsidian indsamler eller gemmer ikke information om dine forespørgsler."
+		"message": "Ved at bruge en ekstern udbyder accepterer du deres vilkår og betingelser samt privatlivspolitik. Fortolkerforespørgsler sendes direkte til din valgte udbyder. Puda Web Clipper indsamler eller gemmer ikke information om dine forespørgsler."
 	},
 	"appendToDaily": {
 		"message": "Tilføj til daglig note, i slutningen"
@@ -59,8 +59,14 @@
 	"autoRunInterpreterDescription": {
 		"message": "Udfører promptvariabler med det samme, hvis de findes i skabelonen. Bruger API-kreditter fra din modeludbyder. Deaktiver hvis du kun vil køre fortolkeren manuelt."
 	},
+	"autoSaveEnabled": {
+		"message": "Auto-save"
+	},
 	"behavior": {
 		"message": "Opførsel"
+	},
+	"browse": {
+		"message": "Browse"
 	},
 	"byDay": {
 		"message": "Per dag"
@@ -91,6 +97,9 @@
 	},
 	"chooseTemplateFile": {
 		"message": "Vælg skabelonfil"
+	},
+	"clear": {
+		"message": "Clear"
 	},
 	"clipBehavior": {
 		"message": "Klipningsopførsel"
@@ -144,6 +153,9 @@
 	"copyToClipboard": {
 		"message": "Kopiér til udklipsholder"
 	},
+	"customModel": {
+		"message": "Tilpasset model"
+	},
 	"createNewNote": {
 		"message": "Opret ny note"
 	},
@@ -158,6 +170,12 @@
 	},
 	"defaultInterpreterContextDescription": {
 		"message": "Tilsidesætter konteksten der bruges til at fortolke promptvariabler. Du kan bruge variabler her."
+	},
+	"defaultSaveDirectoryDescription": {
+		"message": "Choose a folder to save files to when using \"Save file\". The folder can be anywhere on your computer."
+	},
+	"defaultSaveDirectoryLabel": {
+		"message": "Default save directory"
 	},
 	"defaultTemplateName": {
 		"message": "Standard"
@@ -185,6 +203,36 @@
 	},
 	"disableReader": {
 		"message": "Deaktiver læsevisning"
+	},
+	"domainFilterAdd": {
+		"message": "Add"
+	},
+	"domainFilterBlockedTooltip": {
+		"message": "This site is excluded from auto-save by the domain filter."
+	},
+	"domainFilterDescription": {
+		"message": "Pages on these domains (and their subdomains) are excluded from auto-save."
+	},
+	"domainFilterEmpty": {
+		"message": "No domains added."
+	},
+	"domainFilterErrorDuplicate": {
+		"message": "That domain has already been added."
+	},
+	"domainFilterErrorEmpty": {
+		"message": "Please enter a domain."
+	},
+	"domainFilterErrorInvalid": {
+		"message": "Please enter a valid domain."
+	},
+	"domainFilterLabel": {
+		"message": "Domain filter"
+	},
+	"domainFilterPlaceholder": {
+		"message": "example.com"
+	},
+	"domainFilterRemove": {
+		"message": "Remove"
 	},
 	"done": {
 		"message": "Færdig"
@@ -228,7 +276,7 @@
 		"message": "Fremhæv indhold på websider for at gemme i Obsidian"
 	},
 	"enableInterpreter": {
-		"message": "Aktivér fortolker"
+		"message": "Aktivér AI-resumé"
 	},
 	"enableInterpreterDescription": {
 		"message": "Brug naturligt sprog til at udtrække information fra sider. For eksempel kan du bruge skabelonsyntaksen $strong_start${{\"opsummér denne side\"}}$strong_end$. Kræver en API-nøgle eller opsætning af en tilpasset model nedenfor. $link_start$Lær mere$link_end$",
@@ -435,7 +483,7 @@
 		"message": "Fortolk"
 	},
 	"interpreter": {
-		"message": "Fortolker"
+		"message": "AI-resumé"
 	},
 	"interpreterContext": {
 		"message": "Fortolkerkontekst"
@@ -504,6 +552,9 @@
 	},
 	"newTemplate": {
 		"message": "Ny skabelon"
+	},
+	"noDirectorySelected": {
+		"message": "No directory selected"
 	},
 	"noHighlights": {
 		"message": "Ingen fremhævninger"
@@ -969,6 +1020,66 @@
 	},
 	"specificNoteName": {
 		"message": "Specifikt notenavn"
+	},
+	"summarizerDownload": {
+		"message": "Download / verify model"
+	},
+	"summarizerDownloadError": {
+		"message": "Model download failed:"
+	},
+	"summarizerDownloading": {
+		"message": "Downloading model... $1%"
+	},
+	"summarizerMapContext": {
+		"message": "This is part of the article titled \"$1\". Extract the key facts from this section."
+	},
+	"summarizerModel": {
+		"message": "Chrome-resumé"
+	},
+	"summarizerModelDescription": {
+		"message": "Used as a fallback to generate the summary on-device when no LLM is configured or the LLM fails. Requires a one-time model download."
+	},
+	"summarizerModelLabel": {
+		"message": "Chrome built-in summarizer"
+	},
+	"summarizerNotDownloaded": {
+		"message": "Model not downloaded yet."
+	},
+	"summarizerReady": {
+		"message": "Model ready. Summaries can be generated on-device."
+	},
+	"summarizerSharedContext": {
+		"message": "This summary is used as a knowledge base. Preserve technical terms and do not omit important figures or definitions."
+	},
+	"summarizerStatusAvailable": {
+		"message": "Available: the model is downloaded."
+	},
+	"summarizerStatusDownloadable": {
+		"message": "Not downloaded: click to download the model."
+	},
+	"summarizerStatusDownloading": {
+		"message": "Downloading: fetching the model."
+	},
+	"summarizerStatusUnavailable": {
+		"message": "Unavailable: the model cannot be used in this environment."
+	},
+	"summarizerStatusUnknown": {
+		"message": "Unknown status: click to verify."
+	},
+	"summarizerTestFailed": {
+		"message": "Summarizer model is not usable:"
+	},
+	"summarizerUnsupported": {
+		"message": "This browser does not support the built-in Summarizer. Update Chrome to use the on-device fallback."
+	},
+	"summarizerVerified": {
+		"message": "Verified. On-device summaries work."
+	},
+	"summaryPromptDescription": {
+		"message": "Prompt used to generate the summary field in the clipped note's front matter. Leave empty to disable."
+	},
+	"summaryPromptLabel": {
+		"message": "Summary prompt"
 	},
 	"systemDefault": {
 		"message": "Systemstandard"
