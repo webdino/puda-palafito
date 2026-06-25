@@ -1,7 +1,7 @@
 {
 	"name": "puda-web-clipper",
 	"version": "1.6.3",
-	"description": "",
+	"description": "Automatically save web pages as clean Markdown notes, complete with AI summaries.",
 	"bin": {
 		"puda-web-clipper": "./dist/cli.cjs"
 	},

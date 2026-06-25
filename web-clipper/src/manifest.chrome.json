@@ -3,7 +3,7 @@
 	"default_locale": "en",
 	"name": "Puda Web Clipper",
 	"version": "1.0.0",
-	"description": "Clip web pages as clean Markdown to your Obsidian vault — with AI summaries, highlights, and customizable templates.",
+	"description": "Automatically save web pages as clean Markdown notes, complete with AI summaries.",
 	"incognito": "not_allowed",
 	"permissions": [
 		"activeTab",
