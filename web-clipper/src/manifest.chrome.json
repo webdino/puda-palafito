@@ -3,7 +3,7 @@
 	"default_locale": "en",
 	"name": "Puda Web Clipper",
 	"version": "1.0.0",
-	"description": "",
+	"description": "Clip web pages as clean Markdown to your Obsidian vault — with AI summaries, highlights, and customizable templates.",
 	"incognito": "not_allowed",
 	"permissions": [
 		"activeTab",
@@ -59,13 +59,6 @@
 				"mac": "Command+Shift+O"
 			},
 			"description": "__MSG_commandOpenClipper__"
-		},
-		"toggle_highlighter": {
-			"suggested_key": {
-				"default": "Alt+Shift+H",
-				"mac": "Alt+Shift+H"
-			},
-			"description": "__MSG_commandToggleHighlighter__"
 		}
 	}
 }

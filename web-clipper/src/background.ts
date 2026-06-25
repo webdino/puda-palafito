@@ -832,10 +832,6 @@ browser.commands.onCommand.addListener(async (command, tab) => {
 		tab = tabs[0];
 	}
 
-	if (command === "toggle_highlighter" && tab?.id) {
-		await ensureContentScriptLoadedInBackground(tab.id);
-		toggleHighlighterMode(tab.id);
-	}
 	if (command === "copy_to_clipboard" && tab?.id) {
 		await browser.tabs.sendMessage(tab.id, { action: "copyToClipboard" });
 	}
@@ -858,8 +854,6 @@ const debouncedUpdateContextMenu = debounce(async (tabId: number) => {
 			}
 		}
 
-		const isHighlighterMode = getHighlighterModeForTab(currentTabId);
-
 		const menuItems: {
 			id: string;
 			title: string;
@@ -869,21 +863,6 @@ const debouncedUpdateContextMenu = debounce(async (tabId: number) => {
 					id: 'copy-markdown-to-clipboard',
 					title: browser.i18n.getMessage('copyToClipboard'),
 					contexts: ["page", "selection"]
-				},
-				{
-					id: isHighlighterMode ? "exit-highlighter" : "enter-highlighter",
-					title: isHighlighterMode ? browser.i18n.getMessage('disableHighlighter') : browser.i18n.getMessage('highlighterOn'),
-					contexts: ["page","image", "video", "audio"]
-				},
-				{
-					id: "highlight-selection",
-					title: "Add to highlights",
-					contexts: ["selection"]
-				},
-				{
-					id: "highlight-element",
-					title: "Add to highlights",
-					contexts: ["image", "video", "audio"]
 				}
 			];
 
@@ -898,15 +877,7 @@ const debouncedUpdateContextMenu = debounce(async (tabId: number) => {
 }, 100); // 100ms debounce time
 
 browser.contextMenus.onClicked.addListener(async (info, tab) => {
-	if (info.menuItemId === "enter-highlighter" && tab && tab.id) {
-		await setHighlighterMode(tab.id, true);
-	} else if (info.menuItemId === "exit-highlighter" && tab && tab.id) {
-		await setHighlighterMode(tab.id, false);
-	} else if (info.menuItemId === "highlight-selection" && tab && tab.id) {
-		await highlightSelection(tab.id, info);
-	} else if (info.menuItemId === "highlight-element" && tab && tab.id) {
-		await highlightElement(tab.id, info);
-	} else if (info.menuItemId === 'copy-markdown-to-clipboard' && tab && tab.id) {
+	if (info.menuItemId === 'copy-markdown-to-clipboard' && tab && tab.id) {
 		await ensureContentScriptLoadedInBackground(tab.id);
 		await browser.tabs.sendMessage(tab.id, { action: "copyMarkdownToClipboard" });
 	}
