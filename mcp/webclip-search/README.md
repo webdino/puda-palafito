@@ -43,6 +43,9 @@ mcpb pack .
 
 生成された `webclip-search.mcpb` を Claude Desktop にインストールします。
 
+- **注意**
+  - MCPBファイルの実態は zipファイルだが、Claude Desktop 1.12603.1 辺りのバージョンの不具合により`mcpb pack .`で圧縮されたMCPBをインスールできない
+  - これを避けるため、外部Zipツールにより無圧縮の zip ファイルを作って .mcbp にリネームすること
 
 ## インストール方法
 
