@@ -324,7 +324,7 @@ def search_semantic(
 def get_index_status(
     webclip_dir: Path,
     markdown_files: list[Path],
-    parse_file_content: Any,
+    parse_frontmatter: Any,
 ) -> IndexStatus:
     """Return index statistics without forcing a full rebuild."""
     index_path = get_index_path(webclip_dir)
@@ -344,7 +344,7 @@ def get_index_status(
         mtime = file_path.stat().st_mtime
         if rel_path not in indexed_paths or indexed_paths[rel_path] != mtime:
             pending += 1
-        frontmatter, _ = parse_file_content(file_path)
+        frontmatter = parse_frontmatter(file_path)
         if frontmatter.get("summary"):
             with_summary += 1
         if frontmatter.get("description"):
