@@ -45,7 +45,7 @@
 		"message": "Geen API-sleutel"
 	},
 	"apiKeysWarning": {
-		"message": "Door een externe provider te gebruiken ga je akkoord met hun voorwaarden en privacybeleid. Interpreter-verzoeken worden direct naar de provider van jouw keuze gestuurd. Puda Web Clipper verzamelt of bewaart geen gegevens over je verzoeken."
+		"message": "Door een externe provider te gebruiken ga je akkoord met hun voorwaarden en privacybeleid. Interpreter-verzoeken worden direct naar de provider van jouw keuze gestuurd. Browsing Memory verzamelt of bewaart geen gegevens over je verzoeken."
 	},
 	"appendToDaily": {
 		"message": "Toevoegen aan dagelijkse notitie, onderaan"
@@ -320,7 +320,7 @@
 		"message": "Eigenschappen exporteren"
 	},
 	"exportPropertiesDescription": {
-		"message": "Sla Web Clipper eigenschappen op in een $strong_start$types.json$strong_end$ bestand dat kan worden geïmporteerd in je Obsidian kluis of in Web Clipper op andere apparaten.",
+		"message": "Sla Browsing Memory eigenschappen op in een $strong_start$types.json$strong_end$ bestand dat kan worden geïmporteerd in je Obsidian kluis of in Browsing Memory op andere apparaten.",
 		"placeholders": {
 			"strong_end": {
 				"content": "</strong>"
@@ -334,7 +334,7 @@
 		"message": "Sla webinhoud op in een privé en duurzaam formaat dat je offline kunt bekijken. De officiële browserextensie voor Obsidian."
 	},
 	"extensionName": {
-		"message": "Puda Web Clipper"
+		"message": "Browsing Memory"
 	},
 	"failedToCopyText": {
 		"message": "Tekst kopiëren mislukt"
@@ -385,7 +385,7 @@
 		"message": "Feedback"
 	},
 	"feedbackDescription": {
-		"message": "Hoe kunnen we Web Clipper verbeteren? Bezoek alstublieft onze hulppagina, waar u bugs kunt melden, functies kunt voorstellen en hulp kunt krijgen bij veelvoorkomende problemen."
+		"message": "Hoe kunnen we Browsing Memory verbeteren? Bezoek alstublieft onze hulppagina, waar u bugs kunt melden, functies kunt voorstellen en hulp kunt krijgen bij veelvoorkomende problemen."
 	},
 	"feedbackTitle": {
 		"message": "Bedankt voor uw feedback"
@@ -406,7 +406,7 @@
 		"message": "Help"
 	},
 	"helpDescription": {
-		"message": "Leer hoe je Web Clipper gebruikt en krijg hulp bij probleemoplossing."
+		"message": "Leer hoe je Browsing Memory gebruikt en krijg hulp bij probleemoplossing."
 	},
 	"highlightInline": {
 		"message": "Markeer de pagina-inhoud"
@@ -607,7 +607,7 @@
 		"message": "Openen"
 	},
 	"openBehaviorDescription": {
-		"message": "Kies hoe Web Clipper standaard wordt geopend."
+		"message": "Kies hoe Browsing Memory standaard wordt geopend."
 	},
 	"openBehaviorTitle": {
 		"message": "Open gedrag"
@@ -745,7 +745,7 @@
 		"message": "Providers"
 	},
 	"rateExtensionDescription": {
-		"message": "Geniet u van Web Clipper? Help ons door het een beoordeling te geven."
+		"message": "Geniet u van Browsing Memory? Help ons door het een beoordeling te geven."
 	},
 	"reader": {
 		"message": "Lezer"

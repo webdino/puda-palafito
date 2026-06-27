@@ -1,7 +1,7 @@
 {
 	"manifest_version": 3,
 	"default_locale": "en",
-	"name": "Puda Web Clipper",
+	"name": "Browsing Memory",
 	"version": "1.0.0",
 	"description": "Automatically save web pages as clean Markdown notes, complete with AI summaries.",
 	"incognito": "not_allowed",

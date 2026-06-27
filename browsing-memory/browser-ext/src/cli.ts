@@ -25,7 +25,7 @@ interface CliArgs {
 
 function printUsage(): void {
 	const usage = `
-Usage: puda-web-clipper <url> [options]
+Usage: browsing-memory <url> [options]
 
 Options:
   -t, --template <path>        Path to template JSON file or directory (required)

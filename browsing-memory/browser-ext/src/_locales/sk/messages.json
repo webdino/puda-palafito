@@ -45,7 +45,7 @@
 		"message": "Chýba API kľúč"
 	},
 	"apiKeysWarning": {
-		"message": "Používaním externého poskytovateľa súhlasíte s jeho podmienkami a zásadami ochrany súkromia. Požiadavky tlmočníka sa odosielajú priamo poskytovateľovi, ktorého si vyberiete. Puda Web Clipper nezhromažďuje ani neukladá žiadne údaje o vašich požiadavkách."
+		"message": "Používaním externého poskytovateľa súhlasíte s jeho podmienkami a zásadami ochrany súkromia. Požiadavky tlmočníka sa odosielajú priamo poskytovateľovi, ktorého si vyberiete. Browsing Memory nezhromažďuje ani neukladá žiadne údaje o vašich požiadavkách."
 	},
 	"appendToDaily": {
 		"message": "Pridať do dennej poznámky, na koniec"
@@ -320,7 +320,7 @@
 		"message": "Exportovať vlastnosti"
 	},
 	"exportPropertiesDescription": {
-		"message": "Uložiť vlastnosti Web Clippera do súboru $strong_start$types.json$strong_end$, ktorý možno importovať do vášho Obsidian vaultu alebo do Web Clippera na iných zariadeniach.",
+		"message": "Uložiť vlastnosti Browsing Memorya do súboru $strong_start$types.json$strong_end$, ktorý možno importovať do vášho Obsidian vaultu alebo do Browsing Memorya na iných zariadeniach.",
 		"placeholders": {
 			"strong_end": {
 				"content": "</strong>"
@@ -334,7 +334,7 @@
 		"message": "Ukladajte obsah z webu v súkromnom a trvácnom formáte, ku ktorému máte prístup aj offline. Oficiálne rozšírenie prehliadača pre Obsidian."
 	},
 	"extensionName": {
-		"message": "Puda Web Clipper"
+		"message": "Browsing Memory"
 	},
 	"failedToCopyText": {
 		"message": "Nepodarilo sa skopírovať text"
@@ -385,7 +385,7 @@
 		"message": "Spätná väzba"
 	},
 	"feedbackDescription": {
-		"message": "Ako môžeme zlepšiť Web Clipper? Navštívte našu stránku pomoci, kde môžete nahlásiť chyby, navrhnúť funkcie a získať pomoc s bežnými problémami."
+		"message": "Ako môžeme zlepšiť Browsing Memory? Navštívte našu stránku pomoci, kde môžete nahlásiť chyby, navrhnúť funkcie a získať pomoc s bežnými problémami."
 	},
 	"feedbackTitle": {
 		"message": "Ďakujeme za vašu spätnú väzbu"
@@ -406,7 +406,7 @@
 		"message": "Pomoc"
 	},
 	"helpDescription": {
-		"message": "Zistite, ako používať Web Clipper, a získajte pomoc pri riešení problémov."
+		"message": "Zistite, ako používať Browsing Memory, a získajte pomoc pri riešení problémov."
 	},
 	"highlightInline": {
 		"message": "Zvýrazniť obsah stránky"
@@ -607,7 +607,7 @@
 		"message": "Otvoriť"
 	},
 	"openBehaviorDescription": {
-		"message": "Vyberte, ako sa má Web Clipper predvolene otvárať."
+		"message": "Vyberte, ako sa má Browsing Memory predvolene otvárať."
 	},
 	"openBehaviorTitle": {
 		"message": "Správanie pri otvorení"
@@ -745,7 +745,7 @@
 		"message": "Poskytovatelia"
 	},
 	"rateExtensionDescription": {
-		"message": "Páči sa vám Web Clipper? Pomôžte nám tým, že mu dáte hodnotenie."
+		"message": "Páči sa vám Browsing Memory? Pomôžte nám tým, že mu dáte hodnotenie."
 	},
 	"reader": {
 		"message": "Čítačka"

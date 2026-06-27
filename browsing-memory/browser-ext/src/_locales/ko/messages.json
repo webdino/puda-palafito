@@ -45,7 +45,7 @@
 		"message": "API 키가 없습니다"
 	},
 	"apiKeysWarning": {
-		"message": "외부 제공자를 사용하면 해당 제공자의 이용 약관 및 개인정보 보호정책에 동의하는 것입니다. 인터프리터 요청은 선택한 제공자에게 직접 전송됩니다. Puda Web Clipper은 요청에 대한 데이터를 수집하거나 저장하지 않습니다."
+		"message": "외부 제공자를 사용하면 해당 제공자의 이용 약관 및 개인정보 보호정책에 동의하는 것입니다. 인터프리터 요청은 선택한 제공자에게 직접 전송됩니다. Browsing Memory은 요청에 대한 데이터를 수집하거나 저장하지 않습니다."
 	},
 	"appendToDaily": {
 		"message": "데일리 노트 맨 아래에 추가"
@@ -320,7 +320,7 @@
 		"message": "속성 내보내기"
 	},
 	"exportPropertiesDescription": {
-		"message": "Obsidian Vault 또는 다른 장치의 Web Clipper로 가져올 수 있는 $strong_start$types.json$strong_end$ 파일에 Web Clipper 속성을 저장합니다.",
+		"message": "Obsidian Vault 또는 다른 장치의 Browsing Memory로 가져올 수 있는 $strong_start$types.json$strong_end$ 파일에 Browsing Memory 속성을 저장합니다.",
 		"placeholders": {
 			"strong_end": {
 				"content": "</strong>"
@@ -334,7 +334,7 @@
 		"message": "웹 콘텐츠를 저장하여 오프라인에서도 접근할 수 있는 개인적이고 내구성 있는 형식으로 보관하세요. Obsidian의 공식 브라우저 확장 프로그램입니다."
 	},
 	"extensionName": {
-		"message": "Puda Web Clipper"
+		"message": "Browsing Memory"
 	},
 	"failedToCopyText": {
 		"message": "텍스트를 복사하지 못했습니다"
@@ -406,7 +406,7 @@
 		"message": "도움말"
 	},
 	"helpDescription": {
-		"message": "Web Clipper 사용 방법을 알아보고 문제 해결을 위한 도움을 받으세요."
+		"message": "Browsing Memory 사용 방법을 알아보고 문제 해결을 위한 도움을 받으세요."
 	},
 	"highlightInline": {
 		"message": "페이지 내용 인라인 하이라이트"

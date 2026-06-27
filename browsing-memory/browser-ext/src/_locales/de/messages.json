@@ -45,7 +45,7 @@
 		"message": "Kein API-Schlüssel"
 	},
 	"apiKeysWarning": {
-		"message": "Durch die Nutzung eines externen Anbieters stimmst du dessen Nutzungsbedingungen und Datenschutzrichtlinien zu. Interpreter-Anfragen werden direkt an den von Dir gewählten Anbieter gesendet. Puda Web Clipper sammelt und speichert keine Daten über Deine Anfragen."
+		"message": "Durch die Nutzung eines externen Anbieters stimmst du dessen Nutzungsbedingungen und Datenschutzrichtlinien zu. Interpreter-Anfragen werden direkt an den von Dir gewählten Anbieter gesendet. Browsing Memory sammelt und speichert keine Daten über Deine Anfragen."
 	},
 	"appendToDaily": {
 		"message": "Zum Ende der Tagesnotiz hinzufügen"
@@ -385,7 +385,7 @@
 		"message": "Feedback"
 	},
 	"feedbackDescription": {
-		"message": "Wie können wir den Web Clipper verbessern? Bitte besuchen Sie unsere Hilfeseite, wo Sie Fehler melden, Funktionen vorschlagen und Hilfe bei häufigen Problemen erhalten können."
+		"message": "Wie können wir den Browsing Memory verbessern? Bitte besuchen Sie unsere Hilfeseite, wo Sie Fehler melden, Funktionen vorschlagen und Hilfe bei häufigen Problemen erhalten können."
 	},
 	"feedbackTitle": {
 		"message": "Vielen Dank für Ihr Feedback"
@@ -607,7 +607,7 @@
 		"message": "Öffnen"
 	},
 	"openBehaviorDescription": {
-		"message": "Wählen Sie, wie der Web Clipper standardmäßig geöffnet wird."
+		"message": "Wählen Sie, wie der Browsing Memory standardmäßig geöffnet wird."
 	},
 	"openBehaviorTitle": {
 		"message": "Öffnungsverhalten"
@@ -745,7 +745,7 @@
 		"message": "Anbieter"
 	},
 	"rateExtensionDescription": {
-		"message": "Gefällt Ihnen der Web Clipper? Helfen Sie uns, indem Sie ihm eine Bewertung geben."
+		"message": "Gefällt Ihnen der Browsing Memory? Helfen Sie uns, indem Sie ihm eine Bewertung geben."
 	},
 	"reader": {
 		"message": "Leser"

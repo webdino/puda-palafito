@@ -45,7 +45,7 @@
 		"message": "Chave API ausente"
 	},
 	"apiKeysWarning": {
-		"message": "Ao usar um provedor externo, você concorda com seus termos e política de privacidade. As solicitações do interpretador são enviadas diretamente ao provedor que você escolher. O Puda Web Clipper não coleta nem armazena nenhum dado sobre suas solicitações."
+		"message": "Ao usar um provedor externo, você concorda com seus termos e política de privacidade. As solicitações do interpretador são enviadas diretamente ao provedor que você escolher. O Browsing Memory não coleta nem armazena nenhum dado sobre suas solicitações."
 	},
 	"appendToDaily": {
 		"message": "Adicionar à nota diária, no final"
@@ -320,7 +320,7 @@
 		"message": "Exportar propriedades"
 	},
 	"exportPropertiesDescription": {
-		"message": "Salve as propriedades do Web Clipper em um arquivo $strong_start$types.json$strong_end$ que pode ser importado para o cofre do Obsidian, ou para o Web Clipper em outros dispositivos.",
+		"message": "Salve as propriedades do Browsing Memory em um arquivo $strong_start$types.json$strong_end$ que pode ser importado para o cofre do Obsidian, ou para o Browsing Memory em outros dispositivos.",
 		"placeholders": {
 			"strong_end": {
 				"content": "</strong>"
@@ -334,7 +334,7 @@
 		"message": "Salve o conteúdo da internet em um formato privado e durável, que pode ser acessado off-line. A extensão de navegador oficial do Obsidian."
 	},
 	"extensionName": {
-		"message": "Puda Web Clipper"
+		"message": "Browsing Memory"
 	},
 	"failedToCopyText": {
 		"message": "Falha ao copiar o texto"
@@ -385,7 +385,7 @@
 		"message": "Comentários"
 	},
 	"feedbackDescription": {
-		"message": "Como podemos melhorar o Web Clipper? Por favor, visite nossa página de ajuda, onde você pode reportar bugs, sugerir recursos e obter ajuda com problemas comuns."
+		"message": "Como podemos melhorar o Browsing Memory? Por favor, visite nossa página de ajuda, onde você pode reportar bugs, sugerir recursos e obter ajuda com problemas comuns."
 	},
 	"feedbackTitle": {
 		"message": "Obrigado pelo seu feedback"
@@ -406,7 +406,7 @@
 		"message": "Ajuda"
 	},
 	"helpDescription": {
-		"message": "Aprenda a usar o Web Clipper e obtenha ajuda para solucionar problemas."
+		"message": "Aprenda a usar o Browsing Memory e obtenha ajuda para solucionar problemas."
 	},
 	"highlightInline": {
 		"message": "Realçar o conteúdo da página"
@@ -607,7 +607,7 @@
 		"message": "Abrir"
 	},
 	"openBehaviorDescription": {
-		"message": "Escolha como o Web Clipper abre por padrão."
+		"message": "Escolha como o Browsing Memory abre por padrão."
 	},
 	"openBehaviorTitle": {
 		"message": "Comportamento de abertura"
@@ -745,7 +745,7 @@
 		"message": "Provedores"
 	},
 	"rateExtensionDescription": {
-		"message": "Você está gostando do Web Clipper? Ajude-nos dando uma avaliação."
+		"message": "Você está gostando do Browsing Memory? Ajude-nos dando uma avaliação."
 	},
 	"reader": {
 		"message": "Leitor"
@@ -988,7 +988,7 @@
 		"message": "Para alterar as atribuições de teclas, acesse $1, clique no ícone de engrenagem e selecione \"Gerenciar atalhos de extensões\"."
 	},
 	"shortcutInstructionsIntro": {
-		"message": "Atalhos de teclado lhe dão rápido acesso aos recursos do Web Clipper."
+		"message": "Atalhos de teclado lhe dão rápido acesso aos recursos do Browsing Memory."
 	},
 	"shortcutInstructionsSafari": {
 		"message": "Atalhos de teclado não são customizáveis no Safari."

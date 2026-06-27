@@ -45,7 +45,7 @@
 		"message": "Tidak ada kunci API"
 	},
 	"apiKeysWarning": {
-		"message": "Dengan menggunakan penyedia eksternal, Anda menyetujui persyaratan dan kebijakan privasi mereka. Permintaan interpreter dikirim langsung ke penyedia yang Anda pilih. Puda Web Clipper tidak mengumpulkan atau menyimpan data apa pun tentang permintaan Anda."
+		"message": "Dengan menggunakan penyedia eksternal, Anda menyetujui persyaratan dan kebijakan privasi mereka. Permintaan interpreter dikirim langsung ke penyedia yang Anda pilih. Browsing Memory tidak mengumpulkan atau menyimpan data apa pun tentang permintaan Anda."
 	},
 	"appendToDaily": {
 		"message": "Tambah ke catatan harian, di bagian akhir"
@@ -320,7 +320,7 @@
 		"message": "Ekspor properti"
 	},
 	"exportPropertiesDescription": {
-		"message": "Simpan properti Web Clipper ke file $strong_start$types.json$strong_end$ yang dapat diimpor ke dalam vault Obsidian, atau ke Web Clipper di perangkat lain.",
+		"message": "Simpan properti Browsing Memory ke file $strong_start$types.json$strong_end$ yang dapat diimpor ke dalam vault Obsidian, atau ke Browsing Memory di perangkat lain.",
 		"placeholders": {
 			"strong_end": {
 				"content": "</strong>"
@@ -334,7 +334,7 @@
 		"message": "Simpan konten dari web dalam format yang bersifat privat dan tahan lama dan dapat diakses secara offline. Ekstensi browser resmi untuk Obsidian."
 	},
 	"extensionName": {
-		"message": "Puda Web Clipper"
+		"message": "Browsing Memory"
 	},
 	"failedToCopyText": {
 		"message": "Gagal menyalin teks"
@@ -385,7 +385,7 @@
 		"message": "Umpan balik"
 	},
 	"feedbackDescription": {
-		"message": "Bagaimana kami bisa meningkatkan Web Clipper? Silakan kunjungi halaman bantuan kami, di mana Anda dapat melaporkan bug, menyarankan fitur, dan mendapatkan bantuan dengan masalah umum."
+		"message": "Bagaimana kami bisa meningkatkan Browsing Memory? Silakan kunjungi halaman bantuan kami, di mana Anda dapat melaporkan bug, menyarankan fitur, dan mendapatkan bantuan dengan masalah umum."
 	},
 	"feedbackTitle": {
 		"message": "Terima kasih atas umpan balik Anda"
@@ -406,7 +406,7 @@
 		"message": "Bantuan"
 	},
 	"helpDescription": {
-		"message": "Pelajari cara menggunakan Web Clipper dan dapatkan bantuan pemecahan masalah."
+		"message": "Pelajari cara menggunakan Browsing Memory dan dapatkan bantuan pemecahan masalah."
 	},
 	"highlightInline": {
 		"message": "Sorot konten laman web"
@@ -607,7 +607,7 @@
 		"message": "Buka"
 	},
 	"openBehaviorDescription": {
-		"message": "Pilih bagaimana Web Clipper dibuka secara default."
+		"message": "Pilih bagaimana Browsing Memory dibuka secara default."
 	},
 	"openBehaviorTitle": {
 		"message": "Perilaku buka"
@@ -745,7 +745,7 @@
 		"message": "Penyedia"
 	},
 	"rateExtensionDescription": {
-		"message": "Apakah Anda menikmati Web Clipper? Bantu kami dengan memberikan penilaian."
+		"message": "Apakah Anda menikmati Browsing Memory? Bantu kami dengan memberikan penilaian."
 	},
 	"reader": {
 		"message": "Pembaca"

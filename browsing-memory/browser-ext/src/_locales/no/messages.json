@@ -45,7 +45,7 @@
 		"message": "API-nøkkel mangler"
 	},
 	"apiKeysWarning": {
-		"message": "Ved å bruke en ekstern leverandør godtar du deres vilkår og personvernregler. Tolkningsforespørsler sendes direkte til din valgte leverandør. Puda Web Clipper samler ikke inn eller lagrer informasjon om dine forespørsler."
+		"message": "Ved å bruke en ekstern leverandør godtar du deres vilkår og personvernregler. Tolkningsforespørsler sendes direkte til din valgte leverandør. Browsing Memory samler ikke inn eller lagrer informasjon om dine forespørsler."
 	},
 	"appendToDaily": {
 		"message": "Legg til i daglig notat, på slutten"
@@ -320,7 +320,7 @@
 		"message": "Eksporter egenskaper"
 	},
 	"exportPropertiesDescription": {
-		"message": "Lagre Web Clipper-egenskaper til en $strong_start$types.json$strong_end$-fil som kan importeres til ditt Obsidian-hvelv eller Web Clipper på andre enheter",
+		"message": "Lagre Browsing Memory-egenskaper til en $strong_start$types.json$strong_end$-fil som kan importeres til ditt Obsidian-hvelv eller Browsing Memory på andre enheter",
 		"placeholders": {
 			"strong_end": {
 				"content": "</strong>"
@@ -334,7 +334,7 @@
 		"message": "Lagre webinnhold i et privat og varig format som kan nås offline. Den offisielle nettleserutvidelsen for Obsidian."
 	},
 	"extensionName": {
-		"message": "Puda Web Clipper"
+		"message": "Browsing Memory"
 	},
 	"failedToCopyText": {
 		"message": "Kunne ikke kopiere tekst"
@@ -385,7 +385,7 @@
 		"message": "Tilbakemelding"
 	},
 	"feedbackDescription": {
-		"message": "Hvordan kan vi forbedre Web Clipper? Besøk vår hjelpeside for å rapportere feil, foreslå funksjoner og få hjelp med vanlige problemer."
+		"message": "Hvordan kan vi forbedre Browsing Memory? Besøk vår hjelpeside for å rapportere feil, foreslå funksjoner og få hjelp med vanlige problemer."
 	},
 	"feedbackTitle": {
 		"message": "Takk for tilbakemeldingen"
@@ -406,7 +406,7 @@
 		"message": "Hjelp"
 	},
 	"helpDescription": {
-		"message": "Lær hvordan du bruker Web Clipper og få hjelp med feilsøking"
+		"message": "Lær hvordan du bruker Browsing Memory og få hjelp med feilsøking"
 	},
 	"highlightInline": {
 		"message": "Uthev innhold på siden"
@@ -599,7 +599,7 @@
 		"message": "Åpne"
 	},
 	"openBehaviorDescription": {
-		"message": "Velg hvordan Web Clipper åpnes som standard."
+		"message": "Velg hvordan Browsing Memory åpnes som standard."
 	},
 	"openBehaviorTitle": {
 		"message": "Åpne oppførsel"
@@ -737,7 +737,7 @@
 		"message": "Leverandører"
 	},
 	"rateExtensionDescription": {
-		"message": "Liker du Web Clipper? Hjelp oss ved å gi en vurdering."
+		"message": "Liker du Browsing Memory? Hjelp oss ved å gi en vurdering."
 	},
 	"reader": {
 		"message": "Lesevisning"

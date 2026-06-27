@@ -45,7 +45,7 @@
 		"message": "无 API 密钥"
 	},
 	"apiKeysWarning": {
-		"message": "使用外部提供商即表示您同意其条款和隐私政策。解释器请求直接发送给您选择的提供商。Puda Web Clipper 不会收集或存储任何关于您请求的数据。"
+		"message": "使用外部提供商即表示您同意其条款和隐私政策。解释器请求直接发送给您选择的提供商。Browsing Memory 不会收集或存储任何关于您请求的数据。"
 	},
 	"appendToDaily": {
 		"message": "添加到日记末尾"
@@ -385,7 +385,7 @@
 		"message": "反馈"
 	},
 	"feedbackDescription": {
-		"message": "我们如何改进Web Clipper？请访问我们的帮助页面，您可以在那里报告错误，建议功能，并获得常见问题的帮助。"
+		"message": "我们如何改进Browsing Memory？请访问我们的帮助页面，您可以在那里报告错误，建议功能，并获得常见问题的帮助。"
 	},
 	"feedbackTitle": {
 		"message": "感谢您的反馈"
@@ -406,7 +406,7 @@
 		"message": "帮助"
 	},
 	"helpDescription": {
-		"message": "了解如何使用 Web Clipper 并获取故障排除帮助。"
+		"message": "了解如何使用 Browsing Memory 并获取故障排除帮助。"
 	},
 	"highlightInline": {
 		"message": "高亮页面内容"
@@ -607,7 +607,7 @@
 		"message": "打开"
 	},
 	"openBehaviorDescription": {
-		"message": "选择Web Clipper默认的打开方式。"
+		"message": "选择Browsing Memory默认的打开方式。"
 	},
 	"openBehaviorTitle": {
 		"message": "打开行为"
@@ -745,7 +745,7 @@
 		"message": "提供商"
 	},
 	"rateExtensionDescription": {
-		"message": "您喜欢使用Web Clipper吗？请帮助我们给它评分。"
+		"message": "您喜欢使用Browsing Memory吗？请帮助我们给它评分。"
 	},
 	"reader": {
 		"message": "阅读器"

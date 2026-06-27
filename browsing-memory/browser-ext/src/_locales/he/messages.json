@@ -45,7 +45,7 @@
 		"message": "חסר מפתח API"
 	},
 	"apiKeysWarning": {
-		"message": "השימוש בספק חיצוני מהווה הסכמה לתנאי השימוש ומדיניות הפרטיות שלהם. בקשות המתרגם נשלחות ישירות לספק שבחרת. Puda Web Clipper אינו אוסף או מאחסן מידע על הבקשות שלך."
+		"message": "השימוש בספק חיצוני מהווה הסכמה לתנאי השימוש ומדיניות הפרטיות שלהם. בקשות המתרגם נשלחות ישירות לספק שבחרת. Browsing Memory אינו אוסף או מאחסן מידע על הבקשות שלך."
 	},
 	"appendToDaily": {
 		"message": "הוסף לרשימה היומית, בסוף"
@@ -320,7 +320,7 @@
 		"message": "ייצא מאפיינים"
 	},
 	"exportPropertiesDescription": {
-		"message": "שמור את מאפייני Web Clipper לקובץ $strong_start$types.json$strong_end$ שניתן לייבא לכספת Obsidian שלך או ל-Web Clipper במכשירים אחרים",
+		"message": "שמור את מאפייני Browsing Memory לקובץ $strong_start$types.json$strong_end$ שניתן לייבא לכספת Obsidian שלך או ל-Browsing Memory במכשירים אחרים",
 		"placeholders": {
 			"strong_end": {
 				"content": "</strong>"
@@ -334,7 +334,7 @@
 		"message": "שמור תוכן מהאינטרנט בפורמט פרטי ובר-קיימא שניתן לגשת אליו במצב לא מקוון. הרחבת הדפדפן הרשמית של Obsidian."
 	},
 	"extensionName": {
-		"message": "Puda Web Clipper"
+		"message": "Browsing Memory"
 	},
 	"failedToCopyText": {
 		"message": "נכשל בהעתקת טקסט"
@@ -385,7 +385,7 @@
 		"message": "משוב"
 	},
 	"feedbackDescription": {
-		"message": "כיצד נוכל לשפר את Web Clipper? בקר/י בדף העזרה שלנו כדי לדווח על באגים, להציע תכונות ולקבל עזרה בבעיות נפוצות."
+		"message": "כיצד נוכל לשפר את Browsing Memory? בקר/י בדף העזרה שלנו כדי לדווח על באגים, להציע תכונות ולקבל עזרה בבעיות נפוצות."
 	},
 	"feedbackTitle": {
 		"message": "תודה על המשוב"
@@ -406,7 +406,7 @@
 		"message": "עזרה"
 	},
 	"helpDescription": {
-		"message": "למד/י כיצד להשתמש ב-Web Clipper וקבל/י עזרה בפתרון בעיות"
+		"message": "למד/י כיצד להשתמש ב-Browsing Memory וקבל/י עזרה בפתרון בעיות"
 	},
 	"highlightInline": {
 		"message": "סמן תוכן בדף"
@@ -737,7 +737,7 @@
 		"message": "ספקים"
 	},
 	"rateExtensionDescription": {
-		"message": "אוהב את Web Clipper? עזור לנו על ידי דירוג."
+		"message": "אוהב את Browsing Memory? עזור לנו על ידי דירוג."
 	},
 	"reader": {
 		"message": "קורא"

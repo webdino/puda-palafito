@@ -385,7 +385,7 @@
 		"message": "Geri bildirim"
 	},
 	"feedbackDescription": {
-		"message": "Web Clipper'ı nasıl geliştirebiliriz? Lütfen yardım sayfamızı ziyaret edin, burada hataları bildirebilir, özellikler önerabilir ve yaygın sorunlarla ilgili yardım alabilirsiniz."
+		"message": "Browsing Memory'ı nasıl geliştirebiliriz? Lütfen yardım sayfamızı ziyaret edin, burada hataları bildirebilir, özellikler önerabilir ve yaygın sorunlarla ilgili yardım alabilirsiniz."
 	},
 	"feedbackTitle": {
 		"message": "Geri bildiriminiz için teşekkür ederiz"
@@ -607,7 +607,7 @@
 		"message": "Aç"
 	},
 	"openBehaviorDescription": {
-		"message": "Web Clipper'ın varsayılan olarak nasıl açılacağını seçin."
+		"message": "Browsing Memory'ın varsayılan olarak nasıl açılacağını seçin."
 	},
 	"openBehaviorTitle": {
 		"message": "Açma davranışı"
@@ -745,7 +745,7 @@
 		"message": "Sağlayıcılar"
 	},
 	"rateExtensionDescription": {
-		"message": "Web Clipper'ı beğeniyor musunuz? Bize bir puan vererek yardımcı olun."
+		"message": "Browsing Memory'ı beğeniyor musunuz? Bize bir puan vererek yardımcı olun."
 	},
 	"reader": {
 		"message": "Okuyucu"

@@ -45,7 +45,7 @@
 		"message": "ไม่มีคีย์ API"
 	},
 	"apiKeysWarning": {
-		"message": "การใช้ผู้ให้บริการภายนอกถือว่าคุณยอมรับข้อกำหนดและนโยบายความเป็นส่วนตัวของพวกเขา คำขอตัวแปลจะถูกส่งตรงไปยังผู้ให้บริการที่คุณเลือก Puda Web Clipper ไม่ได้เก็บรวบรวมหรือจัดเก็บข้อมูลใดๆ เกี่ยวกับคำขอของคุณ"
+		"message": "การใช้ผู้ให้บริการภายนอกถือว่าคุณยอมรับข้อกำหนดและนโยบายความเป็นส่วนตัวของพวกเขา คำขอตัวแปลจะถูกส่งตรงไปยังผู้ให้บริการที่คุณเลือก Browsing Memory ไม่ได้เก็บรวบรวมหรือจัดเก็บข้อมูลใดๆ เกี่ยวกับคำขอของคุณ"
 	},
 	"appendToDaily": {
 		"message": "เพิ่มไปยังบันทึกประจำวัน ที่ท้าย"
@@ -320,7 +320,7 @@
 		"message": "ส่งออกคุณสมบัติ"
 	},
 	"exportPropertiesDescription": {
-		"message": "บันทึกคุณสมบัติ Web Clipper ไปยังไฟล์ $strong_start$types.json$strong_end$ ที่สามารถนำเข้าไปยังคลัง Obsidian ของคุณหรือ Web Clipper บนอุปกรณ์อื่น",
+		"message": "บันทึกคุณสมบัติ Browsing Memory ไปยังไฟล์ $strong_start$types.json$strong_end$ ที่สามารถนำเข้าไปยังคลัง Obsidian ของคุณหรือ Browsing Memory บนอุปกรณ์อื่น",
 		"placeholders": {
 			"strong_end": {
 				"content": "</strong>"
@@ -334,7 +334,7 @@
 		"message": "บันทึกเนื้อหาจากเว็บในรูปแบบส่วนตัวและยั่งยืนที่คุณสามารถเข้าถึงได้แบบออฟไลน์ ส่วนขยายเบราว์เซอร์อย่างเป็นทางการสำหรับ Obsidian"
 	},
 	"extensionName": {
-		"message": "Puda Web Clipper"
+		"message": "Browsing Memory"
 	},
 	"failedToCopyText": {
 		"message": "ไม่สามารถคัดลอกข้อความ"
@@ -385,7 +385,7 @@
 		"message": "ข้อเสนอแนะ"
 	},
 	"feedbackDescription": {
-		"message": "เราจะปรับปรุง Web Clipper ได้อย่างไร? เยี่ยมชมหน้าช่วยเหลือของเราที่คุณสามารถรายงานข้อบกพร่อง แนะนำคุณสมบัติ และรับความช่วยเหลือเกี่ยวกับปัญหาทั่วไป"
+		"message": "เราจะปรับปรุง Browsing Memory ได้อย่างไร? เยี่ยมชมหน้าช่วยเหลือของเราที่คุณสามารถรายงานข้อบกพร่อง แนะนำคุณสมบัติ และรับความช่วยเหลือเกี่ยวกับปัญหาทั่วไป"
 	},
 	"feedbackTitle": {
 		"message": "ขอบคุณสำหรับข้อเสนอแนะ"
@@ -406,7 +406,7 @@
 		"message": "ช่วยเหลือ"
 	},
 	"helpDescription": {
-		"message": "เรียนรู้วิธีใช้ Web Clipper และรับความช่วยเหลือในการแก้ไขปัญหา"
+		"message": "เรียนรู้วิธีใช้ Browsing Memory และรับความช่วยเหลือในการแก้ไขปัญหา"
 	},
 	"highlightInline": {
 		"message": "ไฮไลต์เนื้อหาหน้า"
@@ -607,7 +607,7 @@
 		"message": "เปิด"
 	},
 	"openBehaviorDescription": {
-		"message": "เลือกวิธีการเปิด Web Clipper โดยค่าเริ่มต้น"
+		"message": "เลือกวิธีการเปิด Browsing Memory โดยค่าเริ่มต้น"
 	},
 	"openBehaviorTitle": {
 		"message": "พฤติกรรมการเปิด"
@@ -745,7 +745,7 @@
 		"message": "ผู้ให้บริการ"
 	},
 	"rateExtensionDescription": {
-		"message": "ชอบ Web Clipper ไหม? ช่วยเราด้วยการให้คะแนน"
+		"message": "ชอบ Browsing Memory ไหม? ช่วยเราด้วยการให้คะแนน"
 	},
 	"reader": {
 		"message": "อ่าน"

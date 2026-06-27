@@ -118,7 +118,7 @@ export async function sendToLLM(promptContext: string, content: string, promptVa
 			headers = {
 				...headers,
 				'HTTP-Referer': 'https://obsidian.md/',
-				'X-Title': 'Puda Web Clipper',
+				'X-Title': 'Browsing Memory',
 				'Authorization': `Bearer ${provider.apiKey}`
 			};
 		} else if (provider.name.toLowerCase().includes('ollama')) {
@@ -149,7 +149,7 @@ export async function sendToLLM(promptContext: string, content: string, promptVa
 			headers = {
 				...headers,
 				'HTTP-Referer': 'https://obsidian.md/',
-				'X-Title': 'Puda Web Clipper',
+				'X-Title': 'Browsing Memory',
 				'Authorization': `Bearer ${provider.apiKey}`
 			};
 		}

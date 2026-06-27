@@ -320,7 +320,7 @@
 		"message": "Properties export karein"
 	},
 	"exportPropertiesDescription": {
-		"message": "Web Clipper properties ko $strong_start$types.json$strong_end$ file mein save karein jise aapke Obsidian vault mein, ya dusre devices par Web Clipper mein import kiya ja sakta hai.",
+		"message": "Browsing Memory properties ko $strong_start$types.json$strong_end$ file mein save karein jise aapke Obsidian vault mein, ya dusre devices par Browsing Memory mein import kiya ja sakta hai.",
 		"placeholders": {
 			"strong_end": {
 				"content": "</strong>"
@@ -334,7 +334,7 @@
 		"message": "Web se content ko ek private aur durable format mein save karein jise aap offline access kar sakte hain. Obsidian ka official browser extension."
 	},
 	"extensionName": {
-		"message": "Puda Web Clipper"
+		"message": "Browsing Memory"
 	},
 	"failedToCopyText": {
 		"message": "Text copy karne mein fail"
@@ -406,7 +406,7 @@
 		"message": "Help"
 	},
 	"helpDescription": {
-		"message": "Web Clipper ka upyog karna seekhein aur troubleshooting help prapt karein."
+		"message": "Browsing Memory ka upyog karna seekhein aur troubleshooting help prapt karein."
 	},
 	"highlightInline": {
 		"message": "Page content highlight karein"
