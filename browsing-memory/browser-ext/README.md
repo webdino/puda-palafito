@@ -10,6 +10,11 @@
 - 保存先ディレクトリを指定してローカルにファイル保存する
 - ドメインフィルターで自動保存の対象外とするサイトを設定する
 
+## Documents
+
+- インストール方法: [docs/installation.md](./docs/installation.md)
+- 使い方: [docs/usage.md](./docs/usage.md)
+
 ## Requirements
 
 - Node.js 24.x
