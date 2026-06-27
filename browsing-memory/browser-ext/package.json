@@ -1,6 +1,6 @@
 {
 	"name": "browsing-memory",
-	"version": "1.6.3",
+	"version": "1.0.0",
 	"description": "Automatically save web pages as clean Markdown notes, complete with AI summaries.",
 	"bin": {
 		"browsing-memory": "./dist/cli.cjs"
