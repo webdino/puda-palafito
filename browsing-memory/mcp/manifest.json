@@ -1,10 +1,10 @@
 {
   "manifest_version": "0.4",
-  "name": "webclip-search",
-  "display_name": "WebClip Search",
+  "name": "browsing-memory",
+  "display_name": "Browsing Memory",
   "version": "0.1.0",
   "description": "WebClipファイルを検索するMCPサーバ",
-  "long_description": "WebClipで保存したMarkdownファイルを、日付・URL・全文・セマンティック類似度で検索します。frontmatter のメタデータ（title, source/url, created/clip_dateなど）も参照します。",
+  "long_description": "ブラウザ拡張で保存したMarkdownファイルを、日付・URL・全文・セマンティック類似度で検索します。frontmatter のメタデータ（title, source/url, created/clip_dateなど）も参照します。",
   "author": {
     "name": "WebDINO Japan"
   },
