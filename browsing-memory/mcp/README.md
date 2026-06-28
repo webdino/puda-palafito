@@ -49,6 +49,8 @@ mcpb pack .
 
 ## インストール方法
 
+- インストール方法: [docs/installation.md](./docs/installation.md)
+
 ### MCBPファイルを使用してインストールする場合
 
 - ファイル→設定…→拡張機能→詳細設定→「拡張機能をインストール」をクリック
