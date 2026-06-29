@@ -139,6 +139,13 @@ const SUMMARY_TTL_MS = 24 * 60 * 60 * 1000; // 24h
 
 interface StoredSummary { s: string; t: number }
 
+// Compare URLs ignoring the #fragment: same-document hash changes are not a real
+// navigation away from the page.
+function stripHash(url: string): string {
+	const i = url.indexOf('#');
+	return i === -1 ? url : url.slice(0, i);
+}
+
 // Summaries currently being generated, keyed by URL. Lets concurrent triggers
 // (and the save path) await an in-flight generation instead of starting a new one.
 const summaryInFlight = new Map<string, Promise<string | undefined>>();
@@ -1080,15 +1087,26 @@ browser.tabs.onActivated.addListener((activeInfo) => {
 browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 	console.log('[AutoSave] onUpdated tabId:', tabId, 'changeInfo:', JSON.stringify(changeInfo));
 	if (changeInfo.status === 'loading' && changeInfo.url) {
-		if (autoSaveCache?.tabId === tabId) {
-			try {
-				const res = await browser.tabs.sendMessage(tabId, { action: 'getTimeOnPage' }) as { timeOnPage?: number };
-				if (res?.timeOnPage !== undefined) {
-					pendingTimeOnPage = { tabId, seconds: res.timeOnPage };
-				}
-			} catch {}
+		// Skip saving when the tab is merely reloading the SAME url rather than
+		// navigating away. This covers Chrome auto-reloading a tab it discarded for
+		// memory while idle (reactivation reloads the same URL) as well as a manual
+		// refresh — in both cases the user is staying on the page, so we keep the
+		// cached content (a later real navigation or tab close will still save it).
+		const cachedUrl = autoSaveCache?.tabId === tabId ? autoSaveCache.content.url : undefined;
+		const sameUrlReload = !!cachedUrl && stripHash(changeInfo.url) === stripHash(cachedUrl);
+		if (sameUrlReload) {
+			console.log('[AutoSave] Skipping save: same-url reload', changeInfo.url);
+		} else {
+			if (autoSaveCache?.tabId === tabId) {
+				try {
+					const res = await browser.tabs.sendMessage(tabId, { action: 'getTimeOnPage' }) as { timeOnPage?: number };
+					if (res?.timeOnPage !== undefined) {
+						pendingTimeOnPage = { tabId, seconds: res.timeOnPage };
+					}
+				} catch {}
+			}
+			saveIfCached(tabId);
 		}
-		saveIfCached(tabId);
 	}
 	if (changeInfo.status === 'complete') {
 		handleTabChange({ tabId, windowId: tab.windowId });
