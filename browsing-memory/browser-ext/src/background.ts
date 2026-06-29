@@ -131,6 +131,104 @@ interface AutoSaveContent {
 let autoSaveCache: { tabId: number; content: AutoSaveContent } | null = null;
 let pendingTimeOnPage: { tabId: number; seconds: number } | null = null;
 
+// Stored pre-generated summaries are keyed by URL so they survive tab switches
+// (which overwrite the single-slot autoSaveCache) and service-worker restarts.
+const SUMMARY_KEY_PREFIX = 'summary:';
+const SUMMARY_MAX_ENTRIES = 50;
+const SUMMARY_TTL_MS = 24 * 60 * 60 * 1000; // 24h
+
+interface StoredSummary { s: string; t: number }
+
+// Summaries currently being generated, keyed by URL. Lets concurrent triggers
+// (and the save path) await an in-flight generation instead of starting a new one.
+const summaryInFlight = new Map<string, Promise<string | undefined>>();
+
+// Service-worker keep-alive: while a save is awaiting a (possibly slow) summary,
+// ping a side-effect-free extension API periodically so MV3 doesn't tear the
+// worker down before the file write completes. Reference-counted for nesting.
+let keepAliveRefCount = 0;
+let keepAliveTimer: ReturnType<typeof setInterval> | null = null;
+
+function startKeepAlive(): void {
+	keepAliveRefCount++;
+	if (keepAliveTimer === null) {
+		keepAliveTimer = setInterval(() => {
+			// Any extension API event resets the MV3 idle timer.
+			chrome.runtime.getPlatformInfo().catch(() => {});
+		}, 20000);
+	}
+}
+
+function stopKeepAlive(): void {
+	keepAliveRefCount = Math.max(0, keepAliveRefCount - 1);
+	if (keepAliveRefCount === 0 && keepAliveTimer !== null) {
+		clearInterval(keepAliveTimer);
+		keepAliveTimer = null;
+	}
+}
+
+// Persist a freshly generated summary under summary:<url> and prune stale/excess
+// entries. Empty summaries are intentionally not stored so a later trigger can retry.
+async function storeSummary(url: string, summary: string): Promise<void> {
+	const key = SUMMARY_KEY_PREFIX + url;
+	const entry: StoredSummary = { s: summary, t: Date.now() };
+	await browser.storage.local.set({ [key]: entry });
+	await pruneSummaries();
+}
+
+async function pruneSummaries(): Promise<void> {
+	try {
+		const all = await browser.storage.local.get(null);
+		const now = Date.now();
+		const summaries: { key: string; t: number }[] = [];
+		const expired: string[] = [];
+		for (const [key, value] of Object.entries(all)) {
+			if (!key.startsWith(SUMMARY_KEY_PREFIX)) continue;
+			const t = (value as StoredSummary)?.t ?? 0;
+			if (now - t > SUMMARY_TTL_MS) {
+				expired.push(key);
+			} else {
+				summaries.push({ key, t });
+			}
+		}
+		// Beyond the cap, drop the oldest.
+		summaries.sort((a, b) => a.t - b.t);
+		const overflow = summaries.slice(0, Math.max(0, summaries.length - SUMMARY_MAX_ENTRIES));
+		const toRemove = [...expired, ...overflow.map(e => e.key)];
+		if (toRemove.length > 0) {
+			await browser.storage.local.remove(toRemove);
+		}
+	} catch (err) {
+		console.log('[AutoSave] pruneSummaries error:', err);
+	}
+}
+
+// Kick off summary generation for a page during reading time (load-complete), so
+// the result is ready and persisted before the save trigger fires. No-op if a
+// summary already exists or is already being generated for this URL.
+async function precomputeSummary(url: string, markdown: string, title: string): Promise<void> {
+	if (summaryInFlight.has(url)) return;
+	const key = SUMMARY_KEY_PREFIX + url;
+	const stored = await browser.storage.local.get(key);
+	if (stored[key]) return;
+	const promise = generateSummaryInBackground(markdown, title)
+		.then(async summary => {
+			if (summary?.trim()) {
+				await storeSummary(url, summary);
+				console.log('[AutoSave] Pre-generated summary stored for:', url);
+			}
+			return summary;
+		})
+		.catch(err => {
+			console.log('[AutoSave] precomputeSummary error:', err);
+			return undefined;
+		})
+		.finally(() => {
+			summaryInFlight.delete(url);
+		});
+	summaryInFlight.set(url, promise);
+}
+
 async function generateSummaryInBackground(markdown: string, title: string): Promise<string | undefined> {
 	const settings = await loadSettings();
 	// Try the configured LLM first, but only when it is fully set up.
@@ -204,7 +302,7 @@ function buildAutoSaveFileName(): string {
 	return `${ts}.md`;
 }
 
-async function extractAndCache(tabId: number): Promise<void> {
+async function extractAndCache(tabId: number, precompute = false): Promise<void> {
 	try {
 		const settings = await loadSettings();
 		if (!settings.autoSaveEnabled) {
@@ -228,6 +326,12 @@ async function extractAndCache(tabId: number): Promise<void> {
 			response.windowId = tab.windowId;
 			autoSaveCache = { tabId, content: response };
 			console.log('[AutoSave] Cached:', response.url);
+			// On page load, pre-generate the summary in the background so it is ready
+			// (and persisted by URL) before the save trigger. Skip domain-filtered
+			// pages to avoid wasting LLM calls / hitting the rate-limit cooldown.
+			if (precompute && isAllowedByDomainFilter(response.url, settings.domainFilter)) {
+				void precomputeSummary(response.url, response.markdown, response.title);
+			}
 		} else {
 			console.log('[AutoSave] getMarkdownContent failed:', response);
 		}
@@ -245,6 +349,9 @@ async function saveIfCached(tabId: number): Promise<void> {
 		content.timeOnPage = pendingTimeOnPage.seconds;
 		pendingTimeOnPage = null;
 	}
+	// Keep the service worker alive across the (possibly slow) summary wait and the
+	// file write, so a save triggered on navigation/tab-close isn't lost to teardown.
+	startKeepAlive();
 	try {
 		// Re-check the domain filter at save time: the user may have added this
 		// domain to the filter after the page was already visited/cached.
@@ -256,15 +363,19 @@ async function saveIfCached(tabId: number): Promise<void> {
 		}
 		if (!isAllowedByDomainFilter(content.url, settings.domainFilter)) {
 			console.log('[AutoSave] saveIfCached skipped (domain filtered)');
-			const summaryKey = `summary:${content.url}`;
+			const summaryKey = SUMMARY_KEY_PREFIX + content.url;
 			await browser.storage.local.remove(summaryKey);
 			return;
 		}
-		const summaryKey = `summary:${content.url}`;
+		// Prefer the pre-generated summary persisted at load time. If none is stored
+		// but one is still being generated, wait for it. Otherwise generate inline.
+		const summaryKey = SUMMARY_KEY_PREFIX + content.url;
 		const stored = await browser.storage.local.get(summaryKey);
-		let summary = stored[summaryKey] as string | undefined;
+		let summary = (stored[summaryKey] as StoredSummary | undefined)?.s;
 		if (summary) {
 			await browser.storage.local.remove(summaryKey);
+		} else if (summaryInFlight.has(content.url)) {
+			summary = await summaryInFlight.get(content.url);
 		} else {
 			summary = await generateSummaryInBackground(content.markdown, content.title);
 		}
@@ -300,6 +411,8 @@ async function saveIfCached(tabId: number): Promise<void> {
 		}
 	} catch (err) {
 		console.log('[AutoSave] Error during save:', err);
+	} finally {
+		stopKeepAlive();
 	}
 }
 
@@ -942,7 +1055,7 @@ browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 	}
 	if (changeInfo.status === 'complete') {
 		handleTabChange({ tabId, windowId: tab.windowId });
-		extractAndCache(tabId);
+		extractAndCache(tabId, true);
 		updateActionIconForTab(tabId, tab.url);
 	}
 });
