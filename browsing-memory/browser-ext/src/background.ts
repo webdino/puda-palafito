@@ -397,17 +397,18 @@ async function saveIfCached(tabId: number): Promise<void> {
 				if (tabId) browser.tabs.sendMessage(tabId, { action: 'showToast', message: msg }).catch(() => {});
 			});
 		} else if (result?.error === 'no-handle') {
-			console.log('[AutoSave] Skipped: no directory configured');
+			console.warn('[AutoSave] Save failed: no save directory configured');
 			chrome.action.setBadgeText({ text: '!' });
 			chrome.action.setBadgeBackgroundColor({ color: '#e74c3c' });
 			chrome.tabs.create({ url: chrome.runtime.getURL('settings.html') });
 		} else if (result?.needsPermission) {
+			console.warn(`[AutoSave] Save failed: directory permission not granted (file: ${fileName})`);
 			chrome.action.setBadgeText({ text: '!' });
 			chrome.action.setBadgeBackgroundColor({ color: '#e74c3c' });
 			await chrome.storage.local.set({ autoSaveNeedsPermission: true });
 			chrome.tabs.create({ url: chrome.runtime.getURL('settings.html') });
 		} else {
-			console.log('[AutoSave] Save failed:', result?.error);
+			console.warn('[AutoSave] Save failed:', result?.error);
 		}
 	} catch (err) {
 		console.log('[AutoSave] Error during save:', err);
@@ -508,10 +509,46 @@ async function ensureOffscreenDocument(): Promise<void> {
 	});
 }
 
+// Proactively detect a lapsed directory permission (e.g. after a browser restart,
+// when the File System Access handle loses its read-write grant). Re-granting needs
+// a user gesture and can't happen during background auto-save, so we surface it early
+// — once per browser session — instead of silently failing at the save trigger.
+async function probeAutoSavePermission(): Promise<void> {
+	try {
+		const settings = await loadSettings();
+		if (!settings.autoSaveEnabled) return;
+		await ensureOffscreenDocument();
+		const res = await chrome.runtime.sendMessage({
+			action: 'offscreen-checkPermission',
+			target: 'offscreen',
+		}) as { hasHandle: boolean; granted: boolean };
+		if (!res?.hasHandle || res.granted) return;
+
+		console.warn('[AutoSave] Directory permission not granted; prompting user to re-grant');
+		chrome.action.setBadgeText({ text: '!' });
+		chrome.action.setBadgeBackgroundColor({ color: '#e74c3c' });
+		await chrome.storage.local.set({ autoSaveNeedsPermission: true });
+
+		// Open the settings page once per browser session so the user isn't nagged on
+		// every service-worker restart. storage.session is cleared on browser restart
+		// and on extension reload, which is exactly when permission can lapse.
+		const { autoSavePermissionPrompted } = await chrome.storage.session.get('autoSavePermissionPrompted');
+		if (!autoSavePermissionPrompted) {
+			await chrome.storage.session.set({ autoSavePermissionPrompted: true });
+			chrome.tabs.create({ url: chrome.runtime.getURL('settings.html') });
+		}
+	} catch (err) {
+		console.log('[AutoSave] permission probe error:', err);
+	}
+}
+
 async function initialize() {
 	try {
 		// Keep offscreen document alive for reliable auto-save on tab close
 		await ensureOffscreenDocument();
+
+		// Surface a lapsed directory permission early, before any save trigger.
+		await probeAutoSavePermission();
 
 		// Set up tab listeners
 		await setupTabListeners();

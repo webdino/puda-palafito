@@ -6,7 +6,29 @@ interface FileSystemHandleWithPermission extends FileSystemDirectoryHandle {
 }
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
-	if (message.target !== 'offscreen' || message.action !== 'offscreen-saveFile') return false;
+	if (message.target !== 'offscreen') return false;
+
+	if (message.action === 'offscreen-checkPermission') {
+		// Read-only probe: queryPermission needs no user gesture, so the background
+		// can poll the stored handle's permission state without attempting a save.
+		(async () => {
+			try {
+				const handle = await loadDirectoryHandle();
+				if (!handle) {
+					sendResponse({ hasHandle: false, granted: false });
+					return;
+				}
+				const h = handle as FileSystemHandleWithPermission;
+				const permState = await h.queryPermission({ mode: 'readwrite' });
+				sendResponse({ hasHandle: true, granted: permState === 'granted' });
+			} catch (err) {
+				sendResponse({ hasHandle: false, granted: false, error: (err as Error).message });
+			}
+		})();
+		return true;
+	}
+
+	if (message.action !== 'offscreen-saveFile') return false;
 
 	(async () => {
 		try {
