@@ -96,12 +96,7 @@ async function initializeDefaultSaveDirectory(): Promise<void> {
 		grantBtn.textContent = 'Grant Access';
 		grantBtn.style.cssText = 'padding:6px 14px;background:#ffc107;color:#1a1a1a;border:1px solid #d39e00;border-radius:4px;cursor:pointer;font-weight:600;white-space:nowrap;';
 		grantBtn.addEventListener('click', async () => {
-			console.log('[AutoSave] requesting permission for:', handle.name);
-			const h = handle as any;
-			const before = await h.queryPermission({ mode: 'readwrite' });
-			console.log('[AutoSave] permission before:', before);
 			const granted = await verifyPermission(handle);
-			console.log('[AutoSave] verifyPermission result:', granted);
 			if (granted) {
 				nameDisplay.textContent = handle.name;
 				banner.remove();
