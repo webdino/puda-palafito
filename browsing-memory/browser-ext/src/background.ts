@@ -131,13 +131,18 @@ interface AutoSaveContent {
 let autoSaveCache: { tabId: number; content: AutoSaveContent } | null = null;
 let pendingTimeOnPage: { tabId: number; seconds: number } | null = null;
 
-// Stored pre-generated summaries are keyed by URL so they survive tab switches
-// (which overwrite the single-slot autoSaveCache) and service-worker restarts.
-const SUMMARY_KEY_PREFIX = 'summary:';
+// Pre-generated summaries live in a SINGLE storage.local map keyed by URL, so reads
+// and pruning touch only this one key instead of scanning the whole storage area
+// (which can hold large blobs like `highlights`). They survive tab switches (which
+// overwrite the single-slot autoSaveCache) and service-worker restarts.
+// Shape: { [url]: { s, t } }.
+const SUMMARIES_KEY = 'autoSaveSummaries';
+const LEGACY_SUMMARY_PREFIX = 'summary:'; // obsolete per-URL keys from earlier builds
 const SUMMARY_MAX_ENTRIES = 50;
 const SUMMARY_TTL_MS = 24 * 60 * 60 * 1000; // 24h
 
 interface StoredSummary { s: string; t: number }
+type SummariesMap = Record<string, StoredSummary>;
 
 // Compare URLs ignoring the #fragment: same-document hash changes are not a real
 // navigation away from the page.
@@ -149,6 +154,73 @@ function stripHash(url: string): string {
 // Summaries currently being generated, keyed by URL. Lets concurrent triggers
 // (and the save path) await an in-flight generation instead of starting a new one.
 const summaryInFlight = new Map<string, Promise<string | undefined>>();
+
+// Serialize read-modify-write of the summaries map so concurrent stores/removes
+// (e.g. summaries for different tabs finishing at the same time) don't clobber each
+// other. All writes happen in this single service worker, so an in-memory chain
+// is sufficient.
+let summariesWriteChain: Promise<unknown> = Promise.resolve();
+function withSummariesLock<T>(fn: () => Promise<T>): Promise<T> {
+	const run = summariesWriteChain.then(fn, fn);
+	summariesWriteChain = run.catch(() => {});
+	return run as Promise<T>;
+}
+
+async function readSummaries(): Promise<SummariesMap> {
+	const stored = await browser.storage.local.get(SUMMARIES_KEY);
+	return (stored[SUMMARIES_KEY] as SummariesMap) ?? {};
+}
+
+// Drop entries older than the TTL, then cap to the most recent N.
+function pruneSummariesMap(map: SummariesMap): SummariesMap {
+	const now = Date.now();
+	let entries = Object.entries(map).filter(([, v]) => now - (v?.t ?? 0) <= SUMMARY_TTL_MS);
+	if (entries.length > SUMMARY_MAX_ENTRIES) {
+		entries = entries.sort((a, b) => b[1].t - a[1].t).slice(0, SUMMARY_MAX_ENTRIES);
+	}
+	return Object.fromEntries(entries);
+}
+
+// Persist a freshly generated summary. Empty summaries are intentionally not stored
+// so a later trigger can retry.
+async function storeSummary(url: string, summary: string): Promise<void> {
+	await withSummariesLock(async () => {
+		const map = await readSummaries();
+		map[url] = { s: summary, t: Date.now() };
+		await browser.storage.local.set({ [SUMMARIES_KEY]: pruneSummariesMap(map) });
+	});
+}
+
+async function getStoredSummary(url: string): Promise<string | undefined> {
+	const map = await readSummaries();
+	return map[url]?.s;
+}
+
+async function removeStoredSummary(url: string): Promise<void> {
+	await withSummariesLock(async () => {
+		const map = await readSummaries();
+		if (url in map) {
+			delete map[url];
+			await browser.storage.local.set({ [SUMMARIES_KEY]: map });
+		}
+	});
+}
+
+// One-time cleanup of the obsolete per-URL `summary:<url>` keys written by earlier
+// builds. Runs once (guarded by a flag); the single get(null) here is acceptable as
+// it only ever happens on the first startup after this change ships.
+async function cleanupLegacySummaryKeys(): Promise<void> {
+	try {
+		const { autoSaveSummariesMigrated } = await browser.storage.local.get('autoSaveSummariesMigrated');
+		if (autoSaveSummariesMigrated) return;
+		const all = await browser.storage.local.get(null);
+		const legacy = Object.keys(all).filter(k => k.startsWith(LEGACY_SUMMARY_PREFIX));
+		if (legacy.length > 0) await browser.storage.local.remove(legacy);
+		await browser.storage.local.set({ autoSaveSummariesMigrated: true });
+	} catch (err) {
+		console.log('[AutoSave] legacy summary cleanup error:', err);
+	}
+}
 
 // Service-worker keep-alive: while a save is awaiting a (possibly slow) summary,
 // ping a side-effect-free extension API periodically so MV3 doesn't tear the
@@ -174,50 +246,12 @@ function stopKeepAlive(): void {
 	}
 }
 
-// Persist a freshly generated summary under summary:<url> and prune stale/excess
-// entries. Empty summaries are intentionally not stored so a later trigger can retry.
-async function storeSummary(url: string, summary: string): Promise<void> {
-	const key = SUMMARY_KEY_PREFIX + url;
-	const entry: StoredSummary = { s: summary, t: Date.now() };
-	await browser.storage.local.set({ [key]: entry });
-	await pruneSummaries();
-}
-
-async function pruneSummaries(): Promise<void> {
-	try {
-		const all = await browser.storage.local.get(null);
-		const now = Date.now();
-		const summaries: { key: string; t: number }[] = [];
-		const expired: string[] = [];
-		for (const [key, value] of Object.entries(all)) {
-			if (!key.startsWith(SUMMARY_KEY_PREFIX)) continue;
-			const t = (value as StoredSummary)?.t ?? 0;
-			if (now - t > SUMMARY_TTL_MS) {
-				expired.push(key);
-			} else {
-				summaries.push({ key, t });
-			}
-		}
-		// Beyond the cap, drop the oldest.
-		summaries.sort((a, b) => a.t - b.t);
-		const overflow = summaries.slice(0, Math.max(0, summaries.length - SUMMARY_MAX_ENTRIES));
-		const toRemove = [...expired, ...overflow.map(e => e.key)];
-		if (toRemove.length > 0) {
-			await browser.storage.local.remove(toRemove);
-		}
-	} catch (err) {
-		console.log('[AutoSave] pruneSummaries error:', err);
-	}
-}
-
 // Kick off summary generation for a page during reading time (load-complete), so
 // the result is ready and persisted before the save trigger fires. No-op if a
 // summary already exists or is already being generated for this URL.
 async function precomputeSummary(url: string, markdown: string, title: string): Promise<void> {
 	if (summaryInFlight.has(url)) return;
-	const key = SUMMARY_KEY_PREFIX + url;
-	const stored = await browser.storage.local.get(key);
-	if (stored[key]) return;
+	if (await getStoredSummary(url)) return;
 	const promise = generateSummaryInBackground(markdown, title)
 		.then(async summary => {
 			if (summary?.trim()) {
@@ -366,19 +400,18 @@ async function saveIfCached(tabId: number): Promise<void> {
 			return;
 		}
 		if (!isAllowedByDomainFilter(content.url, settings.domainFilter)) {
-			const summaryKey = SUMMARY_KEY_PREFIX + content.url;
-			await browser.storage.local.remove(summaryKey);
+			await removeStoredSummary(content.url);
 			return;
 		}
 		// Prefer the pre-generated summary persisted at load time. If none is stored
 		// but one is still being generated, wait for it. Otherwise generate inline.
-		const summaryKey = SUMMARY_KEY_PREFIX + content.url;
-		const stored = await browser.storage.local.get(summaryKey);
-		let summary = (stored[summaryKey] as StoredSummary | undefined)?.s;
+		// In the first two cases the summary may be persisted in the map, so remove it.
+		let summary = await getStoredSummary(content.url);
 		if (summary) {
-			await browser.storage.local.remove(summaryKey);
+			await removeStoredSummary(content.url);
 		} else if (summaryInFlight.has(content.url)) {
 			summary = await summaryInFlight.get(content.url);
+			await removeStoredSummary(content.url);
 		} else {
 			summary = await generateSummaryInBackground(content.markdown, content.title);
 		}
@@ -392,6 +425,7 @@ async function saveIfCached(tabId: number): Promise<void> {
 			content: fileContent,
 		}) as { success: boolean; error?: string; needsPermission?: boolean };
 		if (result?.success) {
+			console.log('[AutoSave] Saved:', fileName);
 			chrome.action.setBadgeText({ text: '' });
 			const msg = `Saved: ${content.title || fileName}`;
 			browser.tabs.query({ active: true, currentWindow: true }).then(tabs => {
@@ -551,6 +585,9 @@ async function initialize() {
 
 		// Surface a lapsed directory permission early, before any save trigger.
 		await probeAutoSavePermission();
+
+		// One-time sweep of obsolete per-URL summary keys from earlier builds.
+		await cleanupLegacySummaryKeys();
 
 		// Set up tab listeners
 		await setupTabListeners();
