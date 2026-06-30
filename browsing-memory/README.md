@@ -19,3 +19,17 @@
 
 - 拡張機能: [browser-ext/README.md](./browser-ext/README.md)
 - MCPサーバー: [mcp/README.md](./mcp/README.md)
+
+## 利用例
+
+### 特定内容の調査したまとめ
+
+https://github.com/user-attachments/assets/d601b0c5-5574-4ebb-9cbc-4f8363831893
+
+### 保存したページの削除
+
+https://github.com/user-attachments/assets/1ebd6cf5-0f82-45ce-ac88-f64510b950d4
+
+### 忘れた情報を探す
+
+https://github.com/user-attachments/assets/21406adc-e804-4b41-b126-f4a32fd6028c
