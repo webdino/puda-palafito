@@ -6,7 +6,7 @@ browsing-memoryのブラウザ拡張機能インストール方法
 
 ### 1. `browsing-memory-1.0.0-chrome.zip` の解凍
 
-[browsing-memory-1.0.0-chrome.zip](../browsing-memory-1.0.0-chrome.zip)の解凍を行ってください。
+browsing-memory-1.0.0-chrome.zipの解凍を行ってください。
 
 ### 2. Chromeの拡張機能管理画面を開く
 
