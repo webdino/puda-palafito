@@ -131,7 +131,148 @@ interface AutoSaveContent {
 let autoSaveCache: { tabId: number; content: AutoSaveContent } | null = null;
 let pendingTimeOnPage: { tabId: number; seconds: number } | null = null;
 
+// Pre-generated summaries live in a SINGLE storage.local map keyed by URL, so reads
+// and pruning touch only this one key instead of scanning the whole storage area
+// (which can hold large blobs like `highlights`). They survive tab switches (which
+// overwrite the single-slot autoSaveCache) and service-worker restarts.
+// Shape: { [url]: { s, t } }.
+const SUMMARIES_KEY = 'autoSaveSummaries';
+const LEGACY_SUMMARY_PREFIX = 'summary:'; // obsolete per-URL keys from earlier builds
+const SUMMARY_MAX_ENTRIES = 50;
+const SUMMARY_TTL_MS = 24 * 60 * 60 * 1000; // 24h
+
+interface StoredSummary { s: string; t: number }
+type SummariesMap = Record<string, StoredSummary>;
+
+// Compare URLs ignoring the #fragment: same-document hash changes are not a real
+// navigation away from the page.
+function stripHash(url: string): string {
+	const i = url.indexOf('#');
+	return i === -1 ? url : url.slice(0, i);
+}
+
+// Summaries currently being generated, keyed by URL. Lets concurrent triggers
+// (and the save path) await an in-flight generation instead of starting a new one.
+const summaryInFlight = new Map<string, Promise<string | undefined>>();
+
+// Serialize read-modify-write of the summaries map so concurrent stores/removes
+// (e.g. summaries for different tabs finishing at the same time) don't clobber each
+// other. All writes happen in this single service worker, so an in-memory chain
+// is sufficient.
+let summariesWriteChain: Promise<unknown> = Promise.resolve();
+function withSummariesLock<T>(fn: () => Promise<T>): Promise<T> {
+	const run = summariesWriteChain.then(fn, fn);
+	summariesWriteChain = run.catch(() => {});
+	return run as Promise<T>;
+}
+
+async function readSummaries(): Promise<SummariesMap> {
+	const stored = await browser.storage.local.get(SUMMARIES_KEY);
+	return (stored[SUMMARIES_KEY] as SummariesMap) ?? {};
+}
+
+// Drop entries older than the TTL, then cap to the most recent N.
+function pruneSummariesMap(map: SummariesMap): SummariesMap {
+	const now = Date.now();
+	let entries = Object.entries(map).filter(([, v]) => now - (v?.t ?? 0) <= SUMMARY_TTL_MS);
+	if (entries.length > SUMMARY_MAX_ENTRIES) {
+		entries = entries.sort((a, b) => b[1].t - a[1].t).slice(0, SUMMARY_MAX_ENTRIES);
+	}
+	return Object.fromEntries(entries);
+}
+
+// Persist a freshly generated summary. Empty summaries are intentionally not stored
+// so a later trigger can retry.
+async function storeSummary(url: string, summary: string): Promise<void> {
+	await withSummariesLock(async () => {
+		const map = await readSummaries();
+		map[url] = { s: summary, t: Date.now() };
+		await browser.storage.local.set({ [SUMMARIES_KEY]: pruneSummariesMap(map) });
+	});
+}
+
+async function getStoredSummary(url: string): Promise<string | undefined> {
+	const map = await readSummaries();
+	return map[url]?.s;
+}
+
+async function removeStoredSummary(url: string): Promise<void> {
+	await withSummariesLock(async () => {
+		const map = await readSummaries();
+		if (url in map) {
+			delete map[url];
+			await browser.storage.local.set({ [SUMMARIES_KEY]: map });
+		}
+	});
+}
+
+// One-time cleanup of the obsolete per-URL `summary:<url>` keys written by earlier
+// builds. Runs once (guarded by a flag); the single get(null) here is acceptable as
+// it only ever happens on the first startup after this change ships.
+async function cleanupLegacySummaryKeys(): Promise<void> {
+	try {
+		const { autoSaveSummariesMigrated } = await browser.storage.local.get('autoSaveSummariesMigrated');
+		if (autoSaveSummariesMigrated) return;
+		const all = await browser.storage.local.get(null);
+		const legacy = Object.keys(all).filter(k => k.startsWith(LEGACY_SUMMARY_PREFIX));
+		if (legacy.length > 0) await browser.storage.local.remove(legacy);
+		await browser.storage.local.set({ autoSaveSummariesMigrated: true });
+	} catch (err) {
+		console.log('[AutoSave] legacy summary cleanup error:', err);
+	}
+}
+
+// Service-worker keep-alive: while a save is awaiting a (possibly slow) summary,
+// ping a side-effect-free extension API periodically so MV3 doesn't tear the
+// worker down before the file write completes. Reference-counted for nesting.
+let keepAliveRefCount = 0;
+let keepAliveTimer: ReturnType<typeof setInterval> | null = null;
+
+function startKeepAlive(): void {
+	keepAliveRefCount++;
+	if (keepAliveTimer === null) {
+		keepAliveTimer = setInterval(() => {
+			// Any extension API event resets the MV3 idle timer.
+			chrome.runtime.getPlatformInfo().catch(() => {});
+		}, 20000);
+	}
+}
+
+function stopKeepAlive(): void {
+	keepAliveRefCount = Math.max(0, keepAliveRefCount - 1);
+	if (keepAliveRefCount === 0 && keepAliveTimer !== null) {
+		clearInterval(keepAliveTimer);
+		keepAliveTimer = null;
+	}
+}
+
+// Kick off summary generation for a page during reading time (load-complete), so
+// the result is ready and persisted before the save trigger fires. No-op if a
+// summary already exists or is already being generated for this URL.
+async function precomputeSummary(url: string, markdown: string, title: string): Promise<void> {
+	if (summaryInFlight.has(url)) return;
+	if (await getStoredSummary(url)) return;
+	const promise = generateSummaryInBackground(markdown, title)
+		.then(async summary => {
+			if (summary?.trim()) {
+				await storeSummary(url, summary);
+			}
+			return summary;
+		})
+		.catch(err => {
+			console.log('[AutoSave] precomputeSummary error:', err);
+			return undefined;
+		})
+		.finally(() => {
+			summaryInFlight.delete(url);
+		});
+	summaryInFlight.set(url, promise);
+}
+
 async function generateSummaryInBackground(markdown: string, title: string): Promise<string | undefined> {
+	const startedAt = Date.now();
+	console.log('[AutoSave] Summary started:', title);
+	const elapsed = () => `${Date.now() - startedAt}ms`;
 	const settings = await loadSettings();
 	// Try the configured LLM first, but only when it is fully set up.
 	if (settings.interpreterEnabled && settings.summaryPrompt?.trim()) {
@@ -148,7 +289,7 @@ async function generateSummaryInBackground(markdown: string, title: string): Pro
 				const response = promptResponses.find((r: { key: string }) => r.key === '__summary__');
 				const summary = response?.user_response as string | undefined;
 				if (summary?.trim()) {
-					console.log('[AutoSave] Summary generated by LLM:', { provider: provider?.name, model: modelConfig.name, modelId: modelConfig.providerModelId });
+					console.log(`[AutoSave] Summary completed via LLM (${modelConfig.name}) in ${elapsed()}`);
 					return summary;
 				}
 			} catch (err) {
@@ -168,7 +309,7 @@ async function generateSummaryInBackground(markdown: string, title: string): Pro
 			if (availability === 'available') {
 				const summary = await summarize(title, markdown, code);
 				if (summary.trim()) {
-					console.log('[AutoSave] Summary generated by Chrome Summarizer (on-device):', { outputLanguage: code });
+					console.log(`[AutoSave] Summary completed via on-device Summarizer (${code}) in ${elapsed()}`);
 					return summary;
 				}
 			}
@@ -176,6 +317,7 @@ async function generateSummaryInBackground(markdown: string, title: string): Pro
 	} catch (err) {
 		console.warn('[AutoSave] Summarizer fallback failed:', err);
 	}
+	console.log(`[AutoSave] Summary completed with no result in ${elapsed()}`);
 	return undefined;
 }
 
@@ -204,17 +346,14 @@ function buildAutoSaveFileName(): string {
 	return `${ts}.md`;
 }
 
-async function extractAndCache(tabId: number): Promise<void> {
+async function extractAndCache(tabId: number, precompute = false): Promise<void> {
 	try {
 		const settings = await loadSettings();
 		if (!settings.autoSaveEnabled) {
-			console.log('[AutoSave] extractAndCache skipped (auto-save disabled)');
 			return;
 		}
 		const tab = await browser.tabs.get(tabId);
-		console.log('[AutoSave] extractAndCache tabId:', tabId, 'url:', tab.url);
 		if (!tab.url || !isValidUrl(tab.url) || isBlankPage(tab.url)) {
-			console.log('[AutoSave] extractAndCache skipped (invalid url)');
 			return;
 		}
 		// NOTE: the domain filter is intentionally NOT checked here. It is checked
@@ -227,7 +366,12 @@ async function extractAndCache(tabId: number): Promise<void> {
 			response.tabId = tabId;
 			response.windowId = tab.windowId;
 			autoSaveCache = { tabId, content: response };
-			console.log('[AutoSave] Cached:', response.url);
+			// On page load, pre-generate the summary in the background so it is ready
+			// (and persisted by URL) before the save trigger. Skip domain-filtered
+			// pages to avoid wasting LLM calls / hitting the rate-limit cooldown.
+			if (precompute && isAllowedByDomainFilter(response.url, settings.domainFilter)) {
+				void precomputeSummary(response.url, response.markdown, response.title);
+			}
 		} else {
 			console.log('[AutoSave] getMarkdownContent failed:', response);
 		}
@@ -237,7 +381,6 @@ async function extractAndCache(tabId: number): Promise<void> {
 }
 
 async function saveIfCached(tabId: number): Promise<void> {
-	console.log('[AutoSave] saveIfCached tabId:', tabId, 'cache:', autoSaveCache?.tabId ?? 'none');
 	if (!autoSaveCache || autoSaveCache.tabId !== tabId) return;
 	const { content } = autoSaveCache;
 	autoSaveCache = null;
@@ -245,26 +388,30 @@ async function saveIfCached(tabId: number): Promise<void> {
 		content.timeOnPage = pendingTimeOnPage.seconds;
 		pendingTimeOnPage = null;
 	}
+	// Keep the service worker alive across the (possibly slow) summary wait and the
+	// file write, so a save triggered on navigation/tab-close isn't lost to teardown.
+	startKeepAlive();
 	try {
 		// Re-check the domain filter at save time: the user may have added this
 		// domain to the filter after the page was already visited/cached.
 		// This must run before LLM summarization and the file save so both are skipped.
 		const settings = await loadSettings();
 		if (!settings.autoSaveEnabled) {
-			console.log('[AutoSave] saveIfCached skipped (auto-save disabled)');
 			return;
 		}
 		if (!isAllowedByDomainFilter(content.url, settings.domainFilter)) {
-			console.log('[AutoSave] saveIfCached skipped (domain filtered)');
-			const summaryKey = `summary:${content.url}`;
-			await browser.storage.local.remove(summaryKey);
+			await removeStoredSummary(content.url);
 			return;
 		}
-		const summaryKey = `summary:${content.url}`;
-		const stored = await browser.storage.local.get(summaryKey);
-		let summary = stored[summaryKey] as string | undefined;
+		// Prefer the pre-generated summary persisted at load time. If none is stored
+		// but one is still being generated, wait for it. Otherwise generate inline.
+		// In the first two cases the summary may be persisted in the map, so remove it.
+		let summary = await getStoredSummary(content.url);
 		if (summary) {
-			await browser.storage.local.remove(summaryKey);
+			await removeStoredSummary(content.url);
+		} else if (summaryInFlight.has(content.url)) {
+			summary = await summaryInFlight.get(content.url);
+			await removeStoredSummary(content.url);
 		} else {
 			summary = await generateSummaryInBackground(content.markdown, content.title);
 		}
@@ -286,20 +433,23 @@ async function saveIfCached(tabId: number): Promise<void> {
 				if (tabId) browser.tabs.sendMessage(tabId, { action: 'showToast', message: msg }).catch(() => {});
 			});
 		} else if (result?.error === 'no-handle') {
-			console.log('[AutoSave] Skipped: no directory configured');
+			console.warn('[AutoSave] Save failed: no save directory configured');
 			chrome.action.setBadgeText({ text: '!' });
 			chrome.action.setBadgeBackgroundColor({ color: '#e74c3c' });
 			chrome.tabs.create({ url: chrome.runtime.getURL('settings.html') });
 		} else if (result?.needsPermission) {
+			console.warn(`[AutoSave] Save failed: directory permission not granted (file: ${fileName})`);
 			chrome.action.setBadgeText({ text: '!' });
 			chrome.action.setBadgeBackgroundColor({ color: '#e74c3c' });
 			await chrome.storage.local.set({ autoSaveNeedsPermission: true });
 			chrome.tabs.create({ url: chrome.runtime.getURL('settings.html') });
 		} else {
-			console.log('[AutoSave] Save failed:', result?.error);
+			console.warn('[AutoSave] Save failed:', result?.error);
 		}
 	} catch (err) {
 		console.log('[AutoSave] Error during save:', err);
+	} finally {
+		stopKeepAlive();
 	}
 }
 
@@ -395,10 +545,49 @@ async function ensureOffscreenDocument(): Promise<void> {
 	});
 }
 
+// Proactively detect a lapsed directory permission (e.g. after a browser restart,
+// when the File System Access handle loses its read-write grant). Re-granting needs
+// a user gesture and can't happen during background auto-save, so we surface it early
+// — once per browser session — instead of silently failing at the save trigger.
+async function probeAutoSavePermission(): Promise<void> {
+	try {
+		const settings = await loadSettings();
+		if (!settings.autoSaveEnabled) return;
+		await ensureOffscreenDocument();
+		const res = await chrome.runtime.sendMessage({
+			action: 'offscreen-checkPermission',
+			target: 'offscreen',
+		}) as { hasHandle: boolean; granted: boolean };
+		if (!res?.hasHandle || res.granted) return;
+
+		console.warn('[AutoSave] Directory permission not granted; prompting user to re-grant');
+		chrome.action.setBadgeText({ text: '!' });
+		chrome.action.setBadgeBackgroundColor({ color: '#e74c3c' });
+		await chrome.storage.local.set({ autoSaveNeedsPermission: true });
+
+		// Open the settings page once per browser session so the user isn't nagged on
+		// every service-worker restart. storage.session is cleared on browser restart
+		// and on extension reload, which is exactly when permission can lapse.
+		const { autoSavePermissionPrompted } = await chrome.storage.session.get('autoSavePermissionPrompted');
+		if (!autoSavePermissionPrompted) {
+			await chrome.storage.session.set({ autoSavePermissionPrompted: true });
+			chrome.tabs.create({ url: chrome.runtime.getURL('settings.html') });
+		}
+	} catch (err) {
+		console.log('[AutoSave] permission probe error:', err);
+	}
+}
+
 async function initialize() {
 	try {
 		// Keep offscreen document alive for reliable auto-save on tab close
 		await ensureOffscreenDocument();
+
+		// Surface a lapsed directory permission early, before any save trigger.
+		await probeAutoSavePermission();
+
+		// One-time sweep of obsolete per-URL summary keys from earlier builds.
+		await cleanupLegacySummaryKeys();
 
 		// Set up tab listeners
 		await setupTabListeners();
@@ -928,21 +1117,29 @@ browser.tabs.onActivated.addListener((activeInfo) => {
 });
 
 browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
-	console.log('[AutoSave] onUpdated tabId:', tabId, 'changeInfo:', JSON.stringify(changeInfo));
 	if (changeInfo.status === 'loading' && changeInfo.url) {
-		if (autoSaveCache?.tabId === tabId) {
-			try {
-				const res = await browser.tabs.sendMessage(tabId, { action: 'getTimeOnPage' }) as { timeOnPage?: number };
-				if (res?.timeOnPage !== undefined) {
-					pendingTimeOnPage = { tabId, seconds: res.timeOnPage };
-				}
-			} catch {}
+		// Skip saving when the tab is merely reloading the SAME url rather than
+		// navigating away. This covers Chrome auto-reloading a tab it discarded for
+		// memory while idle (reactivation reloads the same URL) as well as a manual
+		// refresh — in both cases the user is staying on the page, so we keep the
+		// cached content (a later real navigation or tab close will still save it).
+		const cachedUrl = autoSaveCache?.tabId === tabId ? autoSaveCache.content.url : undefined;
+		const sameUrlReload = !!cachedUrl && stripHash(changeInfo.url) === stripHash(cachedUrl);
+		if (!sameUrlReload) {
+			if (autoSaveCache?.tabId === tabId) {
+				try {
+					const res = await browser.tabs.sendMessage(tabId, { action: 'getTimeOnPage' }) as { timeOnPage?: number };
+					if (res?.timeOnPage !== undefined) {
+						pendingTimeOnPage = { tabId, seconds: res.timeOnPage };
+					}
+				} catch {}
+			}
+			saveIfCached(tabId);
 		}
-		saveIfCached(tabId);
 	}
 	if (changeInfo.status === 'complete') {
 		handleTabChange({ tabId, windowId: tab.windowId });
-		extractAndCache(tabId);
+		extractAndCache(tabId, true);
 		updateActionIconForTab(tabId, tab.url);
 	}
 });

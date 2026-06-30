@@ -89,22 +89,19 @@ async function initializeDefaultSaveDirectory(): Promise<void> {
 	if (autoSaveNeedsPermission && handle) {
 		await browser.storage.local.remove('autoSaveNeedsPermission');
 		const banner = document.createElement('div');
-		banner.style.cssText = 'padding:12px 16px;background:#fff3cd;border:1px solid #ffc107;border-radius:6px;margin:12px 0;display:flex;align-items:center;gap:12px;';
+		banner.style.cssText = 'padding:12px 16px;background:#fff3cd;color:#664d03;border:1px solid #ffc107;border-radius:6px;margin:12px 0;display:flex;align-items:center;gap:12px;';
 		banner.innerHTML = `<span style="flex:1">Auto-save needs permission to access <strong>${handle.name}</strong>.</span>`;
 		const grantBtn = document.createElement('button');
 		grantBtn.type = 'button';
 		grantBtn.textContent = 'Grant Access';
-		grantBtn.style.cssText = 'padding:6px 14px;background:#ffc107;border:none;border-radius:4px;cursor:pointer;font-weight:bold;white-space:nowrap;';
+		grantBtn.style.cssText = 'padding:6px 14px;background:#ffc107;color:#1a1a1a;border:1px solid #d39e00;border-radius:4px;cursor:pointer;font-weight:600;white-space:nowrap;';
 		grantBtn.addEventListener('click', async () => {
-			console.log('[AutoSave] requesting permission for:', handle.name);
-			const h = handle as any;
-			const before = await h.queryPermission({ mode: 'readwrite' });
-			console.log('[AutoSave] permission before:', before);
 			const granted = await verifyPermission(handle);
-			console.log('[AutoSave] verifyPermission result:', granted);
 			if (granted) {
 				nameDisplay.textContent = handle.name;
 				banner.remove();
+				// Clear the warning badge set by the background permission probe / save failure.
+				chrome.action.setBadgeText({ text: '' });
 			}
 		});
 		banner.appendChild(grantBtn);
